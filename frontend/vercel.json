@@ -1,1 +1,8 @@
-{}
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://muisplatform-production.up.railway.app/api/:path*"
+    }
+  ]
+}

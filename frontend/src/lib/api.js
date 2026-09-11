@@ -1,4 +1,13 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+function getApiBase() {
+  const raw = (process.env.NEXT_PUBLIC_API_URL || '').trim().replace(/\/$/, '');
+  const isLocalhost = !raw || raw.includes('localhost');
+  if (process.env.NODE_ENV === 'production' && isLocalhost) {
+    return '';
+  }
+  return raw || 'http://localhost:5000';
+}
+
+const API_BASE = getApiBase();
 
 export function getToken() {
   if (typeof window === 'undefined') return '';
