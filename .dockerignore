@@ -1,0 +1,12 @@
+.git
+.github
+frontend
+docs
+**/node_modules
+**/.next
+**/.env
+**/.env.*
+!**/.env.example
+**/.env.local.example
+*.md
+*.zip
