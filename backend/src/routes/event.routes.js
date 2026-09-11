@@ -5,7 +5,6 @@ import { EventRsvp } from '../models/EventRsvp.js';
 import { WeeklyProgram } from '../models/WeeklyProgram.js';
 import { GalleryItem } from '../models/GalleryItem.js';
 import { sendMail, wrapEmail } from '../utils/mailer.js';
-import { buildIcs } from '../utils/ics.js';
 import { authRequired, requireRoles } from '../middleware/auth.js';
 import { publicFormLimiter } from '../middleware/rateLimit.js';
 
@@ -31,24 +30,26 @@ router.post('/:slug/rsvp', publicFormLimiter, asyncHandler(async (req, res) => {
   const event = await Event.findOne({ slug: req.params.slug });
   if (!event) throw new HttpError(404, 'Event not found.');
   const { fullName, email, departmentYear } = req.body || {};
-  if (!fullName || !email || !departmentYear) throw new HttpError(400, 'All RSVP fields are required.');
+  if (!fullName || !email || !departmentYear) throw new HttpError(400, 'All registration fields are required.');
   try {
-    await EventRsvp.create({ event: event._id, fullName, email, departmentYear });
+    await EventRsvp.create({
+      event: event._id,
+      fullName,
+      email,
+      departmentYear,
+      ticketStatus: 'pending'
+    });
   } catch (err) {
-    if (err.code === 11000) throw new HttpError(409, 'You already reserved a seat for this event.');
+    if (err.code === 11000) throw new HttpError(409, 'You already applied for this event. Wait for a ticket email after staff approval.');
     throw err;
   }
-  const ics = buildIcs({
-    title: event.title,
-    description: event.description,
-    location: event.location,
-    dateLabel: `${event.date} ${event.time || ''}`
-  });
   await sendMail({
     to: email,
-    subject: `RSVP confirmed: ${event.title}`,
-    html: wrapEmail('RSVP confirmed', `<p>Assalamu alaikum ${fullName},</p><p>Your seat for <strong>${event.title}</strong> is reserved.</p><p>${event.date} — ${event.location}</p>`),
-    attachments: [{ filename: 'muis-event.ics', content: Buffer.from(ics).toString('base64') }]
+    subject: `Application received: ${event.title}`,
+    html: wrapEmail(
+      'Application received',
+      `<p>Assalamu alaikum ${fullName},</p><p>We received your registration for <strong>${event.title}</strong>.</p><p>This is not a ticket yet. MUIS will email you if your ticket is approved.</p><p>${event.date} — ${event.location}</p>`
+    )
   });
   res.status(201).json({ ok: true });
 }));

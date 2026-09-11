@@ -27,11 +27,13 @@ async function run() {
         email: env.adminEmail,
         password: env.adminPassword,
         studentId: env.adminStudentId,
-        role: 'admin'
+        role: 'admin',
+        memberStatus: 'approved'
       });
       console.log('Admin user created:', env.adminEmail);
     } else {
       existing.role = 'admin';
+      existing.memberStatus = 'approved';
       existing.name = env.adminName || existing.name;
       if (env.adminPassword.length >= 6) {
         existing.password = env.adminPassword;

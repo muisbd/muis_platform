@@ -48,3 +48,10 @@ export function requireRoles(...roles) {
 }
 
 export const staffRoles = ['admin', 'moderator', 'treasurer'];
+
+export function requireMember(req, _res, next) {
+  if (!req.user) return next(new HttpError(401, 'Please log in to continue.'));
+  if (req.user.role === 'admin') return next();
+  if (req.user.memberStatus === 'approved') return next();
+  next(new HttpError(403, 'Your MUIS membership is not approved yet. A committee officer will review your Join application.'));
+}

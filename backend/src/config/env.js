@@ -11,7 +11,7 @@ export const env = {
   mongoUri: process.env.MONGODB_URI || '',
   jwtSecret: process.env.JWT_SECRET || 'dev-only-change-me',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000,http://localhost:3001',
+  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000,http://localhost:3001,https://muis-platform.vercel.app',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
   resendApiKey: process.env.RESEND_API_KEY || '',
   resendFrom: process.env.RESEND_FROM || 'MUIS <noreply@metrouni.edu.bd>',

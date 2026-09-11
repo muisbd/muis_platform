@@ -15,6 +15,11 @@ const userSchema = new mongoose.Schema(
       enum: ['student', 'blogger', 'moderator', 'treasurer', 'admin'],
       default: 'student'
     },
+    memberStatus: {
+      type: String,
+      enum: ['none', 'pending', 'approved', 'rejected'],
+      default: 'none'
+    },
     bloggerId: { type: String, default: '' },
     frozen: { type: Boolean, default: false },
     byline: { type: String, default: '' }

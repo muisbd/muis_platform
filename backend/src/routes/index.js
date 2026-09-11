@@ -12,6 +12,7 @@ import blogRoutes from './blog.routes.js';
 import progressRoutes from './progress.routes.js';
 import adminRoutes from './admin.routes.js';
 import uploadRoutes from './upload.routes.js';
+import sirahRoutes from './sirah.routes.js';
 
 const router = Router();
 
@@ -32,5 +33,6 @@ router.use('/blogs', blogRoutes);
 router.use('/progress', progressRoutes);
 router.use('/admin', adminRoutes);
 router.use('/upload', uploadRoutes);
+router.use('/sirah', sirahRoutes);
 
 export default router;

@@ -11,6 +11,7 @@ const membershipSchema = new mongoose.Schema(
     department: { type: String, required: true, trim: true },
     year: { type: String, default: 'N/A' },
     motivation: { type: String, default: 'N/A' },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     reviewStatus: {
       type: String,
       enum: ['new', 'approved', 'added_to_group', 'rejected'],

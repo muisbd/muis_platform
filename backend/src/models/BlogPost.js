@@ -2,7 +2,9 @@ import mongoose from 'mongoose';
 
 const blogSchema = new mongoose.Schema(
   {
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    authorName: { type: String, default: '' },
+    authorEmail: { type: String, default: '' },
     bloggerId: { type: String, default: '' },
     byline: { type: String, default: '' },
     title: { type: String, required: true },

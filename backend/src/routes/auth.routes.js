@@ -27,28 +27,13 @@ function publicUser(user) {
     gender: user.gender,
     role: user.role,
     bloggerId: user.bloggerId,
-    byline: user.byline
+    byline: user.byline,
+    memberStatus: user.role === 'admin' ? 'approved' : (user.memberStatus || 'none')
   };
 }
 
-router.post('/register', authLimiter, asyncHandler(async (req, res) => {
-  const { name, email, password, studentId, phone, department, gender } = req.body || {};
-  if (!name || !email || !password) throw new HttpError(400, 'Name, email and password are required.');
-  if (String(password).length < 6) throw new HttpError(400, 'Password must be at least 6 characters.');
-  const exists = await User.findOne({ email: String(email).toLowerCase() });
-  if (exists) throw new HttpError(409, 'An account with this email already exists.');
-  const user = await User.create({
-    name,
-    email,
-    password,
-    studentId: studentId || '',
-    phone: phone || '',
-    department: department || '',
-    gender: gender === 'Male' || gender === 'Female' ? gender : ''
-  });
-  const token = signToken(user);
-  setAuthCookie(res, token);
-  res.status(201).json({ ok: true, token, user: publicUser(user) });
+router.post('/register', authLimiter, asyncHandler(async (_req, res) => {
+  throw new HttpError(400, 'Please join MUIS to create your account. Membership is reviewed by a committee officer.');
 }));
 
 router.post('/login', authLimiter, asyncHandler(async (req, res) => {

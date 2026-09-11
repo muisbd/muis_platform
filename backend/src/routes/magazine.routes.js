@@ -14,25 +14,30 @@ router.get('/editions', asyncHandler(async (_req, res) => {
 }));
 
 router.post('/submissions', publicFormLimiter, asyncHandler(async (req, res) => {
-  const { authorName, email, title, abstract, fileUrl } = req.body || {};
+  const { authorName, email, title, abstract, fileUrl, kind } = req.body || {};
   if (!authorName || !email || !title || !abstract) {
-    throw new HttpError(400, 'Author name, email, title and abstract are required.');
+    throw new HttpError(400, 'Author name, email, title and your writing are required.');
   }
+  const dest = kind === 'blog' ? 'blog' : 'magazine';
   const doc = await MagazineSubmission.create({
     authorName,
     email,
     title,
     abstract,
+    kind: dest,
     fileUrl: fileUrl || ''
   });
   await sendMail({
     to: email,
-    subject: 'Article received — MUIS An-Noor',
-    html: wrapEmail('Submission received', `<p>Assalamu alaikum ${authorName},</p><p>Your article “${title}” was sent to the Editorial Board.</p>`)
+    subject: dest === 'blog' ? 'Blog submission received — MUIS' : 'Article received — MUIS An-Noor',
+    html: wrapEmail(
+      'Submission received',
+      `<p>Assalamu alaikum ${authorName},</p><p>Your piece “${title}” was received. MUIS will review it before anything is published.</p>`
+    )
   });
   await notifyCommittee(
-    'New magazine submission',
-    wrapEmail('An-Noor submission', `<p>${authorName}: ${title}</p><p>${abstract}</p>`)
+    dest === 'blog' ? 'New blog submission' : 'New magazine submission',
+    wrapEmail('Writing submission', `<p>${authorName} (${dest}): ${title}</p><p>${abstract}</p>`)
   );
   res.status(201).json({ ok: true, id: doc._id });
 }));

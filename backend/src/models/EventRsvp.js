@@ -5,7 +5,13 @@ const rsvpSchema = new mongoose.Schema(
     event: { type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true },
     fullName: { type: String, required: true },
     email: { type: String, required: true, lowercase: true },
-    departmentYear: { type: String, required: true }
+    departmentYear: { type: String, required: true },
+    ticketStatus: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending'
+    },
+    ticketCode: { type: String, default: '' }
   },
   { timestamps: true }
 );
