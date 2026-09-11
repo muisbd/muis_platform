@@ -1,10 +1,13 @@
+const PRODUCTION_API = 'https://muisplatform-production.up.railway.app';
+
 function getApiBase() {
   const raw = (process.env.NEXT_PUBLIC_API_URL || '').trim().replace(/\/$/, '');
-  const isLocalhost = !raw || raw.includes('localhost');
-  if (process.env.NODE_ENV === 'production' && isLocalhost) {
-    return '';
+  if (process.env.NODE_ENV !== 'production') {
+    if (raw && /localhost|127\.0\.0\.1/.test(raw)) return raw;
+    return 'http://localhost:5000';
   }
-  return raw || 'http://localhost:5000';
+  if (raw && !/localhost|127\.0\.0\.1/.test(raw)) return raw;
+  return PRODUCTION_API;
 }
 
 const API_BASE = getApiBase();

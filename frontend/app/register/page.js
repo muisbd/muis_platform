@@ -1,5 +1,5 @@
-import RegisterPage from '../../src/components/RegisterPage.js';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <RegisterPage />;
+  redirect('/join');
 }

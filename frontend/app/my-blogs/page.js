@@ -1,5 +1,5 @@
-import MyBlogsPage from '../../src/components/MyBlogsPage.js';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <MyBlogsPage />;
+  redirect('/blogs');
 }

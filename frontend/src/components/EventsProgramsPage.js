@@ -123,9 +123,18 @@ export default function EventsProgramsPage() {
       <section className="section">
         <div className="container">
           <div className="section-header">
+            <div className="eyebrow" style={{ color: '#FBBF24' }}>Open now</div>
+            <h2>Sirah Conference 2026</h2>
+            <p>Scan the QR or open muis.bd/sirah-2026. Verify your email, then MUIS accepts or rejects your registration.</p>
+          </div>
+          <div style={{ marginBottom: 36 }}>
+            <Link href="/sirah-2026" className="btn btn-vibrant-primary">Register for Sirah Conference 2026</Link>
+          </div>
+
+          <div className="section-header">
             <div className="eyebrow" style={{ color: '#38BDF8' }}>Upcoming Campus Program</div>
             <h2>Dawah Event 2026</h2>
-            <p>Our single upcoming major program scheduled for December 2026.</p>
+            <p>Our next major program scheduled for December 2026.</p>
           </div>
 
           <div style={{ background: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: 'var(--radius-xl)', overflow: 'hidden', display: 'grid', gridTemplateColumns: '1fr', gap: 0, boxShadow: '0 16px 40px rgba(0,0,0,0.5)' }} className="upcoming-banner-grid">

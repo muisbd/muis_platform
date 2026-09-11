@@ -5311,6 +5311,7 @@ select.form-control option {
 .admin-badge-new,
 .admin-badge-pending,
 .admin-badge-pending_review,
+.admin-badge-pending_verify,
 .admin-badge-draft {
   background: rgba(56, 189, 248, 0.18);
   border-color: #38BDF8;
@@ -5639,6 +5640,30 @@ select.form-control option {
   .admin-row {
     flex-direction: column;
   }
+}
+
+.sirah-pay-box {
+  background: rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(30, 27, 75, 0.12);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.sirah-pay-box p {
+  margin: 0 0 8px;
+}
+
+.sirah-pay-box p:last-child {
+  margin-bottom: 0;
+}
+
+.sirah-page h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 

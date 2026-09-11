@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { BookOpen } from 'lucide-react';
 import PageHeader from './PageHeader.js';
+import WritingSubmit from './WritingSubmit.js';
 import { api } from '../lib/api.js';
 
 export default function BlogsPage() {
@@ -20,13 +21,13 @@ export default function BlogsPage() {
 
   return (
     <div className="page-container page-fade-enter">
-      <PageHeader title="MUIS Student Blogs" description="Articles published by MUIS after committee review. Writers cannot self-publish." />
+      <PageHeader title="MUIS Student Blogs" description="Published after committee review. Anyone may submit a piece below — you cannot publish it yourself." />
       <section className="section">
         <div className="container">
           <div className="section-header">
             <div className="eyebrow">Knowledge</div>
             <h2>Published reflections & campus writing</h2>
-            <p>Want to write? Create an account, then request a Blogger ID from the committee.</p>
+            <p>Submit once. Staff either publish on this blog or keep it for the An-Noor magazine.</p>
           </div>
           {loading ? <p>Loading posts…</p> : null}
           {error ? <p className="join-alert alert-error">{error}</p> : null}
@@ -49,6 +50,11 @@ export default function BlogsPage() {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+      <section className="section section-bg-surface">
+        <div className="container">
+          <WritingSubmit defaultKind="blog" />
         </div>
       </section>
     </div>

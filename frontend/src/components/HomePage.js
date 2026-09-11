@@ -171,6 +171,30 @@ export default function HomePage() {
       <ScrollReveal id="upcoming-event-section" className="section section-upcoming-shade section-scroll-reveal">
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="section-header" style={{ marginBottom: 24 }}>
+            <div className="eyebrow" style={{ color: '#FBBF24' }}>Open registration</div>
+            <h2>Sirah Conference 2026</h2>
+          </div>
+
+          <div className="compact-event-card" style={{ marginBottom: 28 }}>
+            <div className="compact-event-cover" style={{ backgroundImage: "url('/images/event.jpg')" }}>
+              <span className="compact-event-badge"><Calendar /> 2026</span>
+            </div>
+            <div className="compact-event-body">
+              <div className="compact-event-meta">
+                <span className="compact-tag-purple">Flagship Conference</span>
+                <span className="compact-tag-emerald"><ShieldCheck /> Email verification</span>
+              </div>
+              <h3 className="compact-event-title">Sirah Conference 2026</h3>
+              <p className="compact-event-desc">Register with your name, student ID, email, and payment TrxID. We send a 6-digit code to your inbox; after verify, MUIS accepts or rejects your seat.</p>
+              <div className="compact-event-action">
+                <Link href="/sirah-2026" className="btn btn-vibrant-primary btn-sm">
+                  Register at muis.bd/sirah-2026 <ExternalLink />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="section-header" style={{ marginBottom: 24, marginTop: 12 }}>
             <div className="eyebrow" style={{ color: '#38BDF8' }}>Upcoming Campus Event</div>
             <h2>Dawah Event 2026</h2>
           </div>

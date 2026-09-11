@@ -4,11 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import {
   UserPlus, User, CreditCard, GraduationCap, Award, UserCheck,
-  Mail, Phone, BookOpen, Calendar, Loader2, ShieldCheck, CheckCircle2
+  Mail, Phone, BookOpen, Calendar, Loader2, ShieldCheck, CheckCircle2, Lock
 } from 'lucide-react';
-import { api } from '../lib/api.js';
+import { useAuth } from '../context/AuthContext.js';
 
 export default function JoinPage() {
+  const { join } = useAuth();
   const [status, setStatus] = useState('Current Student');
   const [gender, setGender] = useState('');
   const [alert, setAlert] = useState(null);
@@ -34,6 +35,8 @@ export default function JoinPage() {
     const department = form.querySelector('#join-dept')?.value.trim() || '';
     const year = form.querySelector('#join-year')?.value.trim() || 'N/A';
     const motivation = form.querySelector('#join-motivation')?.value.trim() || 'N/A';
+    const password = form.querySelector('#join-password')?.value || '';
+    const confirm = form.querySelector('#join-password-confirm')?.value || '';
 
     if (!name) {
       showAlert('Please enter your Full Name.');
@@ -63,6 +66,14 @@ export default function JoinPage() {
       showAlert('Please enter your Department (e.g. CSE, LLB, BBA).');
       return;
     }
+    if (!password || password.length < 6) {
+      showAlert('Please choose a password of at least 6 characters. This is your MUIS login.');
+      return;
+    }
+    if (password !== confirm) {
+      showAlert('Passwords do not match.');
+      return;
+    }
 
     const payload = {
       name,
@@ -73,15 +84,17 @@ export default function JoinPage() {
       phone,
       department,
       year: year || 'N/A',
-      motivation: motivation || 'N/A'
+      motivation: motivation || 'N/A',
+      password
     };
 
     setLoading(true);
 
     try {
-      await api('/membership', { method: 'POST', body: payload });
+      await join(payload);
       setLoading(false);
-      setSuccess({ ...payload, id });
+      const { password: _pw, ...safe } = payload;
+      setSuccess({ ...safe, id });
     } catch (err) {
       setLoading(false);
       showAlert(err.message || 'Could not submit your application. Please try again.');
@@ -103,8 +116,8 @@ export default function JoinPage() {
           <div className="join-form-wrapper">
             <div className="join-card">
               <div className="join-card-header">
-                <h2><UserPlus className="join-icon-glow" /> Membership Application Form</h2>
-                <p>Please fill out your details below to join MUIS.</p>
+                <h2><UserPlus className="join-icon-glow" /> Join MUIS</h2>
+                <p>This form creates your login and membership application. Student ID is required. A committee officer must approve you before courses unlock.</p>
               </div>
 
               <form key={formKey} id="join-muis-form" className={`join-form${success ? ' hidden' : ''}`} noValidate onSubmit={handleSubmit}>
@@ -207,9 +220,26 @@ export default function JoinPage() {
                   </div>
                 </div>
 
+                <div className="form-grid-2">
+                  <div className="form-group">
+                    <label htmlFor="join-password">Password <span className="required">*</span></label>
+                    <div className="input-with-icon">
+                      <Lock className="input-icon" />
+                      <input type="password" id="join-password" name="password" className="form-control" minLength={6} required placeholder="Min 6 characters" />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="join-password-confirm">Confirm password <span className="required">*</span></label>
+                    <div className="input-with-icon">
+                      <Lock className="input-icon" />
+                      <input type="password" id="join-password-confirm" name="passwordConfirm" className="form-control" minLength={6} required />
+                    </div>
+                  </div>
+                </div>
+
                 <div className="form-submit-row text-center">
                   <button type="submit" id="join-submit-btn" className="btn btn-emerald btn-lg btn-center" disabled={loading}>
-                    <span className={`btn-text${loading ? ' hidden' : ''}`}>Complete Membership Application</span>
+                    <span className={`btn-text${loading ? ' hidden' : ''}`}>Create login &amp; apply for membership</span>
                     <span className={`btn-spinner${loading ? '' : ' hidden'}`}><Loader2 className="spin" /> Submitting...</span>
                   </button>
                 </div>
@@ -225,7 +255,7 @@ export default function JoinPage() {
                   <CheckCircle2 />
                 </div>
                 <h3>JazakAllah Khair! Application Received</h3>
-                <p id="join-success-msg">Your MUIS membership application has been saved. Check your email for confirmation. You can also <Link href="/register">create a student account</Link> for the private prayer journal.</p>
+                <p id="join-success-msg">Your application is saved and your login is ready. Check your email. Courses unlock after a committee officer approves your membership. You can <Link href="/login">sign in</Link> now.</p>
                 {success && (
                   <div className="success-details-box text-left" id="success-summary-box">
                     <div style={{ background: 'rgba(255,255,255,0.04)', padding: 16, borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)', lineHeight: 1.8, marginTop: 16 }}>

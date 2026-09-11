@@ -8,14 +8,14 @@ import { useAuth } from '../context/AuthContext.js';
 import PageHeader from './PageHeader.js';
 
 export default function LoginPage() {
-  const { login, isLoggedIn } = useAuth();
+  const { login, isLoggedIn, isStaff } = useAuth();
   const router = useRouter();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isLoggedIn) router.replace('/progress');
-  }, [isLoggedIn, router]);
+    if (isLoggedIn) router.replace(isStaff ? '/admin' : '/');
+  }, [isLoggedIn, isStaff, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +27,7 @@ export default function LoginPage() {
       if (['admin', 'moderator', 'treasurer'].includes(user.role)) {
         router.push('/admin');
       } else {
-        router.push('/progress');
+        router.push('/');
       }
     } catch (err) {
       setError(err.message);
@@ -38,7 +38,7 @@ export default function LoginPage() {
 
   return (
     <div className="page-container page-fade-enter">
-      <PageHeader title="Student Login" description="Sign in to your private prayer journal, RSVP history, and (if issued) blog workspace." />
+      <PageHeader title="Member login" description="Sign in with the email and password from your Join MUIS application." />
       <section className="section">
         <div className="container">
           <div className="form-card auth-card">
@@ -46,7 +46,7 @@ export default function LoginPage() {
               <LogIn /> Welcome back
             </h3>
             <p style={{ color: 'var(--color-text-muted)', marginBottom: 20, fontSize: '0.92rem' }}>
-              Use the email and password you registered with. Committee officers land in Admin after login.
+              Courses stay locked until a committee officer approves your membership. Super admin lands in Admin after login.
             </p>
             {error ? <div className="join-alert alert-error" role="alert">{error}</div> : null}
             <form onSubmit={handleSubmit}>
@@ -69,7 +69,7 @@ export default function LoginPage() {
               </button>
             </form>
             <p style={{ marginTop: 16, fontSize: '0.9rem', textAlign: 'center' }}>
-              New student? <Link href="/register" style={{ color: 'var(--color-navy)', fontWeight: 700 }}>Create an account</Link>
+              New student? <Link href="/join" style={{ color: 'var(--color-navy)', fontWeight: 700 }}>Join MUIS</Link>
             </p>
           </div>
         </div>

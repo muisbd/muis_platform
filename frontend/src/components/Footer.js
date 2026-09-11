@@ -42,6 +42,7 @@ export default function Footer() {
               <ul className="footer-links">
                 <li><Link href="/about">About Us & Committee</Link></li>
                 <li><Link href="/events-programs">Events & Gallery</Link></li>
+                <li><Link href="/sirah-2026">Sirah Conference 2026</Link></li>
                 <li><Link href="/blogs">Student Blogs</Link></li>
                 <li><Link href="/join" style={{ color: '#10B981', fontWeight: 600 }}>Join MUIS</Link></li>
                 <li><Link href="/donate">Support & Donate</Link></li>

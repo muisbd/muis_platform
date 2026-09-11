@@ -43,7 +43,7 @@ export default function EventDetailPage({ eventId }) {
         }
       });
       form.reset();
-      showToast('RSVP confirmed. Check your email for a calendar invite (.ics).');
+      showToast('Application received. This is not a ticket yet. MUIS will email you if staff approve your ticket.');
     } catch (err) {
       showToast(err.message, true);
     } finally {
@@ -110,10 +110,10 @@ export default function EventDetailPage({ eventId }) {
             </div>
 
             <div className="form-card" style={{ margin: 0, width: '100%' }}>
-              <div className="eyebrow">Reserve Your Seat</div>
-              <h3 style={{ color: 'var(--color-navy)', marginBottom: 8 }}>RSVP Confirmation</h3>
+              <div className="eyebrow">Event registration</div>
+              <h3 style={{ color: 'var(--color-navy)', marginBottom: 8 }}>Apply for a ticket</h3>
               <p style={{ fontSize: '0.88rem', color: 'var(--color-text-muted)', marginBottom: 20 }}>
-                Fill out your student details below to receive an email reminder & entry confirmation.
+                Guests do not need a MUIS login. You will get an email that we received your details. A ticket is sent only after a committee officer approves you.
               </p>
 
               <form id="event-detail-rsvp-form" onSubmit={handleSubmit}>
@@ -133,7 +133,7 @@ export default function EventDetailPage({ eventId }) {
                 </div>
 
                 <button type="submit" className="btn btn-gold btn-lg" style={{ width: '100%', marginTop: 12 }} disabled={loading}>
-                  <Calendar /> {loading ? 'Saving RSVP…' : 'Confirm RSVP & Add to Calendar'}
+                  <Calendar /> {loading ? 'Sending…' : 'Submit application'}
                 </button>
               </form>
             </div>

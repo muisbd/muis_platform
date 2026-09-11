@@ -1,15 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Download, Send } from 'lucide-react';
+import { Download } from 'lucide-react';
 import PageHeader from './PageHeader.js';
+import WritingSubmit from './WritingSubmit.js';
 import { MAGAZINE_EDITIONS } from '../data/magazineData.js';
 import { showToast } from '../utils/toast.js';
 import { api, mapMagazine } from '../lib/api.js';
 
 export default function MagazinePage() {
   const [editions, setEditions] = useState(MAGAZINE_EDITIONS);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     api('/magazine/editions')
@@ -18,29 +18,6 @@ export default function MagazinePage() {
       })
       .catch(() => {});
   }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    setLoading(true);
-    try {
-      await api('/magazine/submissions', {
-        method: 'POST',
-        body: {
-          authorName: form.querySelector('[name="authorName"]').value.trim(),
-          email: form.querySelector('[name="email"]').value.trim(),
-          title: form.querySelector('[name="title"]').value.trim(),
-          abstract: form.querySelector('[name="abstract"]').value.trim()
-        }
-      });
-      form.reset();
-      showToast('Thank you! Your article submission has been sent to the Editorial Board.');
-    } catch (err) {
-      showToast(err.message, true);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="page-container page-fade-enter">
@@ -97,40 +74,7 @@ export default function MagazinePage() {
 
       <section className="section section-bg-surface">
         <div className="container">
-          <div className="form-card" style={{ maxWidth: 760, margin: '0 auto' }}>
-            <div className="eyebrow" style={{ textAlign: 'center' }}>Write for An-Noor</div>
-            <h3 style={{ color: 'var(--color-navy)', textAlign: 'center', marginBottom: 12 }}>Submit Your Article or Poetry</h3>
-            <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', marginBottom: 24, fontSize: '0.94rem' }}>
-              We welcome student submissions on academic ethics, Islamic history, book reviews, personal reflections, and creative poetry for our upcoming Fall 2026 issue.
-            </p>
-
-            <form id="magazine-submit-form" onSubmit={handleSubmit}>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Author Name *</label>
-                  <input name="authorName" type="text" required placeholder="Tariq Rahman" />
-                </div>
-                <div className="form-group">
-                  <label>University Email *</label>
-                  <input name="email" type="email" required placeholder="student@metropolitan.edu" />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label>Article Title / Topic *</label>
-                <input name="title" type="text" required placeholder="e.g. Navigating Academic Pressure with Patience" />
-              </div>
-
-              <div className="form-group">
-                <label>Abstract / Brief Summary *</label>
-                <textarea name="abstract" rows="4" required placeholder="Briefly describe your proposed article or paste your text submission here..." />
-              </div>
-
-              <button type="submit" className="btn btn-navy btn-lg" style={{ width: '100%' }} disabled={loading}>
-                <Send /> {loading ? 'Sending…' : 'Submit Article to Editorial Board'}
-              </button>
-            </form>
-          </div>
+          <WritingSubmit defaultKind="magazine" />
         </div>
       </section>
     </div>

@@ -1,5 +1,5 @@
-import ProgressPage from '../../src/components/ProgressPage.js';
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return <ProgressPage />;
+  redirect('/');
 }

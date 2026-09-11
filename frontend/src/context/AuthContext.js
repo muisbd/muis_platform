@@ -31,16 +31,23 @@ export function AuthProvider({ children }) {
       ready,
       isLoggedIn: Boolean(user),
       isStaff: Boolean(user && staff.includes(user.role)),
-      isBlogger: Boolean(user && (user.role === 'blogger' || user.role === 'admin')),
+      isMember: Boolean(user && (user.role === 'admin' || user.memberStatus === 'approved')),
+      isPendingMember: Boolean(user && user.memberStatus === 'pending'),
       async login(email, password) {
         const data = await api('/auth/login', { method: 'POST', body: { email, password } });
         setToken(data.token);
         setUser(data.user);
         return data.user;
       },
-      async register(payload) {
-        const data = await api('/auth/register', { method: 'POST', body: payload });
-        setToken(data.token);
+      async join(payload) {
+        const data = await api('/membership', { method: 'POST', body: payload });
+        if (data.token) setToken(data.token);
+        if (data.user) setUser(data.user);
+        return data;
+      },
+      async applyToken(token) {
+        setToken(token);
+        const data = await api('/auth/me');
         setUser(data.user);
         return data.user;
       },

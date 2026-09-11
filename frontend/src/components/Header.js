@@ -11,7 +11,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
-  const { user, isLoggedIn, isStaff, isBlogger, logout, ready } = useAuth();
+  const { user, isLoggedIn, isStaff, isMember, isPendingMember, logout, ready } = useAuth();
 
   const isHomePage = pathname === '/' || pathname === '' || pathname === '/index.html';
   const headerClass = isHomePage ? 'header header-transparent' : 'header header-inner';
@@ -58,6 +58,7 @@ export default function Header() {
           <ul className={`nav-menu${menuOpen ? ' open' : ''}`}>
             <li><Link href="/" className={`nav-link ${getActiveClass('/')}`} onClick={closeMenu}>Home</Link></li>
             <li><Link href="/about" className={`nav-link ${getActiveClass('/about')}`} onClick={closeMenu}>About</Link></li>
+            <li><Link href="/sirah-2026" className={`nav-link ${getActiveClass('/sirah-2026')}`} onClick={closeMenu}>Sirah 2026</Link></li>
             <li><Link href="/events-programs" className={`nav-link ${getActiveClass('/events-programs')}`} onClick={closeMenu}>Events & Programs</Link></li>
             <li><Link href="/courses" className={`nav-link ${getActiveClass('/courses')}`} onClick={closeMenu}>Islamic Courses</Link></li>
             <li><Link href="/blogs" className={`nav-link ${getActiveClass('/blogs')}`} onClick={closeMenu}>Blogs</Link></li>
@@ -66,8 +67,6 @@ export default function Header() {
             <li className="nav-mobile-only"><Link href="/donate" className={`nav-link nav-link-donate ${getActiveClass('/donate')}`} onClick={closeMenu}>Donate Now</Link></li>
             {isLoggedIn ? (
               <>
-                <li className="nav-mobile-only"><Link href="/progress" className={`nav-link ${getActiveClass('/progress')}`} onClick={closeMenu}>My Progress</Link></li>
-                {isBlogger ? <li className="nav-mobile-only"><Link href="/my-blogs" className="nav-link" onClick={closeMenu}>Write</Link></li> : null}
                 {isStaff ? <li className="nav-mobile-only"><Link href="/admin" className={`nav-link ${getActiveClass('/admin')}`} onClick={closeMenu}>Admin</Link></li> : null}
                 <li className="nav-mobile-only"><button type="button" className="nav-link" onClick={() => { closeMenu(); logout(); }}>Logout</button></li>
               </>
@@ -94,8 +93,9 @@ export default function Header() {
                 </button>
                 {accountOpen ? (
                   <div className="nav-account-menu">
-                    <Link href="/progress" onClick={() => setAccountOpen(false)}>My journal</Link>
-                    {isBlogger ? <Link href="/my-blogs" onClick={() => setAccountOpen(false)}>Write a blog</Link> : null}
+                    {isMember ? <Link href="/courses" onClick={() => setAccountOpen(false)}>Courses</Link> : null}
+                    <Link href="/sirah-2026" onClick={() => setAccountOpen(false)}>Sirah 2026</Link>
+                    {isPendingMember ? <span>Membership pending review</span> : null}
                     <button type="button" onClick={() => { setAccountOpen(false); logout(); }}>Logout</button>
                   </div>
                 ) : null}

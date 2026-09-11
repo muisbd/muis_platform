@@ -12,10 +12,11 @@ const ALL_TABS = [
   { id: 'memberships', label: 'Membership', roles: ['admin', 'moderator'] },
   { id: 'messages', label: 'Messages', roles: ['admin', 'moderator'] },
   { id: 'donations', label: 'Donations', roles: ['admin', 'treasurer'] },
-  { id: 'rsvps', label: 'RSVPs', roles: ['admin', 'moderator'] },
+  { id: 'rsvps', label: 'Event tickets', roles: ['admin', 'moderator'] },
+  { id: 'sirah', label: 'Sirah 2026', roles: ['admin', 'moderator', 'treasurer'] },
   { id: 'enrollments', label: 'Enrollments', roles: ['admin', 'moderator'] },
   { id: 'notes', label: 'Notes', roles: ['admin', 'moderator'] },
-  { id: 'magazine', label: 'Magazine', roles: ['admin', 'moderator'] },
+  { id: 'magazine', label: 'Writing', roles: ['admin', 'moderator'] },
   { id: 'blogs', label: 'Blogs', roles: ['admin', 'moderator'] },
   { id: 'users', label: 'Users', roles: ['admin'] },
   { id: 'content', label: 'Content', roles: ['admin', 'moderator'] }
@@ -31,6 +32,7 @@ function statusLabel(value) {
     matched: 'Verified',
     handled: 'Handled',
     pending_review: 'Needs review',
+    pending_verify: 'Email pending',
     published: 'Published',
     draft: 'Draft',
     accepted: 'Accepted'
@@ -56,6 +58,7 @@ export default function AdminDashboard() {
   const [eventForm, setEventForm] = useState({ slug: '', title: '', date: '', location: '', description: '', isUpcoming: true });
   const [courseForm, setCourseForm] = useState({ slug: '', title: '', instructor: '', description: '' });
   const [magForm, setMagForm] = useState({ slug: '', title: '', issue: '', downloadUrl: '' });
+  const [sirahUpdates, setSirahUpdates] = useState([]);
 
   const tabs = ALL_TABS.filter((t) => user && (user.role === 'admin' || t.roles.includes(user.role)));
 
@@ -73,6 +76,14 @@ export default function AdminDashboard() {
       else if (current === 'messages') setRows((await api('/admin/messages')).list || []);
       else if (current === 'donations') setRows((await api('/admin/donations')).list || []);
       else if (current === 'rsvps') setRows((await api('/admin/rsvps')).list || []);
+      else if (current === 'sirah') {
+        setRows((await api('/admin/sirah')).list || []);
+        try {
+          setSirahUpdates((await api('/admin/sirah-updates')).list || []);
+        } catch {
+          setSirahUpdates([]);
+        }
+      }
       else if (current === 'enrollments') setRows((await api('/admin/enrollments')).list || []);
       else if (current === 'notes') setRows((await api('/admin/notes')).list || []);
       else if (current === 'magazine') setRows((await api('/admin/magazine-submissions')).list || []);
@@ -111,7 +122,7 @@ export default function AdminDashboard() {
     <div className="page-container page-fade-enter admin-page">
       <PageHeader
         title="MUIS Admin"
-        description={`Signed in as ${user?.name} (${user?.role}). Review queues only — prayer journals are never shown here.`}
+        description={`Signed in as ${user?.name} (${user?.role}). Super admin can manage membership, tickets, writing, and donations.`}
         eyebrow="Committee desk"
       />
       <section className="section" style={{ paddingTop: 12 }}>
@@ -134,15 +145,15 @@ export default function AdminDashboard() {
               <div className="progress-stat"><strong>{overview.pendingBlogs}</strong><span>Blogs to review</span></div>
               <div className="progress-stat"><strong>{overview.magSubs}</strong><span>Magazine subs</span></div>
               <div className="progress-stat"><strong>{overview.users}</strong><span>Accounts</span></div>
+              <div className="progress-stat"><strong>{overview.sirah || 0}</strong><span>Sirah to review</span></div>
             </div>
           ) : null}
 
           {tab === 'memberships' && Array.isArray(rows) ? (
             <div className="admin-table-wrap">
               <p className="admin-help">
-                These are Join form submissions. <strong>Approve</strong> = accepted as a member.
+                These are Join applications. Each one also creates a login. <strong>Approve</strong> makes them a MUIS member (courses unlock).
                 <strong> In WhatsApp group</strong> = you already added them to the official chat.
-                The student does not see this page.
               </p>
               {rows.map((row) => (
                 <div key={row._id} className="admin-row">
@@ -216,11 +227,101 @@ export default function AdminDashboard() {
 
           {tab === 'rsvps' && Array.isArray(rows) ? (
             <div className="admin-table-wrap">
+              <p className="admin-help">Guest event applications. Approve to email a ticket. This is not MUIS membership.</p>
               {rows.map((row) => (
                 <div key={row._id} className="admin-row">
                   <div>
-                    <strong>{row.fullName}</strong> · {row.email}
-                    <div className="admin-meta">{row.event?.title || row.event?.slug} · {row.departmentYear}</div>
+                    <div className="admin-row-title">
+                      <strong>{row.fullName}</strong>
+                      <span className={`admin-badge admin-badge-${row.ticketStatus || 'pending'}`}>{statusLabel(row.ticketStatus || 'pending')}</span>
+                    </div>
+                    <div className="admin-meta">{row.email} · {row.event?.title || row.event?.slug} · {row.departmentYear}</div>
+                    {row.ticketCode ? <div className="admin-meta">Ticket {row.ticketCode}</div> : null}
+                  </div>
+                  <div className="admin-actions">
+                    {(row.ticketStatus || 'pending') !== 'approved' ? (
+                      <button type="button" className="btn btn-sm btn-emerald" onClick={() => patch(`/admin/rsvps/${row._id}`, { ticketStatus: 'approved' })}>Approve ticket</button>
+                    ) : null}
+                    {(row.ticketStatus || 'pending') !== 'rejected' ? (
+                      <button type="button" className="btn btn-sm btn-outline" onClick={() => patch(`/admin/rsvps/${row._id}`, { ticketStatus: 'rejected' })}>Reject</button>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : null}
+
+          {tab === 'sirah' && Array.isArray(rows) ? (
+            <div className="admin-table-wrap">
+              <p className="admin-help">
+                Sirah Conference 2026 only — not MUIS membership. Students verify email first. Accept or reject after you check the TrxID. They see the result when they sign in at /sirah-2026.
+              </p>
+              {user?.role === 'admin' || user?.role === 'moderator' ? (
+                <form
+                  className="form-card"
+                  style={{ marginBottom: 24, maxWidth: 'none' }}
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const form = e.currentTarget;
+                    try {
+                      await api('/admin/sirah-updates', {
+                        method: 'POST',
+                        body: { title: form.title.value.trim(), body: form.body.value.trim() }
+                      });
+                      form.reset();
+                      showToast('Update posted. Attendees will see it when they sign in.');
+                      load('sirah');
+                    } catch (err) {
+                      showToast(err.message, true);
+                    }
+                  }}
+                >
+                  <h3 style={{ color: 'var(--color-navy)', marginBottom: 12 }}>Post an event update</h3>
+                  <input name="title" className="form-control" required placeholder="Title (e.g. Venue confirmed)" />
+                  <textarea name="body" className="form-control" required placeholder="Message for registered students" rows={3} />
+                  <button className="btn btn-navy" type="submit">Post to attendees</button>
+                </form>
+              ) : null}
+              {sirahUpdates.length ? (
+                <div style={{ marginBottom: 20 }}>
+                  <h4 style={{ marginBottom: 8 }}>Posted updates</h4>
+                  {sirahUpdates.map((item) => (
+                    <div key={item._id} className="admin-meta" style={{ marginBottom: 8 }}>
+                      <strong>{item.title}</strong> — {item.body}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+              {rows.map((row) => (
+                <div key={row._id} className="admin-row">
+                  <div>
+                    <div className="admin-row-title">
+                      <strong>{row.name}</strong>
+                      <span className={`admin-badge admin-badge-${row.status}`}>{statusLabel(row.status)}</span>
+                    </div>
+                    <div className="admin-meta">{row.studentId} · {row.email}</div>
+                    <div className="admin-meta">{row.paymentMethod} · TrxID {row.trxId} · {fmt(row.createdAt)}</div>
+                    {row.ticketCode ? <div className="admin-meta">Reference {row.ticketCode}</div> : null}
+                    {row.adminNote ? <div className="admin-meta">Note: {row.adminNote}</div> : null}
+                    {!row.emailVerified ? <div className="admin-meta">Email not verified yet — accept is locked.</div> : null}
+                  </div>
+                  <div className="admin-actions">
+                    {row.emailVerified && row.status !== 'accepted' ? (
+                      <button type="button" className="btn btn-sm btn-emerald" onClick={() => patch(`/admin/sirah/${row._id}`, { status: 'accepted' })}>Accept</button>
+                    ) : null}
+                    {row.emailVerified && row.status !== 'rejected' ? (
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline"
+                        onClick={() => {
+                          const note = window.prompt('Optional note for the student (shown in the rejection email):', row.adminNote || '');
+                          if (note === null) return;
+                          patch(`/admin/sirah/${row._id}`, { status: 'rejected', adminNote: note });
+                        }}
+                      >
+                        Reject
+                      </button>
+                    ) : null}
                   </div>
                 </div>
               ))}
@@ -258,14 +359,19 @@ export default function AdminDashboard() {
 
           {tab === 'magazine' && Array.isArray(rows) ? (
             <div className="admin-table-wrap">
+              <p className="admin-help">Public writing submissions (blog or magazine). Publish on the website, accept for An-Noor, or reject.</p>
               {rows.map((row) => (
                 <div key={row._id} className="admin-row">
                   <div>
-                    <strong>{row.title}</strong> · {row.authorName} · {row.status}
+                    <strong>{row.title}</strong> · {row.authorName} · {row.kind || 'magazine'} · {row.status}
                     <p className="admin-meta">{row.abstract}</p>
+                    {row.publishedSlug ? <p className="admin-meta">Live: /blogs/{row.publishedSlug}</p> : null}
                   </div>
                   <div className="admin-actions">
-                    <button type="button" className="btn btn-sm btn-emerald" onClick={() => patch(`/admin/magazine-submissions/${row._id}`, { status: 'accepted', reviewNote: 'Accepted for the next issue.' })}>Accept</button>
+                    {row.status !== 'published' ? (
+                      <button type="button" className="btn btn-sm btn-emerald" onClick={() => patch(`/admin/magazine-submissions/${row._id}`, { publishAsBlog: true })}>Publish on blog</button>
+                    ) : null}
+                    <button type="button" className="btn btn-sm btn-gold" onClick={() => patch(`/admin/magazine-submissions/${row._id}`, { status: 'accepted', reviewNote: 'Accepted for the next issue.' })}>Keep for magazine</button>
                     <button type="button" className="btn btn-sm btn-outline" onClick={() => patch(`/admin/magazine-submissions/${row._id}`, { status: 'rejected', reviewNote: 'Not selected this round.' })}>Reject</button>
                   </div>
                 </div>
@@ -303,12 +409,10 @@ export default function AdminDashboard() {
                 <div key={row._id} className="admin-row">
                   <div>
                     <strong>{row.name}</strong> · {row.email} · {row.role}
-                    <div className="admin-meta">{row.bloggerId || 'no blogger id'} · {row.frozen ? 'frozen' : 'active'}</div>
+                    <div className="admin-meta">Member: {row.memberStatus || 'none'} · {row.frozen ? 'frozen' : 'active'}</div>
                   </div>
                   <div className="admin-actions">
-                    <button type="button" className="btn btn-sm btn-gold" onClick={() => patch(`/admin/users/${row._id}`, { issueBlogger: true })}>Issue Blogger ID</button>
-                    <button type="button" className="btn btn-sm btn-outline" onClick={() => patch(`/admin/users/${row._id}`, { role: 'moderator' })}>Make moderator</button>
-                    <button type="button" className="btn btn-sm btn-outline" onClick={() => patch(`/admin/users/${row._id}`, { role: 'treasurer' })}>Make treasurer</button>
+                    <button type="button" className="btn btn-sm btn-emerald" onClick={() => patch(`/admin/users/${row._id}`, { memberStatus: 'approved' })}>Mark member</button>
                     <button type="button" className="btn btn-sm btn-outline" onClick={() => patch(`/admin/users/${row._id}`, { frozen: !row.frozen })}>{row.frozen ? 'Unfreeze' : 'Freeze'}</button>
                   </div>
                 </div>
