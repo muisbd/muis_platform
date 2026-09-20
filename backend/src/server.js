@@ -15,7 +15,13 @@ const corsOrigins = [
   ...env.corsOrigin.split(',').map((s) => s.trim()),
   env.frontendUrl,
   'http://localhost:3000',
-  'http://localhost:3001'
+  'http://localhost:3001',
+  'http://localhost:3002',
+  'https://muis.bd',
+  'https://www.muis.bd',
+  'http://muis.bd',
+  'http://www.muis.bd',
+  'https://muis-platform.vercel.app'
 ].filter(Boolean);
 
 app.use(cors({

@@ -37,7 +37,7 @@ router.get('/overview', requireRoles('admin', 'moderator', 'treasurer'), asyncHa
     BlogPost.countDocuments({ status: 'pending_review' }),
     MagazineSubmission.countDocuments({ status: 'pending' }),
     User.countDocuments(),
-    SirahRegistration.countDocuments({ status: 'pending_review' })
+    SirahRegistration.countDocuments({ status: { $in: ['pending_review', 'pending_verify'] } })
   ]);
   res.json({ ok: true, memberships, messages, donations, pendingBlogs, magSubs, users, sirah });
 }));
@@ -290,7 +290,6 @@ router.patch('/sirah/:id', requireRoles('admin', 'moderator', 'treasurer'), asyn
   if (!['accepted', 'rejected', 'pending_review'].includes(nextStatus)) {
     throw new HttpError(400, 'Invalid status.');
   }
-  if (!doc.emailVerified) throw new HttpError(400, 'Student has not verified their email yet.');
   doc.status = nextStatus;
   doc.adminNote = req.body.adminNote || doc.adminNote;
   if (nextStatus === 'accepted') {
@@ -300,7 +299,7 @@ router.patch('/sirah/:id', requireRoles('admin', 'moderator', 'treasurer'), asyn
       subject: 'Sirah 2026 — registration accepted',
       html: wrapEmail(
         'You are registered',
-        `<p>Assalamu alaikum ${doc.name},</p><p>Your Sirah Conference 2026 registration is accepted.</p><p>Reference: <strong>${doc.ticketCode}</strong></p><p>Sign in at ${env.frontendUrl}/sirah-2026 for updates.</p>`
+        `<p>Assalamu alaikum ${doc.name},</p><p>Your Sirah Conference 2026 registration is accepted.</p><p>Reference: <strong>${doc.ticketCode}</strong></p>`
       )
     });
   }

@@ -31,8 +31,8 @@ function statusLabel(value) {
     pending: 'Pending',
     matched: 'Verified',
     handled: 'Handled',
-    pending_review: 'Needs review',
-    pending_verify: 'Email pending',
+    pending_review: 'Pending',
+    pending_verify: 'Pending',
     published: 'Published',
     draft: 'Draft',
     accepted: 'Accepted'
@@ -48,6 +48,82 @@ function fmt(d) {
   }
 }
 
+function csvCell(value) {
+  const text = String(value ?? '');
+  if (/[",\n]/.test(text)) return `"${text.replace(/"/g, '""')}"`;
+  return text;
+}
+
+function downloadSirahCsv(list, filename) {
+  const headers = ['Name', 'Student ID', 'Phone', 'Email', 'Department', 'Batch', 'Section', 'Payment method', 'TrxID / Paid to', 'Status', 'Reference', 'Submitted'];
+  const lines = [
+    headers.join(','),
+    ...list.map((row) => [
+      row.name,
+      row.studentId,
+      row.phone,
+      row.email,
+      row.department,
+      row.batch,
+      row.section,
+      row.paymentMethod,
+      sirahPaymentRef(row),
+      row.status,
+      row.ticketCode,
+      row.createdAt ? new Date(row.createdAt).toISOString() : ''
+    ].map(csvCell).join(','))
+  ];
+  const blob = new Blob([`\uFEFF${lines.join('\n')}`], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function sirahListText(list) {
+  const header = ['Name', 'Student ID', 'Phone', 'Email', 'Department', 'Batch', 'Section', 'Payment', 'TrxID / Paid to'].join('\t');
+  const body = list.map((row) => [
+    row.name,
+    row.studentId,
+    row.phone,
+    row.email,
+    row.department,
+    row.batch || '',
+    row.section || '',
+    row.paymentMethod,
+    sirahPaymentRef(row)
+  ].join('\t'));
+  return [header, ...body].join('\n');
+}
+
+async function copyText(text, okMessage) {
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast(okMessage);
+  } catch {
+    showToast('Could not copy.', true);
+  }
+}
+
+function isCashPayment(row) {
+  return String(row?.paymentMethod || '').toLowerCase() === 'cash';
+}
+
+function sirahPaymentRef(row) {
+  if (isCashPayment(row)) return row.paidTo || row.trxId || '—';
+  return row.trxId || '—';
+}
+
+function sirahPaymentLabel(row) {
+  return isCashPayment(row) ? `Cash · Paid to ${sirahPaymentRef(row)}` : `${row.paymentMethod} · TrxID ${sirahPaymentRef(row)}`;
+}
+
+function isSirahPending(row) {
+  return row.status === 'pending_review' || row.status === 'pending_verify';
+}
+
 export default function AdminDashboard() {
   const { user, ready, isStaff } = useAuth();
   const router = useRouter();
@@ -59,6 +135,7 @@ export default function AdminDashboard() {
   const [courseForm, setCourseForm] = useState({ slug: '', title: '', instructor: '', description: '' });
   const [magForm, setMagForm] = useState({ slug: '', title: '', issue: '', downloadUrl: '' });
   const [sirahUpdates, setSirahUpdates] = useState([]);
+  const [sirahFilter, setSirahFilter] = useState('pending');
 
   const tabs = ALL_TABS.filter((t) => user && (user.role === 'admin' || t.roles.includes(user.role)));
 
@@ -251,15 +328,153 @@ export default function AdminDashboard() {
             </div>
           ) : null}
 
-          {tab === 'sirah' && Array.isArray(rows) ? (
+          {tab === 'sirah' && Array.isArray(rows) ? (() => {
+            const pendingCount = rows.filter(isSirahPending).length;
+            const accepted = rows.filter((row) => row.status === 'accepted');
+            const rejectedCount = rows.filter((row) => row.status === 'rejected').length;
+            const visible = rows.filter((row) => {
+              if (sirahFilter === 'all') return true;
+              if (sirahFilter === 'pending') return isSirahPending(row);
+              return row.status === sirahFilter;
+            });
+            return (
             <div className="admin-table-wrap">
               <p className="admin-help">
-                Sirah Conference 2026 only — not MUIS membership. Students verify email first. Accept or reject after you check the TrxID. They see the result when they sign in at /sirah-2026.
+                Check the TrxID, then Approve or Reject. Use the accepted list below for the final registered candidates.
               </p>
+              <div className="sirah-admin-toolbar">
+                <div className="sirah-filter-row">
+                  {[
+                    ['pending', `Pending (${pendingCount})`],
+                    ['accepted', `Accepted (${accepted.length})`],
+                    ['rejected', `Rejected (${rejectedCount})`],
+                    ['all', `All (${rows.length})`]
+                  ].map(([id, label]) => (
+                    <button
+                      key={id}
+                      type="button"
+                      className={`tab-btn${sirahFilter === id ? ' active' : ''}`}
+                      onClick={() => setSirahFilter(id)}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                <div className="sirah-export-row">
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-emerald"
+                    disabled={!accepted.length}
+                    onClick={() => {
+                      downloadSirahCsv(accepted, 'sirah-2026-accepted.csv');
+                      showToast('Accepted list downloaded.');
+                    }}
+                  >
+                    Download accepted CSV
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline"
+                    disabled={!accepted.length}
+                    onClick={() => copyText(sirahListText(accepted), 'Accepted list copied. Paste into Excel or Google Sheets.')}
+                  >
+                    Copy accepted list
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline"
+                    disabled={!rows.length}
+                    onClick={() => downloadSirahCsv(rows, 'sirah-2026-all.csv')}
+                  >
+                    Download all
+                  </button>
+                </div>
+              </div>
+
+              {sirahFilter === 'accepted' && accepted.length ? (
+                <div className="sirah-final-table-wrap">
+                  <table className="sirah-final-table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Student ID</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Dept</th>
+                        <th>Batch</th>
+                        <th>Sec</th>
+                        <th>Payment</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {accepted.map((row, index) => (
+                        <tr key={row._id}>
+                          <td>{index + 1}</td>
+                          <td>{row.name}</td>
+                          <td>{row.studentId}</td>
+                          <td>{row.phone || '—'}</td>
+                          <td>{row.email}</td>
+                          <td>{row.department || '—'}</td>
+                          <td>{row.batch || '—'}</td>
+                          <td>{row.section || '—'}</td>
+                          <td>
+                            <button type="button" className="sirah-inline-copy" onClick={() => copyText(sirahPaymentRef(row), isCashPayment(row) ? 'Name copied' : 'TrxID copied')}>
+                              {isCashPayment(row) ? `Cash · ${sirahPaymentRef(row)}` : row.trxId}
+                            </button>
+                          </td>
+                          <td>
+                            <button type="button" className="btn btn-sm btn-outline" onClick={() => patch(`/admin/sirah/${row._id}`, { status: 'rejected' })}>Reject</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
+
+              {!visible.length ? <p className="admin-meta">No registrations in this list yet.</p> : null}
+              {sirahFilter !== 'accepted' ? visible.map((row) => (
+                <div key={row._id} className="admin-row">
+                  <div>
+                    <div className="admin-row-title">
+                      <strong>{row.name}</strong>
+                      <span className={`admin-badge admin-badge-${row.status}`}>{statusLabel(row.status)}</span>
+                    </div>
+                    <div className="admin-meta">{row.studentId} · {row.phone || 'no phone'} · {row.email}</div>
+                    <div className="admin-meta">
+                      {row.department || 'Department not given'}
+                      {row.batch ? ` · Batch ${row.batch}` : ''}
+                      {row.section ? ` · Sec ${row.section}` : ''}
+                    </div>
+                    <div className="admin-meta">
+                      {sirahPaymentLabel(row)}{' '}
+                      <button type="button" className="sirah-inline-copy" onClick={() => copyText(sirahPaymentRef(row), isCashPayment(row) ? 'Name copied' : 'TrxID copied')}>
+                        copy
+                      </button>
+                      {' · '}{fmt(row.createdAt)}
+                    </div>
+                    {row.ticketCode ? <div className="admin-meta">Reference {row.ticketCode}</div> : null}
+                    {row.adminNote ? <div className="admin-meta">Note: {row.adminNote}</div> : null}
+                  </div>
+                  <div className="admin-actions">
+                    {row.status !== 'accepted' ? (
+                      <button type="button" className="btn btn-sm btn-emerald" onClick={() => patch(`/admin/sirah/${row._id}`, { status: 'accepted' })}>Approve</button>
+                    ) : null}
+                    {row.status !== 'rejected' ? (
+                      <button type="button" className="btn btn-sm btn-outline" onClick={() => patch(`/admin/sirah/${row._id}`, { status: 'rejected' })}>Reject</button>
+                    ) : (
+                      <button type="button" className="btn btn-sm btn-outline" onClick={() => patch(`/admin/sirah/${row._id}`, { status: 'pending_review' })}>Reopen</button>
+                    )}
+                  </div>
+                </div>
+              )) : null}
+
               {user?.role === 'admin' || user?.role === 'moderator' ? (
                 <form
                   className="form-card"
-                  style={{ marginBottom: 24, maxWidth: 'none' }}
+                  style={{ margin: '24px 0 0', maxWidth: 'none' }}
                   onSubmit={async (e) => {
                     e.preventDefault();
                     const form = e.currentTarget;
@@ -269,22 +484,22 @@ export default function AdminDashboard() {
                         body: { title: form.title.value.trim(), body: form.body.value.trim() }
                       });
                       form.reset();
-                      showToast('Update posted. Attendees will see it when they sign in.');
+                      showToast('Update posted.');
                       load('sirah');
                     } catch (err) {
                       showToast(err.message, true);
                     }
                   }}
                 >
-                  <h3 style={{ color: 'var(--color-navy)', marginBottom: 12 }}>Post an event update</h3>
+                  <h3 style={{ color: '#F8FAFC', marginBottom: 12 }}>Optional event note</h3>
                   <input name="title" className="form-control" required placeholder="Title (e.g. Venue confirmed)" />
-                  <textarea name="body" className="form-control" required placeholder="Message for registered students" rows={3} />
-                  <button className="btn btn-navy" type="submit">Post to attendees</button>
+                  <textarea name="body" className="form-control" required placeholder="Internal note for the team" rows={3} />
+                  <button className="btn btn-navy" type="submit">Save note</button>
                 </form>
               ) : null}
               {sirahUpdates.length ? (
-                <div style={{ marginBottom: 20 }}>
-                  <h4 style={{ marginBottom: 8 }}>Posted updates</h4>
+                <div style={{ marginTop: 20 }}>
+                  <h4 style={{ marginBottom: 8 }}>Posted notes</h4>
                   {sirahUpdates.map((item) => (
                     <div key={item._id} className="admin-meta" style={{ marginBottom: 8 }}>
                       <strong>{item.title}</strong> — {item.body}
@@ -292,41 +507,9 @@ export default function AdminDashboard() {
                   ))}
                 </div>
               ) : null}
-              {rows.map((row) => (
-                <div key={row._id} className="admin-row">
-                  <div>
-                    <div className="admin-row-title">
-                      <strong>{row.name}</strong>
-                      <span className={`admin-badge admin-badge-${row.status}`}>{statusLabel(row.status)}</span>
-                    </div>
-                    <div className="admin-meta">{row.studentId} · {row.email}</div>
-                    <div className="admin-meta">{row.paymentMethod} · TrxID {row.trxId} · {fmt(row.createdAt)}</div>
-                    {row.ticketCode ? <div className="admin-meta">Reference {row.ticketCode}</div> : null}
-                    {row.adminNote ? <div className="admin-meta">Note: {row.adminNote}</div> : null}
-                    {!row.emailVerified ? <div className="admin-meta">Email not verified yet — accept is locked.</div> : null}
-                  </div>
-                  <div className="admin-actions">
-                    {row.emailVerified && row.status !== 'accepted' ? (
-                      <button type="button" className="btn btn-sm btn-emerald" onClick={() => patch(`/admin/sirah/${row._id}`, { status: 'accepted' })}>Accept</button>
-                    ) : null}
-                    {row.emailVerified && row.status !== 'rejected' ? (
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-outline"
-                        onClick={() => {
-                          const note = window.prompt('Optional note for the student (shown in the rejection email):', row.adminNote || '');
-                          if (note === null) return;
-                          patch(`/admin/sirah/${row._id}`, { status: 'rejected', adminNote: note });
-                        }}
-                      >
-                        Reject
-                      </button>
-                    ) : null}
-                  </div>
-                </div>
-              ))}
             </div>
-          ) : null}
+            );
+          })() : null}
 
           {tab === 'enrollments' && Array.isArray(rows) ? (
             <div className="admin-table-wrap">

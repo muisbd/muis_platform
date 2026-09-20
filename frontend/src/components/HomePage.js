@@ -11,6 +11,7 @@ import HeroCanvas from './HeroCanvas.js';
 import HeroTypewriter from './HeroTypewriter.js';
 import PhotoSlideshow from './PhotoSlideshow.js';
 import ScrollReveal, { AboutScrollSection } from './ScrollReveal.js';
+import SirahBannerImage from './SirahBannerImage.js';
 
 export default function HomePage() {
   const [faqOpen, setFaqOpen] = useState(-1);
@@ -175,17 +176,17 @@ export default function HomePage() {
             <h2>Sirah Conference 2026</h2>
           </div>
 
-          <div className="compact-event-card" style={{ marginBottom: 28 }}>
-            <div className="compact-event-cover" style={{ backgroundImage: "url('/images/event.jpg')" }}>
-              <span className="compact-event-badge"><Calendar /> 2026</span>
-            </div>
+          <div className="compact-event-card sirah-promo-card" style={{ marginBottom: 28 }}>
+            <figure className="sirah-banner-frame sirah-promo-banner">
+              <SirahBannerImage />
+            </figure>
             <div className="compact-event-body">
               <div className="compact-event-meta">
                 <span className="compact-tag-purple">Flagship Conference</span>
-                <span className="compact-tag-emerald"><ShieldCheck /> Email verification</span>
+                <span className="compact-tag-emerald"><ShieldCheck /> Open registration</span>
               </div>
               <h3 className="compact-event-title">Sirah Conference 2026</h3>
-              <p className="compact-event-desc">Register with your name, student ID, email, and payment TrxID. We send a 6-digit code to your inbox; after verify, MUIS accepts or rejects your seat.</p>
+              <p className="compact-event-desc">Pay, then register with your name, student ID, phone, email, department, and TrxID. MUIS approves your seat after checking payment.</p>
               <div className="compact-event-action">
                 <Link href="/sirah-2026" className="btn btn-vibrant-primary btn-sm">
                   Register at muis.bd/sirah-2026 <ExternalLink />

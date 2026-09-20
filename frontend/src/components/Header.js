@@ -14,7 +14,8 @@ export default function Header() {
   const { user, isLoggedIn, isStaff, isMember, isPendingMember, logout, ready } = useAuth();
 
   const isHomePage = pathname === '/' || pathname === '' || pathname === '/index.html';
-  const headerClass = isHomePage ? 'header header-transparent' : 'header header-inner';
+  const isHeroPage = isHomePage || pathname.startsWith('/sirah-2026');
+  const headerClass = isHeroPage ? 'header header-transparent' : 'header header-inner';
 
   const getActiveClass = (route) => {
     if (route === '/' && isHomePage) return 'active';
@@ -63,7 +64,6 @@ export default function Header() {
             <li><Link href="/courses" className={`nav-link ${getActiveClass('/courses')}`} onClick={closeMenu}>Islamic Courses</Link></li>
             <li><Link href="/blogs" className={`nav-link ${getActiveClass('/blogs')}`} onClick={closeMenu}>Blogs</Link></li>
             <li><Link href="/contact" className={`nav-link ${getActiveClass('/contact')}`} onClick={closeMenu}>Contact</Link></li>
-            <li className="nav-mobile-only"><Link href="/join" className={`nav-link ${getActiveClass('/join')}`} onClick={closeMenu}>Join MUIS</Link></li>
             <li className="nav-mobile-only"><Link href="/donate" className={`nav-link nav-link-donate ${getActiveClass('/donate')}`} onClick={closeMenu}>Donate Now</Link></li>
             {isLoggedIn ? (
               <>
@@ -77,7 +77,6 @@ export default function Header() {
         </nav>
 
         <div className="nav-actions">
-          <Link href="/join" className="btn btn-outline-white btn-sm nav-join-btn">Join</Link>
           <Link href="/donate" className="btn btn-emerald btn-sm nav-donate-btn">Donate</Link>
           {ready && isLoggedIn ? (
             <>

@@ -6,11 +6,11 @@ function getApiBase() {
     if (raw && /localhost|127\.0\.0\.1/.test(raw)) return raw;
     return 'http://localhost:5000';
   }
+  // Browser on Vercel/custom domain: same-origin /api (vercel.json rewrite). Avoids CORS.
+  if (typeof window !== 'undefined') return '';
   if (raw && !/localhost|127\.0\.0\.1/.test(raw)) return raw;
   return PRODUCTION_API;
 }
-
-const API_BASE = getApiBase();
 
 export function getToken() {
   if (typeof window === 'undefined') return '';
@@ -39,7 +39,7 @@ export async function api(path, options = {}) {
 
   let res;
   try {
-    res = await fetch(`${API_BASE}/api/v1${path}`, {
+    res = await fetch(`${getApiBase()}/api/v1${path}`, {
       method,
       headers,
       credentials: 'include',

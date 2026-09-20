@@ -7,6 +7,7 @@ import PageHeader from './PageHeader.js';
 import Gallery from './Gallery.js';
 import { UPCOMING_EVENTS, PAST_EVENTS, WEEKLY_PROGRAMS } from '../data/eventsData.js';
 import { api, mapEvent } from '../lib/api.js';
+import SirahBannerImage from './SirahBannerImage.js';
 
 const FILTERS = [
   { key: 'all', label: 'All Past Events' },
@@ -125,8 +126,11 @@ export default function EventsProgramsPage() {
           <div className="section-header">
             <div className="eyebrow" style={{ color: '#FBBF24' }}>Open now</div>
             <h2>Sirah Conference 2026</h2>
-            <p>Scan the QR or open muis.bd/sirah-2026. Verify your email, then MUIS accepts or rejects your registration.</p>
+            <p>Scan the QR or open muis.bd/sirah-2026. Pay, submit your details and TrxID, then MUIS accepts or rejects your registration.</p>
           </div>
+          <figure className="sirah-banner-frame sirah-events-banner">
+            <SirahBannerImage />
+          </figure>
           <div style={{ marginBottom: 36 }}>
             <Link href="/sirah-2026" className="btn btn-vibrant-primary">Register for Sirah Conference 2026</Link>
           </div>

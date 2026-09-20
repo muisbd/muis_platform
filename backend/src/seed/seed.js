@@ -16,32 +16,47 @@ async function upsertMany(Model, items, key) {
   }
 }
 
+async function ensureAdmin({ name, email, password, studentId }) {
+  if (!email || !password) return false;
+  const existing = await User.findOne({ email: email.toLowerCase() });
+  if (!existing) {
+    await User.create({
+      name: name || 'MUIS Admin',
+      email,
+      password,
+      studentId: studentId || '',
+      role: 'admin',
+      memberStatus: 'approved'
+    });
+    console.log('Admin user created:', email);
+  } else {
+    existing.role = 'admin';
+    existing.memberStatus = 'approved';
+    existing.name = name || existing.name;
+    if (password.length >= 6) existing.password = password;
+    if (studentId) existing.studentId = studentId;
+    await existing.save();
+    console.log('Admin user updated:', email);
+  }
+  return true;
+}
+
 async function run() {
   await connectDb();
 
-  if (env.adminEmail && env.adminPassword) {
-    const existing = await User.findOne({ email: env.adminEmail.toLowerCase() });
-    if (!existing) {
-      await User.create({
-        name: env.adminName,
-        email: env.adminEmail,
-        password: env.adminPassword,
-        studentId: env.adminStudentId,
-        role: 'admin',
-        memberStatus: 'approved'
-      });
-      console.log('Admin user created:', env.adminEmail);
-    } else {
-      existing.role = 'admin';
-      existing.memberStatus = 'approved';
-      existing.name = env.adminName || existing.name;
-      if (env.adminPassword.length >= 6) {
-        existing.password = env.adminPassword;
-      }
-      await existing.save();
-      console.log('Admin user updated:', env.adminEmail);
-    }
-  } else {
+  const primary = await ensureAdmin({
+    name: env.adminName,
+    email: env.adminEmail,
+    password: env.adminPassword,
+    studentId: env.adminStudentId
+  });
+  const secondary = await ensureAdmin({
+    name: env.admin2Name,
+    email: env.admin2Email,
+    password: env.admin2Password,
+    studentId: env.admin2StudentId
+  });
+  if (!primary && !secondary) {
     console.warn('ADMIN_EMAIL / ADMIN_PASSWORD not set — skipping admin user.');
   }
 
