@@ -21,7 +21,7 @@ export default function BlogsPage() {
 
   return (
     <div className="page-container page-fade-enter">
-      <PageHeader title="MUIS Student Blogs" description="Published after committee review. Anyone may submit a piece below — you cannot publish it yourself." />
+      <PageHeader title="MUIS Student Blogs" description="Published after committee review. Anyone may submit a piece below. You cannot publish it yourself." />
       <section className="section">
         <div className="container">
           <div className="section-header">

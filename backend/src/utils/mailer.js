@@ -12,18 +12,24 @@ export async function sendMail({ to, subject, html, text, attachments }) {
   const resend = getClient();
   if (!resend) {
     console.warn('[mailer] RESEND_API_KEY not set — email skipped:', subject, '→', to);
-    return { skipped: true };
+    return { skipped: true, error: 'RESEND_API_KEY not set' };
   }
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: env.resendFrom,
       to,
+      replyTo: env.committeeEmail,
       subject,
       html,
       text,
       attachments
     });
-    return { skipped: false };
+    if (result?.error) {
+      const message = result.error.message || String(result.error);
+      console.error('[mailer]', message);
+      return { skipped: true, error: message };
+    }
+    return { skipped: false, id: result?.data?.id || '' };
   } catch (err) {
     console.error('[mailer]', err.message);
     return { skipped: true, error: err.message };

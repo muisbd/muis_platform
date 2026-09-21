@@ -69,7 +69,7 @@ export default function EventDetailPage({ eventId }) {
 
   return (
     <div className="page-container page-fade-enter">
-      <PageHeader title={event.title} description={`${event.date}${event.time ? ` at ${event.time}` : ''} — ${event.location}`} parentPage="Events & Programs" parentHash="/events-programs" />
+      <PageHeader title={event.title} description={`${event.date}${event.time ? ` at ${event.time}` : ''} · ${event.location}`} parentPage="Events & Programs" parentHash="/events-programs" />
 
       <section className="section">
         <div className="container">

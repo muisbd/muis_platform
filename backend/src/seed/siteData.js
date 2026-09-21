@@ -232,7 +232,7 @@ export const COURSES = [
 export const MAGAZINE = [
   {
     slug: 'mag-2026',
-    title: 'An-Noor (The Light) — Annual Edition 2026',
+    title: 'An-Noor (The Light): Annual Edition 2026',
     issue: 'Volume 8, Issue 1',
     date: 'Spring 2026',
     cover: '/images/annoor_cover.png',

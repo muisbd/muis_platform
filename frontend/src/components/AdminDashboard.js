@@ -14,7 +14,7 @@ const ALL_TABS = [
   { id: 'messages', label: 'Messages', roles: ['admin', 'moderator'] },
   { id: 'donations', label: 'Donations', roles: ['admin', 'treasurer'] },
   { id: 'rsvps', label: 'Event tickets', roles: ['admin', 'moderator'] },
-  { id: 'sirah', label: 'Sirah 2026', roles: ['admin', 'moderator', 'treasurer'] },
+  { id: 'sirah', label: 'Seerah 2026', roles: ['admin', 'moderator', 'treasurer'] },
   { id: 'enrollments', label: 'Enrollments', roles: ['admin', 'moderator'] },
   { id: 'notes', label: 'Notes', roles: ['admin', 'moderator'] },
   { id: 'magazine', label: 'Writing', roles: ['admin', 'moderator'] },
@@ -180,8 +180,8 @@ export default function AdminDashboard() {
 
   const patch = async (path, body) => {
     try {
-      await api(path, { method: 'PATCH', body });
-      showToast('Saved.');
+      const data = await api(path, { method: 'PATCH', body });
+      showToast(data.message || 'Saved.', data.emailSent === false);
       load(tab);
     } catch (err) {
       showToast(err.message, true);
@@ -217,7 +217,7 @@ export default function AdminDashboard() {
               <div className="progress-stat"><strong>{overview.pendingBlogs}</strong><span>Blogs to review</span></div>
               <div className="progress-stat"><strong>{overview.magSubs}</strong><span>Magazine subs</span></div>
               <div className="progress-stat"><strong>{overview.users}</strong><span>Accounts</span></div>
-              <div className="progress-stat"><strong>{overview.sirah || 0}</strong><span>Sirah to review</span></div>
+              <div className="progress-stat"><strong>{overview.sirah || 0}</strong><span>Seerah to review</span></div>
             </div>
           ) : null}
 
@@ -361,7 +361,7 @@ export default function AdminDashboard() {
                     className="btn btn-sm btn-emerald"
                     disabled={!accepted.length}
                     onClick={() => {
-                      downloadSirahCsv(accepted, 'sirah-2026-accepted.csv');
+                      downloadSirahCsv(accepted, 'seerah-2026-accepted.csv');
                       showToast('Accepted list downloaded.');
                     }}
                   >
@@ -379,7 +379,7 @@ export default function AdminDashboard() {
                     type="button"
                     className="btn btn-sm btn-outline"
                     disabled={!rows.length}
-                    onClick={() => downloadSirahCsv(rows, 'sirah-2026-all.csv')}
+                    onClick={() => downloadSirahCsv(rows, 'seerah-2026-all.csv')}
                   >
                     Download all
                   </button>
@@ -497,7 +497,7 @@ export default function AdminDashboard() {
                   <h4 style={{ marginBottom: 8 }}>Posted notes</h4>
                   {sirahUpdates.map((item) => (
                     <div key={item._id} className="admin-meta" style={{ marginBottom: 8 }}>
-                      <strong>{item.title}</strong> — {item.body}
+                      <strong>{item.title}</strong>: {item.body}
                     </div>
                   ))}
                 </div>

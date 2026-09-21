@@ -5,7 +5,7 @@
    ========================================================================== */
 
 /* Google Fonts Import */
-@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
 /* --- CSS Variables - Dark Obsidian & Vibrant Multi-Gradient --- */
 :root {
@@ -32,6 +32,7 @@
   --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-arabic: 'Amiri', serif;
+  --font-bangla: 'Noto Sans Bengali', 'Inter', sans-serif;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -343,8 +344,8 @@ a {
 }
 
 @keyframes pageFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Homepage Teasers Grid */
@@ -4952,6 +4953,18 @@ select.form-control option {
   color: #FFFFFF;
 }
 
+/* Hide native number spinners so batch typing matches other fields */
+.form-control[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.form-control[type="number"]::-webkit-outer-spin-button,
+.form-control[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 /* Radio Card Selection Group (Status & Gender) */
 .radio-card-group {
   display: grid;
@@ -5672,30 +5685,30 @@ select.form-control option {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100svh;
   min-height: 100dvh;
-  padding: 96px 0 88px;
+  padding: calc(72px + 1.6vh) 0 5.2vh;
   box-sizing: border-box;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(168, 85, 247, 0.16) 0%, transparent 42%),
-    radial-gradient(circle at 82% 8%, rgba(56, 189, 248, 0.12) 0%, transparent 38%),
-    #070913;
+  background: #070913;
 }
 
 .sirah-banner-inner {
   position: relative;
   z-index: 2;
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: clamp(18px, 3vh, 32px);
+  gap: clamp(8px, 1.4vh, 16px);
+  min-height: 0;
 }
 
+.sirah-banner .hero-bismillah,
 .sirah-banner-bismillah {
   margin: 0;
   text-align: center;
+  font-size: clamp(1.28rem, 2.2vh, 1.62rem);
 }
 
 .sirah-hero-grid {
@@ -5705,10 +5718,89 @@ select.form-control option {
   align-items: center;
 }
 
+.sirah-hero-grid-single {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.sirah-hero-grid-single .sirah-banner-copy,
+.sirah-hero-grid-single .sirah-banner-copy .eyebrow {
+  text-align: center;
+  justify-content: center;
+}
+
+.sirah-hero-grid-single .sirah-banner-copy .hero-subtext {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sirah-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: clamp(10px, 1.6vh, 16px);
+}
+
+.sirah-hero-grid-single .sirah-hero-actions {
+  justify-content: center;
+}
+
+.sirah-hero-details-btn {
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #F8FAFC;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sirah-hero-details-btn:hover,
+.sirah-hero-details-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.sirah-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+  margin-top: clamp(8px, 1.3vh, 14px);
+}
+
+.sirah-hero-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #E2E8F0;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.sirah-hero-meta svg {
+  width: 14px;
+  height: 14px;
+  color: #FBBF24;
+}
+
+.sirah-hero-subtext-short {
+  display: none;
+}
+
 @media (min-width: 900px) {
+  .sirah-banner {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+
   .sirah-hero-grid {
     grid-template-columns: minmax(0, 1.15fr) minmax(240px, 0.85fr);
     gap: 40px;
+  }
+
+  .sirah-hero-grid-single {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -5738,19 +5830,155 @@ select.form-control option {
 .sirah-banner-copy .eyebrow {
   justify-content: flex-start;
   flex-wrap: wrap;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .sirah-banner-copy h1 {
-  font-size: clamp(2rem, 4.2vw, 3.2rem);
-  margin-bottom: 14px;
+  font-size: clamp(1.62rem, 2.8vh + 0.7rem, 2.45rem);
+  margin-bottom: 6px;
   font-weight: 800;
+  line-height: 1.12;
+}
+
+.sirah-prophet-lead {
+  display: block;
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  color: #FDE68A;
+  font-family: var(--font-heading);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.sirah-prophet-honorific {
+  position: relative;
+  isolation: isolate;
+  margin: clamp(28px, 5vh, 58px) auto clamp(22px, 3.6vh, 40px);
+  padding: 4px 12px 10px;
+  text-align: center;
+}
+
+.sirah-prophet-honorific::before,
+.sirah-prophet-light,
+.sirah-prophet-shimmer,
+.sirah-prophet-shimmer::after {
+  display: none !important;
+}
+
+.sirah-prophet-arabic-wrap {
+  position: relative;
+  display: block;
+  margin: 0 auto 8px;
+  width: fit-content;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.sirah-prophet-noor {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  z-index: 0;
+  width: 118%;
+  height: 78%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at center, rgba(255, 251, 235, 0.38) 0%, rgba(253, 224, 71, 0.28) 28%, rgba(251, 191, 36, 0.12) 52%, rgba(251, 191, 36, 0) 74%);
+  filter: blur(16px);
+  animation: sirahNoorBreathe 5.2s ease-in-out infinite;
+}
+
+.sirah-prophet-arabic {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  margin: 0;
+  padding: 0.04em 0.16em 0;
+  overflow: visible;
+  color: #FFFBEB;
+  font-family: 'Noto Naskh Arabic', var(--font-arabic);
+  font-size: clamp(3.2rem, 10.4vh, 6.4rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0;
+  white-space: nowrap;
+  unicode-bidi: isolate;
+  text-shadow:
+    0 0 10px rgba(255, 251, 235, 0.95),
+    0 0 22px rgba(253, 224, 71, 0.55),
+    0 0 42px rgba(251, 191, 36, 0.38);
+  filter:
+    drop-shadow(0 0 16px rgba(253, 224, 71, 0.42))
+    drop-shadow(0 0 36px rgba(245, 158, 11, 0.22));
+}
+
+@keyframes sirahNoorBreathe {
+  0%, 100% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+.sirah-prophet-english {
+  display: block;
+  margin-top: 8px;
+  color: #FFFBEB;
+  font-family: var(--font-heading);
+  font-size: clamp(1.05rem, 2vh, 1.45rem);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.sirah-prophet-salawat {
+  display: block;
+  margin-top: 8px;
+  color: #FDE68A;
+  font-family: var(--font-arabic);
+  font-size: clamp(0.98rem, 1.8vh, 1.28rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  unicode-bidi: isolate;
+}
+
+.sirah-page .hero-glow-orb,
+.sirah-page .seerah-poster-glow,
+.sirah-page .seerah-poster-flare,
+.sirah-page .seerah-poster-rays,
+.sirah-page .seerah-poster-title-shine,
+.sirah-page .sirah-prophet-shimmer {
+  display: none !important;
+}
+
+.sirah-page .seerah-poster-title strong,
+.sirah-page .seerah-poster-title span,
+.sirah-page .sirah-banner-copy h1,
+.sirah-page .sirah-prophet-english,
+.sirah-page .sirah-prophet-salawat,
+.sirah-page .sirah-prophet-lead {
+  text-shadow: none !important;
+  animation: none !important;
+  filter: none;
+}
+
+.sirah-page .seerah-poster-rule i {
+  box-shadow: none;
 }
 
 .sirah-banner-copy .hero-subtext {
-  margin: 0;
-  max-width: 640px;
-  line-height: 1.7;
+  margin: 0 auto;
+  max-width: 620px;
+  font-size: clamp(0.9rem, 1.55vh, 1.02rem);
+  line-height: 1.55;
 }
 
 .sirah-speakers {
@@ -5971,40 +6199,47 @@ select.form-control option {
   height: 18px;
 }
 
+.sirah-hero-actions .btn {
+  min-height: 44px;
+  padding: 10px 22px;
+}
+
 .sirah-scroll-down {
   position: absolute;
   left: 50%;
-  bottom: 18px;
+  bottom: 14px;
   z-index: 3;
-  min-width: 46px;
+  min-width: 148px;
   height: auto;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
-  padding: 8px 12px;
-  border: 1px solid rgba(251, 191, 36, 0.5);
+  padding: 12px 22px 10px;
+  border: 1.5px solid rgba(251, 191, 36, 0.85);
   border-radius: 9999px;
-  background: rgba(7, 9, 19, 0.55);
+  background: rgba(7, 9, 19, 0.78);
   color: #FBBF24;
   cursor: pointer;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   animation: sirahScrollBounce 1.65s ease-in-out infinite;
 }
 
 .sirah-scroll-down span {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .sirah-scroll-down svg {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.4;
 }
 
 .sirah-register-section {
@@ -6021,6 +6256,22 @@ select.form-control option {
     animation: none;
     transform: translateX(-50%);
   }
+
+  .sirah-prophet-noor {
+    animation: none;
+  }
+}
+
+@media (max-height: 820px) {
+  .sirah-scroll-down {
+    min-width: 42px;
+    padding: 8px;
+    bottom: 10px;
+  }
+
+  .sirah-scroll-down span {
+    display: none;
+  }
 }
 
 .compact-event-card.sirah-promo-card {
@@ -6032,15 +6283,17 @@ select.form-control option {
   transform: none;
 }
 
-.sirah-promo-card .sirah-banner-frame {
-  border: 0;
-  border-bottom: 1px solid rgba(201, 154, 76, 0.28);
-  box-shadow: none;
+.sirah-promo-card .seerah-event-cover {
+  margin: 0;
+  border-radius: 0;
+}
+
+.sirah-promo-card .seerah-event-cover .seerah-poster-cover {
   border-radius: 0;
 }
 
 .sirah-events-banner {
-  border-radius: var(--radius-lg);
+  border-radius: 18px;
   margin-bottom: 20px;
 }
 
@@ -6058,28 +6311,22 @@ select.form-control option {
   }
 }
 
-@media (max-height: 699px) {
-  .sirah-banner {
-    height: auto;
-    min-height: auto;
-    overflow: visible;
-  }
-}
-
 @media (max-width: 640px) {
   .sirah-banner {
-    padding: 88px 0 92px;
+    min-height: 100svh;
+    min-height: 100dvh;
+    padding: 76px 0 48px;
   }
 
   .sirah-banner-frame {
     border-radius: var(--radius-md);
   }
 
-  .sirah-scroll-down {
-    bottom: 16px;
+  .sirah-promo-banner {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 
-  .sirah-promo-banner {
+  .sirah-promo-card .seerah-event-cover .seerah-poster-cover {
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 }
@@ -6513,18 +6760,34 @@ select.form-control option {
 }
 
 .sirah-pay-steps {
-  margin: 0 0 8px;
-  padding: 12px 14px 12px 32px;
+  list-style: none;
+  counter-reset: pay-step;
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 14px 16px;
   border-radius: 14px;
   background: rgba(251, 191, 36, 0.08);
   border: 1px solid rgba(251, 191, 36, 0.18);
   color: #E5E7EB;
-  font-size: 0.88rem;
-  line-height: 1.55;
+  font-size: 0.9rem;
+  line-height: 1.45;
 }
 
-.sirah-pay-steps li + li {
-  margin-top: 4px;
+.sirah-pay-steps li {
+  display: grid;
+  grid-template-columns: 1.2em 1fr;
+  column-gap: 10px;
+  align-items: baseline;
+  counter-increment: pay-step;
+}
+
+.sirah-pay-steps li::before {
+  content: counter(pay-step) ".";
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #FBBF24;
+  text-align: right;
 }
 
 .sirah-pay-modal-actions {
@@ -6766,6 +7029,1366 @@ select.form-control option {
   padding: 0 16px 14px 32px;
   color: var(--color-navy);
   font-size: 0.88rem;
+}
+
+.seerah-carousel-section {
+  padding-top: 28px;
+}
+
+.seerah-carousel {
+  width: min(100%, 920px);
+  margin: 0 auto;
+}
+
+.seerah-carousel-slide {
+  position: relative;
+  min-height: 340px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+  background-color: #0B1220;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.seerah-carousel-slide.has-image {
+  background-color: #070913;
+}
+
+.seerah-carousel-speaker.has-image,
+.seerah-carousel-contest.has-image {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: #0B1220;
+}
+
+.seerah-carousel-speaker-split .sirah-mini-nav {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.seerah-speaker-slide {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(220px, 0.95fr);
+  align-items: center;
+  gap: 8px 20px;
+  min-height: 360px;
+  padding: 12px 68px 0 68px;
+}
+
+.seerah-speaker-copy {
+  color: #F8FAFC;
+  padding: 12px 8px 28px 0;
+}
+
+.seerah-speaker-copy strong {
+  display: block;
+  margin-top: 4px;
+  font-size: clamp(1.45rem, 3vw, 2.05rem);
+  line-height: 1.2;
+}
+
+.seerah-speaker-copy em {
+  display: block;
+  margin-top: 10px;
+  color: #94A3B8;
+  font-size: 1rem;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+.seerah-speaker-photo-wrap {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  align-self: stretch;
+  padding-top: 28px;
+}
+
+.seerah-speaker-photo-wrap img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 332px;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+.seerah-carousel-contest.has-image {
+  min-height: 420px;
+}
+
+.seerah-carousel-contest-designed {
+  min-height: 430px;
+  background-image: none !important;
+}
+
+.seerah-carousel-contest-designed .sirah-mini-nav {
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 8;
+}
+
+.seerah-carousel-quiz:not(.has-image),
+.seerah-carousel-writing:not(.has-image) {
+  background: linear-gradient(160deg, #141a2c 0%, #0B1220 100%);
+}
+
+.seerah-poster {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #F8FAFC;
+}
+
+.seerah-poster-carousel {
+  position: absolute;
+  inset: 0;
+}
+
+.seerah-poster-cover {
+  min-height: 220px;
+  margin: 0 0 16px;
+  border-radius: 12px;
+}
+
+.seerah-poster-pattern,
+.seerah-poster-glow,
+.seerah-poster-mark,
+.seerah-poster-corner {
+  pointer-events: none;
+}
+
+.seerah-poster-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.42;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23FBBF24' stroke-width='0.8' stroke-opacity='0.18'%3E%3Cpolygon points='40,0 48,12 60,12 52,24 60,36 48,36 40,48 32,36 20,36 28,24 20,12 32,12' /%3E%3Ccircle cx='40' cy='24' r='6' /%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 88px 88px;
+}
+
+.seerah-poster-writing .seerah-poster-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2338BDF8' stroke-width='0.8' stroke-opacity='0.2'%3E%3Cpolygon points='40,0 48,12 60,12 52,24 60,36 48,36 40,48 32,36 20,36 28,24 20,12 32,12' /%3E%3Ccircle cx='40' cy='24' r='6' /%3E%3C/g%3E%3C/svg%3E");
+}
+
+.seerah-poster-seminar .seerah-poster-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C084FC' stroke-width='0.8' stroke-opacity='0.22'%3E%3Cpolygon points='40,0 48,12 60,12 52,24 60,36 48,36 40,48 32,36 20,36 28,24 20,12 32,12' /%3E%3Ccircle cx='40' cy='24' r='6' /%3E%3C/g%3E%3C/svg%3E");
+}
+
+.seerah-poster-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.seerah-poster-quiz,
+.seerah-poster-writing,
+.seerah-poster-seminar,
+.seerah-poster-conference {
+  background: linear-gradient(165deg, #141a2c 0%, #0B1220 58%, #070913 100%);
+}
+
+.seerah-poster-quiz .seerah-poster-glow,
+.seerah-poster-writing .seerah-poster-glow,
+.seerah-poster-seminar .seerah-poster-glow {
+  display: none;
+}
+
+.seerah-poster-mark {
+  position: absolute;
+  right: 4%;
+  top: 46%;
+  z-index: 1;
+  transform: translateY(-50%);
+  font-family: var(--font-heading);
+  font-size: clamp(8rem, 22vw, 14rem);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.08em;
+  color: rgba(255, 255, 255, 0.035);
+}
+
+.seerah-poster-corner {
+  position: absolute;
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+}
+
+.seerah-poster-corner.tl { top: 16px; left: 16px; border-top: 2px solid; border-left: 2px solid; }
+.seerah-poster-corner.tr { top: 16px; right: 16px; border-top: 2px solid; border-right: 2px solid; }
+.seerah-poster-corner.bl { bottom: 16px; left: 16px; border-bottom: 2px solid; border-left: 2px solid; }
+.seerah-poster-corner.br { bottom: 16px; right: 16px; border-bottom: 2px solid; border-right: 2px solid; }
+
+.seerah-poster-quiz .seerah-poster-corner { color: rgba(251, 191, 36, 0.72); }
+.seerah-poster-writing .seerah-poster-corner { color: rgba(56, 189, 248, 0.72); }
+.seerah-poster-seminar .seerah-poster-corner { color: rgba(216, 180, 254, 0.78); }
+
+.seerah-poster-body {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: inherit;
+  padding: 36px 72px 28px;
+  text-align: center;
+}
+
+.seerah-poster-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(7, 9, 19, 0.42);
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.seerah-poster-kicker svg {
+  width: 14px;
+  height: 14px;
+}
+
+.seerah-poster-quiz .seerah-poster-kicker { color: #FBBF24; }
+.seerah-poster-writing .seerah-poster-kicker { color: #7DD3FC; }
+.seerah-poster-seminar .seerah-poster-kicker { color: #E9D5FF; }
+
+.seerah-poster-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  line-height: 0.88;
+}
+
+.seerah-poster-title span {
+  display: block;
+  font-family: var(--font-arabic);
+  font-size: clamp(1.7rem, 4.4vw, 2.7rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(248, 250, 252, 0.92);
+}
+
+.seerah-poster-title strong {
+  display: block;
+  margin-top: 2px;
+  max-width: 100%;
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 8.4vw, 5.3rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+
+.seerah-poster-quiz .seerah-poster-title strong {
+  color: #FBBF24;
+}
+
+.seerah-poster-writing .seerah-poster-title strong {
+  color: #38BDF8;
+}
+
+.seerah-poster-seminar .seerah-poster-title strong {
+  color: #E9D5FF;
+}
+
+.seerah-poster-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(240px, 58%);
+  margin: 16px auto 12px;
+}
+
+.seerah-poster-rule::before,
+.seerah-poster-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.45;
+}
+
+.seerah-poster-rule i {
+  width: 8px;
+  height: 8px;
+  margin: 0 10px;
+  transform: rotate(45deg);
+  background: currentColor;
+  box-shadow: none;
+}
+
+.seerah-poster-quiz .seerah-poster-rule { color: #FBBF24; }
+.seerah-poster-writing .seerah-poster-rule { color: #38BDF8; }
+.seerah-poster-seminar .seerah-poster-rule { color: #D8B4FE; }
+
+.seerah-poster-bn {
+  margin: 0 0 16px;
+  color: #E2E8F0;
+  font-family: var(--font-bangla);
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.seerah-poster-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.seerah-poster-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(7, 9, 19, 0.48);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #E2E8F0;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.seerah-poster-chip svg {
+  width: 13px;
+  height: 13px;
+  color: inherit;
+}
+
+.seerah-poster-quiz .seerah-poster-chip svg { color: #FBBF24; }
+.seerah-poster-writing .seerah-poster-chip svg { color: #38BDF8; }
+.seerah-poster-seminar .seerah-poster-chip svg { color: #D8B4FE; }
+
+.seerah-poster-guests {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.seerah-poster-guest {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.38);
+  color: #FDE68A;
+  font-family: var(--font-heading);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.seerah-poster-guest svg {
+  width: 15px;
+  height: 15px;
+  color: #FBBF24;
+}
+
+.seerah-poster-seminar .seerah-poster-guest {
+  background: rgba(192, 132, 252, 0.14);
+  border-color: rgba(216, 180, 254, 0.42);
+  color: #F3E8FF;
+}
+
+.seerah-poster-seminar .seerah-poster-guest svg {
+  color: #E9D5FF;
+}
+
+.seerah-poster-conference {
+  background: linear-gradient(165deg, #141a2c 0%, #0B1220 58%, #070913 100%);
+}
+
+.seerah-poster-conference .seerah-poster-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23FBBF24' stroke-width='0.8' stroke-opacity='0.22'%3E%3Cpolygon points='40,0 48,12 60,12 52,24 60,36 48,36 40,48 32,36 20,36 28,24 20,12 32,12' /%3E%3Ccircle cx='40' cy='24' r='6' /%3E%3C/g%3E%3C/svg%3E");
+}
+
+.seerah-poster-conference .seerah-poster-corner { color: rgba(251, 191, 36, 0.78); }
+.seerah-poster-conference .seerah-poster-kicker { color: #FBBF24; }
+.seerah-poster-conference .seerah-poster-rule { color: #FBBF24; }
+.seerah-poster-conference .seerah-poster-chip svg { color: #FBBF24; }
+
+.seerah-poster-conference .seerah-poster-guest {
+  background: rgba(251, 191, 36, 0.14);
+  border-color: rgba(251, 191, 36, 0.42);
+  color: #FEF3C7;
+}
+
+.seerah-poster-conference .seerah-poster-guest svg {
+  color: #FBBF24;
+}
+
+.seerah-poster-conference .seerah-poster-glow,
+.seerah-poster-flare,
+.seerah-poster-rays,
+.seerah-poster-title-shine {
+  display: none !important;
+}
+
+.seerah-poster-conference .seerah-poster-title span {
+  text-shadow: none;
+}
+
+.seerah-poster-conference .seerah-poster-title strong {
+  position: relative;
+  color: #FBBF24;
+  text-shadow: none;
+  animation: none;
+}
+
+@keyframes seerahPosterGlow {
+  0%, 100% { opacity: 0.82; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+
+@keyframes seerahPosterFlare {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.96); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+@keyframes seerahPosterRays {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes seerahTitleShine {
+  0%, 68% { transform: translateX(-130%); }
+  88%, 100% { transform: translateX(130%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seerah-poster-conference .seerah-poster-glow,
+  .seerah-poster-flare,
+  .seerah-poster-rays,
+  .seerah-poster-conference .seerah-poster-title strong,
+  .seerah-poster-title-shine {
+    animation: none !important;
+  }
+}
+
+.seerah-details-highlight-poster {
+  margin: 0 0 28px;
+  border-radius: 18px;
+  overflow: hidden;
+  min-height: 280px;
+}
+
+.seerah-event-cover {
+  margin: 0 0 28px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.seerah-event-cover .seerah-poster-cover {
+  margin: 0;
+  min-height: 320px;
+  border-radius: 18px;
+}
+
+.seerah-event-cover .seerah-poster-cover .seerah-poster-body {
+  padding: 40px 24px 32px;
+}
+
+.seerah-event-cover .seerah-poster-cover .seerah-poster-title span {
+  font-size: clamp(1.45rem, 3.4vw, 2.2rem);
+}
+
+.seerah-event-cover .seerah-poster-cover .seerah-poster-title strong {
+  font-size: clamp(2.35rem, 6.4vw, 4.4rem);
+}
+
+.seerah-event-cover .seerah-poster-cover .seerah-poster-mark {
+  font-size: clamp(8rem, 18vw, 12rem);
+}
+
+.seerah-poster-caption {
+  max-width: 520px;
+  margin: 0;
+  color: rgba(226, 232, 240, 0.78);
+  font-family: var(--font-bangla);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.seerah-poster-cover .seerah-poster-body {
+  padding: 28px 20px 22px;
+}
+
+.seerah-poster-cover .seerah-poster-title span {
+  font-size: 1.35rem;
+}
+
+.seerah-poster-cover .seerah-poster-title strong {
+  font-size: 2.5rem;
+}
+
+.seerah-poster-cover .seerah-poster-mark {
+  font-size: 9rem;
+}
+
+.seerah-poster-cover .seerah-poster-caption {
+  display: none;
+}
+
+.seerah-carousel-placeholder,
+.seerah-carousel-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 22px 56px 20px 22px;
+  background: linear-gradient(180deg, transparent, rgba(7, 9, 19, 0.94));
+  color: #F8FAFC;
+}
+
+.seerah-carousel-placeholder {
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: var(--font-bangla);
+}
+
+.seerah-carousel-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  background: rgba(251, 191, 36, 0.16);
+  color: #FBBF24;
+}
+
+.seerah-carousel-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.seerah-carousel-kicker,
+.seerah-carousel-caption span {
+  display: block;
+  margin-bottom: 6px;
+  color: #FBBF24;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: var(--font-heading);
+}
+
+.seerah-carousel-placeholder strong,
+.seerah-carousel-caption strong {
+  display: block;
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+  line-height: 1.3;
+}
+
+.seerah-carousel-placeholder span:last-child,
+.seerah-carousel-caption em {
+  display: block;
+  margin-top: 8px;
+  color: rgba(226, 232, 240, 0.86);
+  font-size: 0.95rem;
+  font-style: normal;
+  line-height: 1.55;
+}
+
+.seerah-carousel-note {
+  text-align: center;
+  margin: 16px 0 0;
+  font-size: 0.92rem;
+}
+
+.seerah-carousel-note a {
+  color: #FBBF24;
+  font-weight: 700;
+}
+
+.seerah-section-header {
+  margin-bottom: 22px;
+}
+
+.seerah-mobile-showcase {
+  display: none;
+}
+
+.seerah-program-grid {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.seerah-program-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.seerah-program-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: rgba(251, 191, 36, 0.14);
+  color: #FBBF24;
+}
+
+.seerah-program-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.seerah-program-card h3 {
+  margin: 0 0 2px;
+  color: #F8FAFC;
+  font-size: 0.98rem;
+}
+
+.seerah-program-card p {
+  margin: 0;
+  color: #94A3B8;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.seerah-mobile-speakers .sirah-speaker-card img {
+  filter: none;
+}
+
+.seerah-carousel-slide,
+.sirah-mini-slide {
+  touch-action: pan-y;
+}
+
+.sirah-pay-card-labels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.sirah-pay-card-labels .sirah-pay-kicker,
+.sirah-pay-card-labels .sirah-pay-modal-badge {
+  margin-bottom: 0;
+}
+
+.sirah-copy-label-short {
+  display: none;
+}
+
+.sirah-sticky-cta {
+  display: none;
+}
+
+.sirah-pay-card {
+  margin: 0 auto;
+  padding: 24px 22px 20px;
+  border-radius: 22px;
+  background: #0B1220;
+  border: 1px solid rgba(244, 114, 182, 0.45);
+  box-shadow: 0 18px 48px rgba(226, 19, 110, 0.12);
+}
+
+.sirah-pay-card-head {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.sirah-pay-card-head h3 {
+  color: #F8FAFC;
+  justify-content: center;
+  margin: 10px 0 12px;
+}
+
+.sirah-pay-card-head p {
+  max-width: 520px;
+  margin: 0 auto;
+  color: var(--color-text-muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.sirah-pay-card .sirah-pay-modal-badge {
+  background: #E2136E;
+}
+
+.sirah-pay-card .sirah-pay-hero strong {
+  color: #F9A8D4;
+}
+
+.sirah-pay-copy-all {
+  width: 100%;
+  justify-content: center;
+  margin-top: 0;
+  min-height: 48px;
+  padding: 12px 16px;
+  gap: 8px;
+}
+
+.sirah-form-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sirah-glimpse-section {
+  padding-top: 12px;
+  padding-bottom: 80px;
+}
+
+.sirah-glimpse-section .sirah-mini-slideshow {
+  width: min(100%, 920px);
+}
+
+.seerah-details-wrap {
+  max-width: 860px;
+}
+
+.seerah-details-banner {
+  margin-bottom: 28px;
+}
+
+.seerah-details-copy {
+  font-family: var(--font-bangla);
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: #E5E7EB;
+}
+
+.seerah-details-copy h2 {
+  margin-bottom: 14px;
+  color: #F8FAFC;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+}
+
+.seerah-details-copy p {
+  margin-bottom: 14px;
+}
+
+.seerah-details-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0 0 22px;
+}
+
+.seerah-details-pills li {
+  padding: 8px 14px;
+  border-radius: 9999px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  color: #FDE68A;
+  font-weight: 700;
+}
+
+.seerah-details-highlight {
+  margin: 0 0 24px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.28);
+}
+
+.seerah-details-highlight strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #F8FAFC;
+  font-size: 1.12rem;
+}
+
+.seerah-details-highlight p {
+  margin: 0;
+}
+
+.seerah-detail-card {
+  margin: 0 0 18px;
+  padding: 20px 22px;
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.seerah-detail-cover {
+  display: block;
+  width: 100%;
+  max-height: 280px;
+  margin: 0 0 16px;
+  object-fit: contain;
+  background: #0B1220;
+  border-radius: 12px;
+}
+
+.seerah-detail-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: #FBBF24;
+}
+
+.seerah-detail-card-head svg {
+  width: 20px;
+  height: 20px;
+}
+
+.seerah-detail-card-head h3 {
+  margin: 0;
+  color: #F8FAFC;
+  font-size: 1.2rem;
+}
+
+.seerah-details-note,
+.seerah-details-close {
+  font-weight: 700;
+  color: #FDE68A;
+}
+
+.seerah-details-links a {
+  color: #FBBF24;
+  font-weight: 700;
+}
+
+.seerah-schedule {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 0;
+}
+
+.seerah-schedule li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(7, 9, 19, 0.45);
+}
+
+.seerah-schedule svg {
+  width: 18px;
+  height: 18px;
+  margin-top: 4px;
+  flex-shrink: 0;
+  color: #FBBF24;
+}
+
+.seerah-details-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+@media (max-width: 760px) {
+  .sirah-form-head {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .sirah-form-details-link {
+    display: none;
+  }
+
+  .sirah-form-title-rest {
+    display: none;
+  }
+
+  .seerah-mobile-showcase {
+    display: none;
+  }
+
+  .seerah-highlights-carousel {
+    display: block;
+  }
+
+  .seerah-mobile-speakers {
+    gap: 8px;
+  }
+
+  .seerah-mobile-speakers .sirah-speaker-photo {
+    padding: 0;
+  }
+
+  .seerah-mobile-speakers .sirah-speaker-card img {
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .seerah-mobile-speakers .sirah-speaker-card figcaption {
+    padding: 8px 8px 10px;
+  }
+
+  .seerah-carousel-slide {
+    min-height: 280px;
+  }
+
+  .seerah-carousel-contest.has-image,
+  .seerah-carousel-contest-designed {
+    min-height: 0;
+  }
+
+  .seerah-poster-carousel {
+    position: relative;
+    inset: auto;
+    min-height: 0;
+  }
+
+  .seerah-carousel-contest-designed .sirah-mini-nav {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+  }
+
+  .seerah-poster-body {
+    padding: 46px 16px 18px;
+  }
+
+  .seerah-poster-kicker {
+    margin-bottom: 10px;
+  }
+
+  .seerah-poster-rule {
+    margin: 10px auto 8px;
+  }
+
+  .seerah-poster-bn {
+    margin-bottom: 10px;
+    font-size: 0.98rem;
+  }
+
+  .seerah-poster-meta,
+  .seerah-poster-guests {
+    margin-bottom: 10px;
+  }
+
+  .seerah-poster-guest {
+    font-size: 0.78rem;
+    padding: 6px 10px;
+  }
+
+  .seerah-poster-title span {
+    font-size: clamp(1.15rem, 5.4vw, 1.55rem);
+  }
+
+  .seerah-poster-title strong {
+    font-size: clamp(2.35rem, 13vw, 3.5rem);
+    letter-spacing: -0.045em;
+  }
+
+  .seerah-poster-mark {
+    font-size: clamp(6.2rem, 34vw, 10rem);
+    right: 2%;
+  }
+
+  .seerah-poster-quiz .seerah-poster-glow {
+    background: radial-gradient(circle at 50% 22%, rgba(251, 191, 36, 0.3), transparent 48%);
+  }
+
+  .seerah-poster-writing .seerah-poster-glow {
+    background: radial-gradient(circle at 50% 22%, rgba(56, 189, 248, 0.3), transparent 48%);
+  }
+
+  .seerah-poster-seminar .seerah-poster-glow {
+    background: radial-gradient(circle at 50% 20%, rgba(192, 132, 252, 0.32), transparent 50%);
+  }
+
+  .seerah-poster-conference .seerah-poster-glow {
+    background:
+      radial-gradient(circle at 50% 38%, rgba(255, 251, 235, 0.4), transparent 20%),
+      radial-gradient(circle at 50% 28%, rgba(251, 191, 36, 0.5), transparent 46%);
+  }
+
+  .seerah-poster-carousel .seerah-poster-caption {
+    display: none;
+  }
+
+  .seerah-poster-corner {
+    width: 26px;
+    height: 26px;
+  }
+
+  .seerah-poster-cover {
+    min-height: 200px;
+  }
+
+  .seerah-speaker-slide {
+    grid-template-columns: minmax(0, 1fr) minmax(150px, 0.85fr);
+    min-height: 280px;
+    padding: 44px 16px 0 16px;
+    gap: 8px 10px;
+  }
+
+  .seerah-speaker-copy {
+    padding: 8px 0 18px;
+  }
+
+  .seerah-speaker-copy strong {
+    font-size: 1.2rem;
+  }
+
+  .seerah-speaker-copy em {
+    font-size: 0.88rem;
+  }
+
+  .seerah-speaker-photo-wrap {
+    padding-top: 20px;
+  }
+
+  .seerah-speaker-photo-wrap img {
+    height: 250px;
+  }
+
+  .sirah-pay-card {
+    padding: 18px 14px 16px;
+    border-radius: 18px;
+  }
+
+  .sirah-page .form-card {
+    padding: 20px 16px 18px;
+    border-radius: 18px;
+  }
+
+  .sirah-page .form-control,
+  .sirah-page select.form-control {
+    font-size: 16px;
+    min-height: 48px;
+  }
+
+  .sirah-page .radio-card-btn {
+    min-height: 48px;
+  }
+
+  .sirah-banner {
+    min-height: 100svh;
+    min-height: 100dvh;
+    padding: 76px 0 52px;
+  }
+
+  .sirah-banner-copy h1 {
+    font-size: clamp(1.55rem, 6.5vw, 2.05rem);
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+
+  .sirah-prophet-honorific {
+    margin: 28px auto 22px;
+    padding: 6px 8px 8px;
+  }
+
+  .sirah-prophet-arabic-wrap {
+    margin: 0 auto 6px;
+  }
+
+  .sirah-prophet-arabic {
+    margin-top: 0;
+    font-size: clamp(3rem, 14vw, 4.8rem);
+  }
+
+  .sirah-prophet-english {
+    font-size: 1.15rem;
+    letter-spacing: 0.1em;
+  }
+
+  .sirah-prophet-salawat {
+    font-size: 1.05rem;
+  }
+
+  .sirah-banner-copy .eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .sirah-hero-subtext-full {
+    display: none;
+  }
+
+  .sirah-hero-subtext-short {
+    display: block;
+    max-width: 34rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .sirah-hero-meta {
+    margin-top: 10px;
+    gap: 6px;
+  }
+
+  .sirah-hero-meta span {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+
+  .sirah-hero-actions {
+    margin-top: 12px;
+    gap: 8px;
+  }
+
+  .sirah-hero-actions .btn {
+    flex: 1 1 140px;
+    width: auto;
+    min-height: 44px;
+  }
+
+  .sirah-scroll-down {
+    bottom: 14px;
+    min-width: 136px;
+    padding: 10px 18px 8px;
+  }
+
+  .sirah-scroll-down span {
+    display: block;
+    font-size: 0.76rem;
+  }
+
+  .sirah-scroll-down svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .seerah-carousel-section,
+  .sirah-register-section {
+    padding-top: 36px;
+    padding-bottom: 36px;
+  }
+
+  .seerah-section-header {
+    margin-bottom: 16px;
+  }
+
+  .seerah-section-header h2 {
+    font-size: 1.35rem;
+  }
+
+  .seerah-section-header p {
+    font-size: 0.92rem;
+    margin-top: 8px;
+  }
+
+  .sirah-mini-nav {
+    width: 42px;
+    height: 42px;
+  }
+
+  .sirah-mini-nav.prev { left: 8px; }
+  .sirah-mini-nav.next { right: 8px; }
+
+  .sirah-mini-slide {
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .sirah-mini-caption {
+    padding: 14px 16px 12px;
+  }
+
+  .sirah-fee-badge,
+  .sirah-pay-card-head p {
+    display: none;
+  }
+
+  .sirah-pay-card-head h3 {
+    font-size: 1.05rem;
+    margin: 8px 0 12px;
+  }
+
+  .sirah-pay-amount,
+  .sirah-pay-hero,
+  .sirah-pay-row {
+    flex-wrap: wrap;
+  }
+
+  .sirah-pay-hero strong {
+    font-size: 1.18rem;
+  }
+
+  .sirah-pay-copy {
+    min-height: 42px;
+  }
+
+  .sirah-pay-copy-hero {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sirah-copy-label-full {
+    display: none;
+  }
+
+  .sirah-copy-label-short {
+    display: inline;
+  }
+
+  .sirah-pay-steps {
+    font-size: 0.88rem;
+    gap: 7px;
+    padding: 12px 14px;
+  }
+
+  .sirah-pay-steps li {
+    column-gap: 8px;
+  }
+
+  .sirah-pay-copy-all {
+    min-height: 46px;
+    padding: 11px 14px;
+    white-space: normal;
+  }
+
+  .sirah-glimpse-section {
+    padding-top: 8px;
+    padding-bottom: 28px;
+  }
+
+  .sirah-page,
+  .seerah-details-page {
+    padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .sirah-sticky-cta {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 10px 10px 16px;
+    border-radius: 18px;
+    background: rgba(11, 18, 32, 0.94);
+    border: 1px solid rgba(139, 92, 246, 0.35);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .sirah-sticky-cta-copy {
+    min-width: 0;
+  }
+
+  .sirah-sticky-cta-copy strong,
+  .sirah-sticky-cta-copy span {
+    display: block;
+  }
+
+  .sirah-sticky-cta-copy strong {
+    color: #F8FAFC;
+    font-size: 0.92rem;
+  }
+
+  .sirah-sticky-cta-copy span {
+    color: #94A3B8;
+    font-size: 0.74rem;
+  }
+
+  .sirah-sticky-cta .btn {
+    width: auto;
+    min-width: 108px;
+    min-height: 44px;
+    padding: 10px 16px;
+    white-space: nowrap;
+  }
+
+  .seerah-details-page .page-header-banner {
+    padding: 108px 0 28px !important;
+  }
+
+  .seerah-details-page .page-header-logo-wrap {
+    display: none;
+  }
+
+  .seerah-details-page .page-title {
+    font-size: 1.7rem;
+    line-height: 1.2;
+  }
+
+  .seerah-details-page .page-description {
+    font-size: 0.92rem;
+  }
+
+  .seerah-details-banner {
+    margin-bottom: 18px;
+  }
+
+  .seerah-event-cover .seerah-poster-cover {
+    min-height: 280px;
+  }
+
+  .seerah-event-cover .seerah-poster-cover .seerah-poster-body {
+    padding: 28px 16px 22px;
+  }
+
+  .seerah-details-copy {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .seerah-details-copy h2 {
+    font-size: 1.4rem;
+  }
+
+  .seerah-details-pills {
+    gap: 8px;
+  }
+
+  .seerah-details-highlight,
+  .seerah-detail-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .seerah-detail-card-head h3 {
+    font-size: 1.08rem;
+  }
+
+  .seerah-schedule li {
+    padding: 12px;
+  }
+
+  .seerah-details-cta .btn {
+    width: 100%;
+  }
+
+  .seerah-details-cta {
+    margin-top: 20px;
+  }
 }
 
 

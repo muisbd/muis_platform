@@ -3,14 +3,28 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
+function isSeerahPath(path) {
+  if (!path) return false;
+  return path === '/seerah-2026'
+    || path.startsWith('/seerah-2026/')
+    || path === '/sirah-2026'
+    || path.startsWith('/sirah-2026/');
+}
+
 export default function Preloader() {
   const pathname = usePathname();
-  const [visible, setVisible] = useState(true);
+  const skipLogo = isSeerahPath(pathname);
+  const [visible, setVisible] = useState(!skipLogo);
   const [fading, setFading] = useState(false);
   const isFirst = useRef(true);
   const dismissedRef = useRef(false);
 
   useEffect(() => {
+    if (skipLogo) {
+      document.body.style.overflow = '';
+      return undefined;
+    }
+
     document.body.style.overflow = 'hidden';
     dismissedRef.current = false;
 
@@ -43,12 +57,19 @@ export default function Preloader() {
       clearTimeout(loadTimer);
       clearTimeout(fallbackTimer);
     };
-  }, []);
+  }, [skipLogo]);
 
   useEffect(() => {
     if (isFirst.current) {
       isFirst.current = false;
       return;
+    }
+
+    if (isSeerahPath(pathname)) {
+      setVisible(false);
+      setFading(false);
+      document.body.style.overflow = '';
+      return undefined;
     }
 
     dismissedRef.current = false;

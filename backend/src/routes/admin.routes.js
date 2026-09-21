@@ -293,25 +293,53 @@ router.patch('/sirah/:id', requireRoles('admin', 'moderator', 'treasurer'), asyn
   doc.status = nextStatus;
   doc.adminNote = req.body.adminNote || doc.adminNote;
   if (nextStatus === 'accepted') {
-    doc.ticketCode = doc.ticketCode || `SIRAH26-${doc._id.toString().slice(-6).toUpperCase()}`;
-    await sendMail({
+    doc.ticketCode = doc.ticketCode || `SEERAH26-${doc._id.toString().slice(-6).toUpperCase()}`;
+  }
+  await doc.save();
+
+  let mail = { skipped: true };
+  if (nextStatus === 'accepted') {
+    mail = await sendMail({
       to: doc.email,
-      subject: 'Sirah 2026 — registration accepted',
+      subject: 'Seerah Conference 2026 — registration confirmed',
       html: wrapEmail(
-        'You are registered',
-        `<p>Assalamu alaikum ${doc.name},</p><p>Your Sirah Conference 2026 registration is accepted.</p><p>Reference: <strong>${doc.ticketCode}</strong></p>`
+        'Your registration is confirmed',
+        `<p>Assalamu alaikum ${doc.name},</p>
+        <p>MUIS has approved your <strong>Seerah Conference 2026</strong> registration.</p>
+        <p>This one registration covers the Seerah Quiz, Writing Contest, and Seerah Seminar.</p>
+        <p><strong>Date:</strong> 17 October<br/>
+        <strong>Writing contest deadline:</strong> 14 October 2026<br/>
+        <strong>Reference:</strong> ${doc.ticketCode}<br/>
+        <strong>Student ID:</strong> ${doc.studentId}</p>
+        <p>Please keep this email. Event details: ${env.frontendUrl}/seerah-2026/details</p>
+        <p>Wassalam,<br/>Metropolitan University Islamic Society (MUIS)</p>`
       )
     });
   }
   if (nextStatus === 'rejected') {
-    await sendMail({
+    mail = await sendMail({
       to: doc.email,
-      subject: 'Sirah 2026 — registration update',
-      html: wrapEmail('Registration update', `<p>Assalamu alaikum ${doc.name},</p><p>${doc.adminNote || 'Your Sirah 2026 registration was not accepted.'}</p>`)
+      subject: 'Seerah Conference 2026 — registration update',
+      html: wrapEmail(
+        'Registration update',
+        `<p>Assalamu alaikum ${doc.name},</p><p>${doc.adminNote || 'Your Seerah Conference 2026 registration was not accepted.'}</p><p>Wassalam,<br/>Metropolitan University Islamic Society (MUIS)</p>`
+      )
     });
   }
-  await doc.save();
-  res.json({ ok: true, doc });
+
+  const emailed = nextStatus === 'pending_review' ? null : !mail.skipped;
+  let message = 'Saved.';
+  if (nextStatus === 'accepted') {
+    message = emailed
+      ? `Approved. Confirmation email sent to ${doc.email}.`
+      : `Approved, but the confirmation email did not send${mail.error ? `: ${mail.error}` : '.'}`;
+  } else if (nextStatus === 'rejected') {
+    message = emailed
+      ? `Rejected. Update email sent to ${doc.email}.`
+      : `Rejected, but the update email did not send${mail.error ? `: ${mail.error}` : '.'}`;
+  }
+
+  res.json({ ok: true, doc, emailSent: emailed, message });
 }));
 
 router.get('/sirah-updates', requireRoles('admin', 'moderator', 'treasurer'), asyncHandler(async (_req, res) => {

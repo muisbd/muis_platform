@@ -146,7 +146,7 @@ export default function ProgressPage() {
     <div className="page-container page-fade-enter">
       <PageHeader
         title="Private daily progress"
-        description="Your salah and character log. Only you can see it — MUIS staff cannot."
+        description="Your salah and character log. Only you can see it. MUIS staff cannot."
         eyebrow="Personal journal"
       />
       <section className="section progress-section">
@@ -154,7 +154,7 @@ export default function ProgressPage() {
           <form className="progress-notebook" onSubmit={save}>
             <div className="progress-notebook-top">
               <div className="progress-lock-note">
-                <Lock size={16} /> Private — not visible to admin
+                <Lock size={16} /> Private. Not visible to admin
               </div>
               <div className="progress-stats">
                 <div className="progress-stat">

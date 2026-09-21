@@ -8,7 +8,9 @@ const nextConfig = {
   outputFileTracingRoot: path.join(__dirname, '..'),
   async redirects() {
     return [
-      { source: '/index.html', destination: '/', permanent: false }
+      { source: '/index.html', destination: '/', permanent: false },
+      { source: '/sirah-2026', destination: '/seerah-2026', permanent: false },
+      { source: '/sirah-2026/:path*', destination: '/seerah-2026/:path*', permanent: false }
     ];
   }
 };

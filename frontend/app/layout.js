@@ -6,6 +6,7 @@ import HashRedirect from '../src/components/HashRedirect.js';
 import Providers from '../src/components/Providers.js';
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://muis.bd'),
   title: 'Metropolitan University Islamic Society (MUIS) | Community, Faith & Excellence',
   description: 'Welcome to Metropolitan University Islamic Society (MUIS). Providing prayer facilities, educational halaqas, community events, charity drives, and a warm sanctuary for students.',
   openGraph: {
@@ -25,7 +26,7 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
       </head>
       <body>
         <Providers>

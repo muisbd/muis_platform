@@ -14,12 +14,14 @@ export default function Header() {
   const { user, isLoggedIn, isStaff, isMember, isPendingMember, logout, ready } = useAuth();
 
   const isHomePage = pathname === '/' || pathname === '' || pathname === '/index.html';
-  const isHeroPage = isHomePage || pathname.startsWith('/sirah-2026');
+  const isSeerahHero = pathname === '/seerah-2026' || pathname === '/sirah-2026';
+  const isSeerahPage = pathname.startsWith('/seerah-2026') || pathname.startsWith('/sirah-2026');
+  const isHeroPage = isHomePage || isSeerahHero;
   const headerClass = isHeroPage ? 'header header-transparent' : 'header header-inner';
 
   const getActiveClass = (route) => {
     if (route === '/' && isHomePage) return 'active';
-    if (route === '/events-programs' && pathname.startsWith('/sirah-2026')) return 'active';
+    if (route === '/events-programs' && isSeerahPage) return 'active';
     return pathname.startsWith(route) && route !== '/' ? 'active' : '';
   };
 

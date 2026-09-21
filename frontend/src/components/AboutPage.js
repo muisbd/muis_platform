@@ -38,7 +38,7 @@ export default function AboutPage() {
                 &quot;Whether you are a fresh student embarking on your university journey or a returning student seeking community, MUIS offers a space where you can belong, grow spiritually, and make lifelong friends. We invite you to join our circles and make the most of your university years.&quot;
               </p>
               <div style={{ marginTop: 20, borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: 12, fontWeight: 700, color: '#C084FC' }}>
-                — Safwan Uddin Ahmed, MUIS President (Head of EEE)
+                Safwan Uddin Ahmed, MUIS President (Head of EEE)
               </div>
             </div>
           </div>

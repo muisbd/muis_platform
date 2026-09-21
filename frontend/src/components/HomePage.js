@@ -11,9 +11,10 @@ import HeroCanvas from './HeroCanvas.js';
 import HeroTypewriter from './HeroTypewriter.js';
 import PhotoSlideshow from './PhotoSlideshow.js';
 import ScrollReveal, { AboutScrollSection } from './ScrollReveal.js';
-import SirahBannerImage from './SirahBannerImage.js';
+import SeerahEventCover from './SeerahEventCover.js';
 import { api, mapEvent } from '../lib/api.js';
 import { UPCOMING_EVENTS } from '../data/eventsData.js';
+import { WRITING_CONTEST_DEADLINE_EN } from '../data/sirahSpeakers.js';
 
 export default function HomePage() {
   const [faqOpen, setFaqOpen] = useState(-1);
@@ -225,24 +226,25 @@ export default function HomePage() {
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="section-header" style={{ marginBottom: 24 }}>
             <div className="eyebrow" style={{ color: '#FBBF24' }}>Open registration</div>
-            <h2>Sirah Conference 2026</h2>
+            <h2>Seerah Conference 2026</h2>
           </div>
 
           <div className="compact-event-card sirah-promo-card" style={{ marginBottom: 28 }}>
-            <figure className="sirah-banner-frame sirah-promo-banner">
-              <SirahBannerImage />
-            </figure>
+            <SeerahEventCover className="sirah-promo-banner" />
             <div className="compact-event-body">
               <div className="compact-event-meta">
                 <span className="compact-tag-purple">Flagship Conference</span>
                 <span className="compact-tag-emerald"><ShieldCheck /> Open registration</span>
                 <span className="compact-tag-gold">150 BDT</span>
               </div>
-              <h3 className="compact-event-title">Sirah Conference 2026</h3>
-              <p className="compact-event-desc">Registration fee 150 BDT. Pay, then register with your name, student ID, phone, email, department, and TrxID. MUIS approves your seat after checking payment.</p>
-              <div className="compact-event-action">
-                <Link href="/sirah-2026" className="btn btn-vibrant-primary btn-sm">
-                  Register at muis.bd/sirah-2026 <ExternalLink />
+              <h3 className="compact-event-title">Seerah Conference 2026</h3>
+              <p className="compact-event-desc">One registration covers Seerah Quiz, Writing Contest, and Seerah Seminar. Writing contest deadline {WRITING_CONTEST_DEADLINE_EN}. Pay 150 BDT with bKash, then submit your details and TrxID.</p>
+              <div className="compact-event-action" style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                <Link href="/seerah-2026" className="btn btn-vibrant-primary btn-sm">
+                  Register at muis.bd/seerah-2026 <ExternalLink />
+                </Link>
+                <Link href="/seerah-2026/details" className="btn btn-outline btn-sm">
+                  Event details
                 </Link>
               </div>
             </div>
