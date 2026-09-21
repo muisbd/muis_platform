@@ -6,6 +6,7 @@
 
 /* Google Fonts Import */
 @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+@import url('https://fonts.maateen.me/solaiman-lipi/font.css');
 
 /* --- CSS Variables - Dark Obsidian & Vibrant Multi-Gradient --- */
 :root {
@@ -29,10 +30,10 @@
   --color-text-light: #6B7280;
   --color-text-on-navy: #FFFFFF;
 
-  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'SolaimanLipi', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', 'SolaimanLipi', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-arabic: 'Amiri', serif;
-  --font-bangla: 'Noto Sans Bengali', 'Inter', sans-serif;
+  --font-bangla: 'SolaimanLipi', 'Noto Sans Bengali', 'Inter', sans-serif;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -68,6 +69,10 @@ html, body {
   overflow-x: hidden;
   width: 100%;
   min-height: 100vh;
+}
+
+[lang="bn"], .text-bn, .bangla-text {
+  font-family: var(--font-bangla) !important;
 }
 
 #app {
@@ -7711,13 +7716,46 @@ select.form-control option {
   margin-bottom: 4px;
 }
 
-.sirah-pay-card-labels .sirah-pay-kicker,
-.sirah-pay-card-labels .sirah-pay-modal-badge {
-  margin-bottom: 0;
+.sirah-pay-kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  color: #FBBF24;
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
 }
 
-.sirah-copy-label-short {
-  display: none;
+.sirah-pay-kicker svg {
+  width: 19px;
+  height: 19px;
+  color: #FBBF24;
+  flex-shrink: 0;
+}
+
+.sirah-form-head-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sirah-event-details-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .sirah-sticky-cta {
@@ -7726,47 +7764,158 @@ select.form-control option {
 
 .sirah-pay-card {
   margin: 0 auto;
-  padding: 24px 22px 20px;
-  border-radius: 22px;
-  background: #0B1220;
-  border: 1px solid rgba(244, 114, 182, 0.45);
-  box-shadow: 0 18px 48px rgba(226, 19, 110, 0.12);
+  padding: 22px 24px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #0F172A 0%, #111C35 100%);
+  border: 1px solid rgba(226, 19, 110, 0.35);
+  box-shadow: 0 16px 40px rgba(226, 19, 110, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
 }
 
-.sirah-pay-card-head {
-  text-align: center;
-  margin-bottom: 16px;
+.sirah-pay-fee-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.sirah-pay-card-head h3 {
+.sirah-pay-fee-label {
+  font-size: 0.88rem;
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.sirah-pay-fee-value {
+  font-size: 1.25rem;
+  font-weight: 800;
   color: #F8FAFC;
-  justify-content: center;
-  margin: 10px 0 12px;
+  letter-spacing: 0.02em;
 }
 
-.sirah-pay-card-head p {
-  max-width: 520px;
-  margin: 0 auto;
-  color: var(--color-text-muted);
-  font-size: 0.94rem;
-  line-height: 1.55;
+.sirah-pay-number-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: rgba(226, 19, 110, 0.08);
+  border: 1px dashed rgba(226, 19, 110, 0.4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
 }
 
-.sirah-pay-card .sirah-pay-modal-badge {
+.sirah-pay-number-box:hover {
+  background: rgba(226, 19, 110, 0.14);
+  border-color: rgba(226, 19, 110, 0.6);
+  transform: translateY(-1px);
+}
+
+.sirah-pay-number-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sirah-pay-number-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #F8FAFC;
+  font-family: monospace, var(--font-sans);
+}
+
+.sirah-pay-send-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 9999px;
   background: #E2136E;
+  color: #FFFFFF;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(226, 19, 110, 0.4);
 }
 
-.sirah-pay-card .sirah-pay-hero strong {
-  color: #F9A8D4;
+.sirah-pay-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #F8FAFC;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
 }
 
-.sirah-pay-copy-all {
-  width: 100%;
-  justify-content: center;
-  margin-top: 0;
-  min-height: 48px;
-  padding: 12px 16px;
-  gap: 8px;
+.sirah-pay-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.sirah-pay-copy-btn.copied,
+.sirah-pay-number-box.copied .sirah-pay-copy-btn {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: rgba(52, 211, 153, 0.6);
+  color: #6EE7B7;
+}
+
+.sirah-pay-copy-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.sirah-pay-copy-tooltip {
+  position: absolute;
+  bottom: -36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: #10B981;
+  color: #FFFFFF;
+  font-size: 0.78rem;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+  animation: fadeInTooltip 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.sirah-pay-copy-tooltip svg {
+  width: 13px;
+  height: 13px;
+}
+
+@keyframes fadeInTooltip {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
 .sirah-form-head {

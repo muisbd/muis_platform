@@ -369,10 +369,10 @@ export default function SirahConferencePage() {
                 <span className="sirah-prophet-salawat" lang="ar">صلى الله عليه وسلم</span>
               </div>
               <p className="hero-subtext sirah-hero-subtext-full">
-                One registration for three programs: Seerah Quiz, Writing Contest, and Seerah Seminar. Writing contest deadline {WRITING_CONTEST_DEADLINE_EN}.
+                One registration for three programs: Seerah Quiz, Writing Contest, and Seerah Seminar.
               </p>
               <p className="hero-subtext sirah-hero-subtext-short">
-                One registration covers Quiz, Writing Contest, and Seminar. Writing deadline {WRITING_CONTEST_DEADLINE_EN}.
+                One registration covers Quiz, Writing Contest, and Seminar.
               </p>
               <div className="sirah-hero-meta">
                 <span><Calendar /> 17 Oct · Saturday</span>
@@ -395,30 +395,13 @@ export default function SirahConferencePage() {
           type="button"
           className="sirah-scroll-down"
           onClick={() => {
-            document.getElementById('seerah-programs')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('sirah-register')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }}
           aria-label="Scroll down to see more"
         >
           <span>Scroll down</span>
           <ChevronDown />
         </button>
-      </section>
-
-      <section id="seerah-programs" className="section seerah-carousel-section">
-        <div className="container">
-          <div className="section-header seerah-section-header">
-            <div className="eyebrow" style={{ color: '#FBBF24' }}><Sparkles /> This year’s highlights</div>
-            <h2>What’s on at Seerah 2026</h2>
-            <p>Quiz, writing contest, and seminar. One registration. Writing contest deadline {WRITING_CONTEST_DEADLINE_EN}.</p>
-          </div>
-
-          <div className="seerah-highlights-carousel">
-            <SeerahCarousel slides={SEERAH_CAROUSEL} />
-          </div>
-          <p className="seerah-carousel-note">
-            <Link href="/seerah-2026/details">Read full event details</Link>
-          </p>
-        </div>
       </section>
 
       <section id="sirah-register" className="section sirah-register-section">
@@ -463,80 +446,57 @@ export default function SirahConferencePage() {
           ) : (
             <>
               <div className="sirah-pay-card sirah-pay-card-bkash">
-                <div className="sirah-pay-card-head">
-                  <div className="sirah-pay-card-labels">
-                    <span className="sirah-pay-kicker"><Wallet /> Step 1 · Pay with bKash</span>
-                    <span className="sirah-pay-modal-badge">Send Money</span>
-                  </div>
-                  <h3><Smartphone /> bKash Payment Info</h3>
-                  <div className="sirah-fee-badge">
-                    <Banknote />
-                    Registration fee <strong>{REGISTRATION_FEE_LABEL}</strong>
-                  </div>
-                  <p>Send {REGISTRATION_FEE_LABEL} to this personal bKash number, then paste the TrxID in the form below.</p>
+                <div className="sirah-pay-card-labels" style={{ justifyContent: 'center' }}>
+                  <span className="sirah-pay-kicker"><Wallet /> Step 1 · Pay with bKash</span>
                 </div>
-                <div className="sirah-pay-amount">
-                  <div className="sirah-pay-amount-text">
-                    <span>Registration fee</span>
-                    <strong>{REGISTRATION_FEE_LABEL}</strong>
-                  </div>
-                  <button
-                    type="button"
-                    className={`sirah-pay-copy${copied === 'fee' ? ' copied' : ''}`}
-                    onClick={() => copyValue(REGISTRATION_FEE, 'fee')}
-                  >
-                    {copied === 'fee' ? <Check /> : <Copy />}
-                    {copied === 'fee' ? 'Copied' : 'Copy 150'}
-                  </button>
+
+                <div className="sirah-pay-fee-row">
+                  <span className="sirah-pay-fee-label">Registration fee</span>
+                  <strong className="sirah-pay-fee-value">{REGISTRATION_FEE_LABEL}</strong>
                 </div>
-                <div className="sirah-pay-hero">
-                  <span>bKash number</span>
-                  <strong>{BKASH_NUMBER}</strong>
-                  <button
-                    type="button"
-                    className={`sirah-pay-copy sirah-pay-copy-hero${copied === 'hero' ? ' copied' : ''}`}
-                    onClick={() => copyValue(BKASH_NUMBER, 'hero')}
-                  >
-                    {copied === 'hero' ? <Check /> : <Copy />}
-                    {copied === 'hero' ? 'Copied' : 'Copy number'}
-                  </button>
-                </div>
-                <div className="sirah-pay-rows">
-                  <PaymentCopyRow
-                    field={{ key: 'type', label: 'Account type', value: 'Personal (Send Money)', copyable: false }}
-                    copied={copied}
-                    onCopy={copyValue}
-                  />
-                </div>
-                <ol className="sirah-pay-steps">
-                  <li>Open the bKash app</li>
-                  <li>Tap Send Money</li>
-                  <li>Paste the number and send {REGISTRATION_FEE_LABEL}</li>
-                  <li>Copy the TrxID into the form</li>
-                </ol>
-                <button
-                  type="button"
-                  className="btn btn-outline sirah-pay-copy-all"
-                  onClick={() => copyValue(BKASH_COPY_ALL, 'all')}
+
+                <div
+                  className={`sirah-pay-number-box${copied === 'number' || copied === 'hero' ? ' copied' : ''}`}
+                  onClick={() => copyValue(BKASH_NUMBER, 'number')}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') copyValue(BKASH_NUMBER, 'number'); }}
+                  title="Click to copy bKash number"
                 >
-                  {copied === 'all' ? <Check /> : <Copy />}
-                  <span className="sirah-copy-label-full">{copied === 'all' ? 'Copied all details' : 'Copy bKash number & amount'}</span>
-                  <span className="sirah-copy-label-short">{copied === 'all' ? 'Copied' : 'Copy all details'}</span>
-                </button>
+                  <div className="sirah-pay-number-left">
+                    <span className="sirah-pay-number-val">{BKASH_NUMBER}</span>
+                    <span className="sirah-pay-send-badge">Send Money</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    className={`sirah-pay-copy-btn${copied === 'number' || copied === 'hero' ? ' copied' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      copyValue(BKASH_NUMBER, 'number');
+                    }}
+                  >
+                    {copied === 'number' || copied === 'hero' ? <Check /> : <Copy />}
+                    <span>{copied === 'number' || copied === 'hero' ? 'Copied!' : 'Copy'}</span>
+                  </button>
+
+                  {(copied === 'number' || copied === 'hero') && (
+                    <div className="sirah-pay-copy-tooltip">
+                      <Check /> Number copied to clipboard!
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="form-card" style={{ marginTop: 28, maxWidth: 'none' }}>
-                <div className="sirah-form-head">
-                  <div>
-                    <h3 style={{ color: '#F8FAFC', marginBottom: 8 }}>
-                      <BookOpen /> Step 2 · Register<span className="sirah-form-title-rest"> for Seerah 2026</span>
-                    </h3>
-                    <p style={{ color: 'var(--color-text-muted)', marginBottom: 0, fontSize: '0.92rem' }}>
-                      Pay the <strong>{REGISTRATION_FEE_LABEL}</strong> fee first, then enter your TrxID.
-                      This covers the quiz, writing contest, and seminar. Send writing contest entries by {WRITING_CONTEST_DEADLINE_EN}. This is not MUIS membership.
-                    </p>
+                <div className="sirah-form-head-centered">
+                  <div className="sirah-pay-card-labels" style={{ justifyContent: 'center' }}>
+                    <span className="sirah-pay-kicker"><BookOpen /> Step 2 · Register for Seerah 2026</span>
                   </div>
-                  <Link href="/seerah-2026/details" className="btn btn-outline btn-sm sirah-form-details-link">Event details</Link>
+                  <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', marginTop: 12, marginBottom: 14, fontSize: '0.92rem', maxWidth: 620 }}>
+                    Pay the <strong>{REGISTRATION_FEE_LABEL}</strong> fee first, then enter your TrxID.
+                    This covers the quiz, writing contest, and seminar.
+                  </p>
                 </div>
                 <form onSubmit={handleRegister} style={{ marginTop: 20 }}>
                   <div className="form-grid-2">
@@ -567,7 +527,7 @@ export default function SirahConferencePage() {
                       <label>Email *</label>
                       <div className="input-with-icon">
                         <Mail className="input-icon" />
-                        <input name="email" type="email" className="form-control" required placeholder="student@metrouni.edu.bd" autoComplete="email" />
+                        <input name="email" type="email" className="form-control" required placeholder="student@gmail.com" autoComplete="email" />
                       </div>
                     </div>
                   </div>
@@ -591,7 +551,7 @@ export default function SirahConferencePage() {
                           className="form-control"
                           value={batch}
                           onChange={(e) => setBatch(e.target.value)}
-                          placeholder="e.g. 62"
+                          placeholder="e.g. 58th"
                         />
                       </div>
                     </div>
@@ -623,6 +583,23 @@ export default function SirahConferencePage() {
               </div>
             </>
           )}
+        </div>
+      </section>
+
+      <section id="seerah-programs" className="section seerah-carousel-section">
+        <div className="container">
+          <div className="section-header seerah-section-header">
+            <div className="eyebrow" style={{ color: '#FBBF24' }}><Sparkles /> This year’s highlights</div>
+            <h2>What’s on at Seerah 2026</h2>
+            <p>Quiz, writing contest, and seminar. One registration. Writing contest deadline {WRITING_CONTEST_DEADLINE_EN}.</p>
+          </div>
+
+          <div className="seerah-highlights-carousel">
+            <SeerahCarousel slides={SEERAH_CAROUSEL} />
+          </div>
+          <p className="seerah-carousel-note">
+            <Link href="/seerah-2026/details">Read full event details</Link>
+          </p>
         </div>
       </section>
 
