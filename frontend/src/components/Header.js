@@ -19,6 +19,7 @@ export default function Header() {
 
   const getActiveClass = (route) => {
     if (route === '/' && isHomePage) return 'active';
+    if (route === '/events-programs' && pathname.startsWith('/sirah-2026')) return 'active';
     return pathname.startsWith(route) && route !== '/' ? 'active' : '';
   };
 
@@ -59,7 +60,6 @@ export default function Header() {
           <ul className={`nav-menu${menuOpen ? ' open' : ''}`}>
             <li><Link href="/" className={`nav-link ${getActiveClass('/')}`} onClick={closeMenu}>Home</Link></li>
             <li><Link href="/about" className={`nav-link ${getActiveClass('/about')}`} onClick={closeMenu}>About</Link></li>
-            <li><Link href="/sirah-2026" className={`nav-link ${getActiveClass('/sirah-2026')}`} onClick={closeMenu}>Sirah 2026</Link></li>
             <li><Link href="/events-programs" className={`nav-link ${getActiveClass('/events-programs')}`} onClick={closeMenu}>Events & Programs</Link></li>
             <li><Link href="/courses" className={`nav-link ${getActiveClass('/courses')}`} onClick={closeMenu}>Islamic Courses</Link></li>
             <li><Link href="/blogs" className={`nav-link ${getActiveClass('/blogs')}`} onClick={closeMenu}>Blogs</Link></li>
@@ -93,7 +93,6 @@ export default function Header() {
                 {accountOpen ? (
                   <div className="nav-account-menu">
                     {isMember ? <Link href="/courses" onClick={() => setAccountOpen(false)}>Courses</Link> : null}
-                    <Link href="/sirah-2026" onClick={() => setAccountOpen(false)}>Sirah 2026</Link>
                     {isPendingMember ? <span>Membership pending review</span> : null}
                     <button type="button" onClick={() => { setAccountOpen(false); logout(); }}>Logout</button>
                   </div>

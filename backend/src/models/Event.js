@@ -11,7 +11,8 @@ const eventSchema = new mongoose.Schema(
     time: { type: String, default: '' },
     location: { type: String, required: true },
     description: { type: String, required: true },
-    isUpcoming: { type: Boolean, default: false }
+    isUpcoming: { type: Boolean, default: false },
+    pinned: { type: Boolean, default: false }
   },
   { timestamps: true }
 );

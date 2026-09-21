@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PageHeader from './PageHeader.js';
+import AdminContentPanel from './AdminContentPanel.js';
 import { useAuth } from '../context/AuthContext.js';
 import { api } from '../lib/api.js';
 import { showToast } from '../utils/toast.js';
@@ -55,7 +56,7 @@ function csvCell(value) {
 }
 
 function downloadSirahCsv(list, filename) {
-  const headers = ['Name', 'Student ID', 'Phone', 'Email', 'Department', 'Batch', 'Section', 'Payment method', 'TrxID / Paid to', 'Status', 'Reference', 'Submitted'];
+  const headers = ['Name', 'Student ID', 'Phone', 'Email', 'Department', 'Batch', 'Gender', 'Payment method', 'TrxID / Paid to', 'Status', 'Reference', 'Submitted'];
   const lines = [
     headers.join(','),
     ...list.map((row) => [
@@ -65,7 +66,7 @@ function downloadSirahCsv(list, filename) {
       row.email,
       row.department,
       row.batch,
-      row.section,
+      row.gender,
       row.paymentMethod,
       sirahPaymentRef(row),
       row.status,
@@ -83,7 +84,7 @@ function downloadSirahCsv(list, filename) {
 }
 
 function sirahListText(list) {
-  const header = ['Name', 'Student ID', 'Phone', 'Email', 'Department', 'Batch', 'Section', 'Payment', 'TrxID / Paid to'].join('\t');
+  const header = ['Name', 'Student ID', 'Phone', 'Email', 'Department', 'Batch', 'Gender', 'Payment', 'TrxID / Paid to'].join('\t');
   const body = list.map((row) => [
     row.name,
     row.studentId,
@@ -91,7 +92,7 @@ function sirahListText(list) {
     row.email,
     row.department,
     row.batch || '',
-    row.section || '',
+    row.gender || '',
     row.paymentMethod,
     sirahPaymentRef(row)
   ].join('\t'));
@@ -131,9 +132,6 @@ export default function AdminDashboard() {
   const [overview, setOverview] = useState(null);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [eventForm, setEventForm] = useState({ slug: '', title: '', date: '', location: '', description: '', isUpcoming: true });
-  const [courseForm, setCourseForm] = useState({ slug: '', title: '', instructor: '', description: '' });
-  const [magForm, setMagForm] = useState({ slug: '', title: '', issue: '', downloadUrl: '' });
   const [sirahUpdates, setSirahUpdates] = useState([]);
   const [sirahFilter, setSirahFilter] = useState('pending');
 
@@ -166,10 +164,6 @@ export default function AdminDashboard() {
       else if (current === 'magazine') setRows((await api('/admin/magazine-submissions')).list || []);
       else if (current === 'blogs') setRows((await api('/admin/blogs')).list || []);
       else if (current === 'users') setRows((await api('/admin/users')).list || []);
-      else if (current === 'content') {
-        const events = await api('/events');
-        setRows({ upcoming: events.upcoming, past: events.past, weekly: events.weekly });
-      }
     } catch (err) {
       showToast(err.message, true);
     } finally {
@@ -179,6 +173,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (!isStaff) return;
+    if (tab === 'content') return;
     load(tab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, isStaff]);
@@ -403,7 +398,7 @@ export default function AdminDashboard() {
                         <th>Email</th>
                         <th>Dept</th>
                         <th>Batch</th>
-                        <th>Sec</th>
+                        <th>Gender</th>
                         <th>Payment</th>
                         <th></th>
                       </tr>
@@ -418,7 +413,7 @@ export default function AdminDashboard() {
                           <td>{row.email}</td>
                           <td>{row.department || '—'}</td>
                           <td>{row.batch || '—'}</td>
-                          <td>{row.section || '—'}</td>
+                          <td>{row.gender || '—'}</td>
                           <td>
                             <button type="button" className="sirah-inline-copy" onClick={() => copyText(sirahPaymentRef(row), isCashPayment(row) ? 'Name copied' : 'TrxID copied')}>
                               {isCashPayment(row) ? `Cash · ${sirahPaymentRef(row)}` : row.trxId}
@@ -446,7 +441,7 @@ export default function AdminDashboard() {
                     <div className="admin-meta">
                       {row.department || 'Department not given'}
                       {row.batch ? ` · Batch ${row.batch}` : ''}
-                      {row.section ? ` · Sec ${row.section}` : ''}
+                      {row.gender ? ` · ${row.gender}` : ''}
                     </div>
                     <div className="admin-meta">
                       {sirahPaymentLabel(row)}{' '}
@@ -513,11 +508,12 @@ export default function AdminDashboard() {
 
           {tab === 'enrollments' && Array.isArray(rows) ? (
             <div className="admin-table-wrap">
+              <p className="admin-help">Students enrolled in Islamic courses. Open Content → Courses to edit a course and see the same list under each class.</p>
               {rows.map((row) => (
                 <div key={row._id} className="admin-row">
                   <div>
                     <strong>{row.fullName}</strong> · {row.email}
-                    <div className="admin-meta">{row.course?.title} · {row.departmentSemester}</div>
+                    <div className="admin-meta">{row.course?.title} · {row.departmentSemester} · enrolled {fmt(row.createdAt)}</div>
                   </div>
                 </div>
               ))}
@@ -603,83 +599,7 @@ export default function AdminDashboard() {
             </div>
           ) : null}
 
-          {tab === 'content' ? (
-            <div className="admin-content-grid">
-              <form
-                className="form-card"
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  try {
-                    await api('/events', { method: 'POST', body: eventForm });
-                    showToast('Event saved.');
-                    load('content');
-                  } catch (err) {
-                    showToast(err.message, true);
-                  }
-                }}
-              >
-                <h3 style={{ color: 'var(--color-navy)' }}>Add event</h3>
-                <input className="form-control" placeholder="slug (dawah-2027)" required value={eventForm.slug} onChange={(e) => setEventForm({ ...eventForm, slug: e.target.value })} />
-                <input className="form-control" placeholder="Title" required value={eventForm.title} onChange={(e) => setEventForm({ ...eventForm, title: e.target.value })} />
-                <input className="form-control" placeholder="Date label" required value={eventForm.date} onChange={(e) => setEventForm({ ...eventForm, date: e.target.value })} />
-                <input className="form-control" placeholder="Location" required value={eventForm.location} onChange={(e) => setEventForm({ ...eventForm, location: e.target.value })} />
-                <textarea className="form-control" placeholder="Description" required value={eventForm.description} onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })} />
-                <label className="check-row"><input type="checkbox" checked={eventForm.isUpcoming} onChange={(e) => setEventForm({ ...eventForm, isUpcoming: e.target.checked })} /> Upcoming</label>
-                <button className="btn btn-navy" type="submit">Create event</button>
-              </form>
-              <form
-                className="form-card"
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  try {
-                    await api('/courses', { method: 'POST', body: courseForm });
-                    showToast('Course saved.');
-                  } catch (err) {
-                    showToast(err.message, true);
-                  }
-                }}
-              >
-                <h3 style={{ color: 'var(--color-navy)' }}>Add course</h3>
-                <input className="form-control" placeholder="slug" required value={courseForm.slug} onChange={(e) => setCourseForm({ ...courseForm, slug: e.target.value })} />
-                <input className="form-control" placeholder="Title" required value={courseForm.title} onChange={(e) => setCourseForm({ ...courseForm, title: e.target.value })} />
-                <input className="form-control" placeholder="Instructor" value={courseForm.instructor} onChange={(e) => setCourseForm({ ...courseForm, instructor: e.target.value })} />
-                <textarea className="form-control" placeholder="Description" value={courseForm.description} onChange={(e) => setCourseForm({ ...courseForm, description: e.target.value })} />
-                <button className="btn btn-navy" type="submit">Create course</button>
-              </form>
-              <form
-                className="form-card"
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  try {
-                    await api('/magazine/editions', { method: 'POST', body: magForm });
-                    showToast('Edition saved. Paste a Cloudinary PDF URL in downloadUrl.');
-                  } catch (err) {
-                    showToast(err.message, true);
-                  }
-                }}
-              >
-                <h3 style={{ color: 'var(--color-navy)' }}>Add magazine edition</h3>
-                <input className="form-control" placeholder="slug" required value={magForm.slug} onChange={(e) => setMagForm({ ...magForm, slug: e.target.value })} />
-                <input className="form-control" placeholder="Title" required value={magForm.title} onChange={(e) => setMagForm({ ...magForm, title: e.target.value })} />
-                <input className="form-control" placeholder="Issue" value={magForm.issue} onChange={(e) => setMagForm({ ...magForm, issue: e.target.value })} />
-                <input className="form-control" placeholder="PDF download URL (Cloudinary)" value={magForm.downloadUrl} onChange={(e) => setMagForm({ ...magForm, downloadUrl: e.target.value })} />
-                <button className="btn btn-navy" type="submit">Create edition</button>
-              </form>
-              {rows && !Array.isArray(rows) && rows.upcoming ? (
-                <div className="admin-table-wrap" style={{ gridColumn: '1 / -1' }}>
-                  <h3>Events in database</h3>
-                  {[...(rows.upcoming || []), ...(rows.past || [])].map((ev) => (
-                    <div key={ev._id || ev.slug} className="admin-row">
-                      <div>
-                        <strong>{ev.title}</strong>
-                        <div className="admin-meta">{ev.slug} · {ev.isUpcoming ? 'upcoming' : 'past'} · {ev.date}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          ) : null}
+          {tab === 'content' ? <AdminContentPanel isAdmin={user?.role === 'admin'} /> : null}
         </div>
       </section>
     </div>

@@ -4267,6 +4267,16 @@ input:focus, select:focus, textarea:focus {
   font-weight: 700;
 }
 
+.compact-tag-gold {
+  background: rgba(251, 191, 36, 0.16);
+  color: #FBBF24;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  padding: 3px 10px;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 .compact-tag-emerald {
   color: #10B981;
   font-size: 0.8rem;
@@ -5347,6 +5357,16 @@ select.form-control option {
   gap: 20px;
 }
 
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0 12px;
+  color: var(--color-navy);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .admin-content-grid .form-card .form-control,
 .admin-content-grid .form-card input,
 .admin-content-grid .form-card textarea {
@@ -5654,13 +5674,12 @@ select.form-control option {
   justify-content: center;
   min-height: 100vh;
   min-height: 100dvh;
-  height: 100vh;
-  height: 100dvh;
-  padding: 88px 0 64px;
+  padding: 96px 0 88px;
   box-sizing: border-box;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 12%, rgba(201, 154, 76, 0.16) 0%, transparent 52%),
+    radial-gradient(circle at 18% 18%, rgba(168, 85, 247, 0.16) 0%, transparent 42%),
+    radial-gradient(circle at 82% 8%, rgba(56, 189, 248, 0.12) 0%, transparent 38%),
     #070913;
 }
 
@@ -5671,11 +5690,26 @@ select.form-control option {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: clamp(14px, 2.8vh, 28px);
+  gap: clamp(18px, 3vh, 32px);
 }
 
 .sirah-banner-bismillah {
   margin: 0;
+  text-align: center;
+}
+
+.sirah-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .sirah-hero-grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(240px, 0.85fr);
+    gap: 40px;
+  }
 }
 
 .sirah-banner-frame {
@@ -5688,12 +5722,6 @@ select.form-control option {
   aspect-ratio: 1600 / 666;
 }
 
-.sirah-banner .sirah-banner-frame {
-  margin: 0 auto;
-  width: min(100%, calc(min(46vh, 520px) * 1600 / 666));
-  max-height: min(46vh, 520px);
-}
-
 .sirah-banner-img {
   display: block;
   width: 100%;
@@ -5704,24 +5732,243 @@ select.form-control option {
 }
 
 .sirah-banner-copy {
-  text-align: center;
-  margin-top: 0;
+  text-align: left;
 }
 
 .sirah-banner-copy .eyebrow {
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   margin-bottom: 8px;
 }
 
 .sirah-banner-copy h1 {
-  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
-  margin-bottom: 10px;
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  margin-bottom: 14px;
+  font-weight: 800;
 }
 
 .sirah-banner-copy .hero-subtext {
-  margin: 0 auto;
+  margin: 0;
   max-width: 640px;
+  line-height: 1.7;
+}
+
+.sirah-speakers {
+  text-align: center;
+}
+
+.sirah-speakers-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  color: #FBBF24;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sirah-speakers-label svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sirah-speaker-collage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sirah-speaker-card {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.sirah-speaker-photo {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 18px 0 0;
+  background: rgba(7, 9, 19, 0.45);
+}
+
+.sirah-speaker-card img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: contain;
+  object-position: center bottom;
+  display: block;
+  filter: grayscale(0.45) contrast(1.04) brightness(0.96);
+}
+
+.sirah-speaker-placeholder {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-top: 18px;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.2), rgba(7, 9, 19, 0.85)),
+    radial-gradient(circle at 50% 30%, rgba(148, 163, 184, 0.28), transparent 62%);
+  color: rgba(226, 232, 240, 0.55);
+}
+
+.sirah-speaker-placeholder svg {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 12px;
+}
+
+.sirah-speaker-card figcaption {
+  padding: 8px 10px 12px;
+}
+
+.sirah-speaker-card figcaption strong,
+.sirah-speaker-card figcaption span {
+  display: block;
+}
+
+.sirah-speaker-card figcaption strong {
+  color: #F8FAFC;
+  font-size: 0.86rem;
+}
+
+.sirah-speaker-card figcaption span {
+  margin-top: 2px;
+  color: #94A3B8;
+  font-size: 0.74rem;
+}
+
+.sirah-speakers-note {
+  margin: 10px 0 0;
+  color: #64748B;
+  font-size: 0.78rem;
+}
+
+.sirah-mini-slideshow {
+  width: min(100%, 760px);
+  margin: 4px auto 0;
+}
+
+.sirah-glimpse-header {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.sirah-glimpse-header h2 {
+  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  margin: 4px 0 12px;
+  color: #F8FAFC;
+}
+
+.sirah-glimpse-header .eyebrow {
+  justify-content: center;
+}
+
+.sirah-mini-slide {
+  position: relative;
+  min-height: 240px;
+  border-radius: var(--radius-lg);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+}
+
+.sirah-mini-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16px 48px 14px 16px;
+  background: linear-gradient(180deg, transparent, rgba(7, 9, 19, 0.92));
+  color: #F8FAFC;
+}
+
+.sirah-mini-caption strong,
+.sirah-mini-caption span {
+  display: block;
+}
+
+.sirah-mini-caption span {
+  margin-top: 4px;
+  color: rgba(226, 232, 240, 0.8);
+  font-size: 0.82rem;
+}
+
+.sirah-mini-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+  background: rgba(7, 9, 19, 0.55);
+  color: #fff;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.sirah-mini-nav.prev { left: 10px; }
+.sirah-mini-nav.next { right: 10px; }
+
+.sirah-mini-nav svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sirah-mini-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.sirah-mini-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba(148, 163, 184, 0.45);
+  cursor: pointer;
+}
+
+.sirah-mini-dot.active {
+  background: #FBBF24;
+}
+
+.sirah-copied-popup {
+  position: fixed;
+  left: 50%;
+  top: 18%;
+  z-index: 2700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.94);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #34D399;
+  font-weight: 700;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  transform: translateX(-50%);
+}
+
+.sirah-copied-popup svg {
+  width: 18px;
+  height: 18px;
 }
 
 .sirah-scroll-down {
@@ -5729,12 +5976,14 @@ select.form-control option {
   left: 50%;
   bottom: 18px;
   z-index: 3;
-  width: 46px;
-  height: 46px;
-  display: none;
+  min-width: 46px;
+  height: auto;
+  display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  gap: 2px;
+  padding: 8px 12px;
   border: 1px solid rgba(251, 191, 36, 0.5);
   border-radius: 9999px;
   background: rgba(7, 9, 19, 0.55);
@@ -5744,6 +5993,13 @@ select.form-control option {
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   animation: sirahScrollBounce 1.65s ease-in-out infinite;
+}
+
+.sirah-scroll-down span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .sirah-scroll-down svg {
@@ -5788,47 +6044,39 @@ select.form-control option {
   margin-bottom: 20px;
 }
 
-@media (max-width: 991px) {
-  .sirah-banner {
-    padding: 88px 0 72px;
+@media (max-width: 899px) {
+  .sirah-banner-copy {
+    text-align: center;
   }
 
-  .sirah-banner .sirah-banner-frame {
-    width: 100%;
-    max-height: min(38vh, 360px);
+  .sirah-banner-copy .eyebrow {
+    justify-content: center;
+  }
+
+  .sirah-banner-copy .hero-subtext {
+    margin: 0 auto;
   }
 }
 
 @media (max-height: 699px) {
   .sirah-banner {
     height: auto;
+    min-height: auto;
     overflow: visible;
-  }
-}
-
-@media (max-width: 768px) {
-  .sirah-scroll-down {
-    display: inline-flex;
   }
 }
 
 @media (max-width: 640px) {
   .sirah-banner {
-    padding: 88px 0 76px;
+    padding: 88px 0 92px;
   }
 
   .sirah-banner-frame {
     border-radius: var(--radius-md);
   }
 
-  .sirah-banner .sirah-banner-frame {
-    max-height: min(32vh, 280px);
-  }
-
   .sirah-scroll-down {
     bottom: 16px;
-    width: 44px;
-    height: 44px;
   }
 
   .sirah-promo-banner {
@@ -5836,60 +6084,520 @@ select.form-control option {
   }
 }
 
-.sirah-pay-grid {
+.sirah-pay-panel {
+  margin: 0 auto 8px;
+  max-width: 720px;
+}
+
+.sirah-pay-panel-head {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.sirah-pay-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #FBBF24;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sirah-pay-kicker svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sirah-pay-panel-head h3 {
+  color: #F8FAFC;
+  justify-content: center;
   margin-bottom: 8px;
 }
 
-.sirah-pay-grid .donate-info-card {
-  gap: 14px;
-  justify-content: flex-start;
+.sirah-pay-panel-head p {
+  max-width: 520px;
+  margin: 0 auto;
+  color: var(--color-text-muted);
+  font-size: 0.94rem;
+  line-height: 1.55;
 }
 
-.sirah-pay-grid .donate-badge {
-  width: fit-content;
-  white-space: nowrap;
-  margin-bottom: 2px;
+.sirah-fee-inline {
+  display: inline-flex;
+  margin-top: 16px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.32);
+  color: #FBBF24;
+  font-size: 0.88rem;
+  font-weight: 700;
 }
 
-.sirah-pay-grid .donate-number-display {
-  font-size: clamp(1.15rem, 4.5vw, 1.8rem);
-  margin-bottom: 0;
-  overflow-wrap: anywhere;
-  word-break: break-all;
-  line-height: 1.25;
+.sirah-fee-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto 12px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  color: #FDE68A;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
-.sirah-pay-grid .highlight-green {
+.sirah-fee-badge svg {
+  width: 18px;
+  height: 18px;
+  color: #FBBF24;
+}
+
+.sirah-fee-badge strong {
+  color: #FBBF24;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.sirah-pay-amount {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.28);
+}
+
+.sirah-pay-amount-text span {
   display: block;
-  overflow-wrap: anywhere;
-  word-break: break-all;
-  font-size: clamp(0.95rem, 3.6vw, 1.1rem);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #FDE68A;
 }
 
-.sirah-copy-row {
+.sirah-pay-amount-text strong {
+  display: block;
+  margin-top: 2px;
+  color: #FBBF24;
+  font-size: 1.28rem;
+  font-weight: 800;
+}
+
+.sirah-pay-buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 6px;
+  gap: 14px;
 }
 
-.sirah-copy-btn {
+.sirah-pay-trigger {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   width: 100%;
-  justify-content: center;
-  min-height: 42px;
-  padding: 10px 12px;
-  white-space: nowrap;
+  min-height: 92px;
+  padding: 16px 16px 16px 18px;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  text-align: left;
+  cursor: pointer;
+  color: #fff;
+  font-family: var(--font-heading);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 
-.sirah-copy-btn svg {
-  width: 15px;
-  height: 15px;
+.sirah-pay-trigger:hover,
+.sirah-pay-trigger:focus-visible {
+  transform: translateY(-3px) scale(1.01);
+  filter: brightness(1.06);
+  outline: none;
+}
+
+.sirah-pay-trigger:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.sirah-pay-trigger-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.sirah-pay-trigger-icon svg,
+.sirah-pay-trigger > svg {
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
 }
 
-@media (max-width: 420px) {
-  .sirah-copy-row {
+.sirah-pay-trigger > svg {
+  margin-left: auto;
+  opacity: 0.85;
+}
+
+.sirah-pay-trigger-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.sirah-pay-trigger-copy strong {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.sirah-pay-trigger-copy em {
+  font-style: normal;
+  font-size: 0.8rem;
+  opacity: 0.88;
+}
+
+.sirah-pay-bkash {
+  background: linear-gradient(135deg, #E2136E 0%, #BE185D 100%);
+  box-shadow: 0 12px 28px rgba(226, 19, 110, 0.35);
+}
+
+.sirah-pay-bank {
+  background: linear-gradient(135deg, #10B981 0%, #047857 100%);
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.32);
+}
+
+.sirah-pay-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.sirah-pay-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(7, 9, 19, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  cursor: pointer;
+}
+
+.sirah-pay-modal-card {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 560px;
+  max-height: min(88vh, 700px);
+  overflow: hidden;
+  padding: 24px 22px 16px;
+  border-radius: 22px;
+  background: #0B1220;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+  animation: sirahPayModalIn 0.22s ease;
+}
+
+.sirah-pay-modal-bkash {
+  border-color: rgba(244, 114, 182, 0.45);
+}
+
+.sirah-pay-modal-bank {
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.sirah-pay-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #E5E7EB;
+  cursor: pointer;
+}
+
+.sirah-pay-modal-close:hover,
+.sirah-pay-modal-close:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+  outline: none;
+}
+
+.sirah-pay-modal-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sirah-pay-modal-head {
+  padding-right: 36px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.sirah-pay-modal-badge {
+  display: inline-flex;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.sirah-pay-modal-bkash .sirah-pay-modal-badge {
+  background: #E2136E;
+}
+
+.sirah-pay-modal-bank .sirah-pay-modal-badge {
+  background: #059669;
+}
+
+.sirah-pay-modal-head h3 {
+  color: #F8FAFC;
+  margin-bottom: 8px;
+}
+
+.sirah-pay-modal-head p {
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.sirah-pay-hero {
+  display: grid;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-bottom: 12px;
+  padding: 14px 16px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.16);
+}
+
+.sirah-pay-hero span {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94A3B8;
+}
+
+.sirah-pay-hero strong {
+  font-size: 1.45rem;
+  line-height: 1.2;
+  color: #FFFFFF;
+  letter-spacing: 0.02em;
+  user-select: all;
+  word-break: break-word;
+}
+
+.sirah-pay-modal-bkash .sirah-pay-hero strong {
+  color: #F9A8D4;
+}
+
+.sirah-pay-modal-bank .sirah-pay-hero strong {
+  color: #6EE7B7;
+}
+
+.sirah-pay-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #F8FAFC;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sirah-pay-copy svg {
+  width: 14px;
+  height: 14px;
+}
+
+.sirah-pay-copy:hover,
+.sirah-pay-copy:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  outline: none;
+}
+
+.sirah-pay-copy.copied {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: rgba(52, 211, 153, 0.5);
+  color: #6EE7B7;
+}
+
+.sirah-pay-copy-hero {
+  justify-self: start;
+  margin-top: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+}
+
+.sirah-pay-modal-body {
+  min-height: 0;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.sirah-pay-rows {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sirah-pay-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px 10px 14px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sirah-pay-row.emphasize {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.sirah-pay-row-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.sirah-pay-row-text span {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #94A3B8;
+}
+
+.sirah-pay-row-text strong {
+  display: block;
+  margin-top: 2px;
+  color: #F8FAFC;
+  font-size: 0.95rem;
+  word-break: break-word;
+  user-select: all;
+}
+
+.sirah-pay-steps {
+  margin: 0 0 8px;
+  padding: 12px 14px 12px 32px;
+  border-radius: 14px;
+  background: rgba(251, 191, 36, 0.08);
+  border: 1px solid rgba(251, 191, 36, 0.18);
+  color: #E5E7EB;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.sirah-pay-steps li + li {
+  margin-top: 4px;
+}
+
+.sirah-pay-modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  flex-shrink: 0;
+  padding-top: 12px;
+  background: #0B1220;
+}
+
+.sirah-pay-modal-actions .btn {
+  width: 100%;
+  justify-content: center;
+  white-space: normal;
+  min-height: 48px;
+}
+
+.sirah-pay-modal-actions .btn-outline {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #F8FAFC;
+}
+
+.sirah-pay-modal-actions .btn-outline:hover,
+.sirah-pay-modal-actions .btn-outline:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  transform: none;
+}
+
+@keyframes sirahPayModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .sirah-pay-buttons,
+  .sirah-pay-modal-actions {
     grid-template-columns: 1fr;
+  }
+
+  .sirah-pay-hero strong {
+    font-size: 1.22rem;
+  }
+
+  .sirah-pay-copy-hero {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sirah-pay-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .sirah-pay-copy {
+    margin-left: auto;
+  }
+
+  .sirah-pay-modal {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .sirah-pay-modal-card {
+    max-height: min(92vh, 100%);
+    border-radius: 20px 20px 12px 12px;
   }
 }
 
@@ -6005,6 +6713,59 @@ select.form-control option {
   .sirah-success-meta {
     grid-template-columns: 1fr;
   }
+}
+
+.home-core-values {
+  margin-top: 40px;
+}
+
+.home-core-values-grid {
+  margin-top: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.admin-file-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px dashed rgba(30, 27, 75, 0.25);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.04);
+  color: var(--color-navy);
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-thumb,
+.admin-thumb-sm {
+  display: block;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.admin-thumb {
+  width: 100%;
+  max-height: 160px;
+}
+
+.admin-thumb-sm {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.admin-course-block {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.admin-student-list {
+  margin: 0;
+  padding: 0 16px 14px 32px;
+  color: var(--color-navy);
+  font-size: 0.88rem;
 }
 
 

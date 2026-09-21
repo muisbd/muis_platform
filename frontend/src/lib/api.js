@@ -69,7 +69,8 @@ export function mapEvent(doc) {
     time: doc.time || '',
     location: doc.location,
     description: doc.description,
-    isUpcoming: doc.isUpcoming
+    isUpcoming: doc.isUpcoming,
+    pinned: Boolean(doc.pinned)
   };
 }
 

@@ -126,7 +126,7 @@ export default function EventsProgramsPage() {
           <div className="section-header">
             <div className="eyebrow" style={{ color: '#FBBF24' }}>Open now</div>
             <h2>Sirah Conference 2026</h2>
-            <p>Scan the QR or open muis.bd/sirah-2026. Pay, submit your details and TrxID, then MUIS accepts or rejects your registration.</p>
+            <p>Registration fee is 150 BDT. Register from Events & Programs, or open muis.bd/sirah-2026. Pay, submit your details and TrxID, then MUIS accepts or rejects your registration.</p>
           </div>
           <figure className="sirah-banner-frame sirah-events-banner">
             <SirahBannerImage />

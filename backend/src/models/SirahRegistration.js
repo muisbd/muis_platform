@@ -9,6 +9,7 @@ const sirahSchema = new mongoose.Schema(
     department: { type: String, default: '', trim: true },
     batch: { type: String, default: '', trim: true },
     section: { type: String, default: '', trim: true },
+    gender: { type: String, enum: ['Male', 'Female', ''], default: '', trim: true },
     paymentMethod: { type: String, required: true, trim: true },
     trxId: { type: String, default: '', trim: true },
     paidTo: { type: String, default: '', trim: true },

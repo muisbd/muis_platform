@@ -1,20 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   Users, Sparkles, Award, HeartHandshake, UserPlus, Calendar, BookOpen,
   FileText, ArrowRight, ShieldCheck, Clock, Mic, HelpCircle, MapPin,
-  MessageSquare, Mail, ChevronDown, ExternalLink
+  MessageSquare, Mail, ChevronDown, ExternalLink, Heart, UsersRound
 } from 'lucide-react';
 import HeroCanvas from './HeroCanvas.js';
 import HeroTypewriter from './HeroTypewriter.js';
 import PhotoSlideshow from './PhotoSlideshow.js';
 import ScrollReveal, { AboutScrollSection } from './ScrollReveal.js';
 import SirahBannerImage from './SirahBannerImage.js';
+import { api, mapEvent } from '../lib/api.js';
+import { UPCOMING_EVENTS } from '../data/eventsData.js';
 
 export default function HomePage() {
   const [faqOpen, setFaqOpen] = useState(-1);
+  const [pinnedEvents, setPinnedEvents] = useState([]);
+
+  useEffect(() => {
+    api('/events')
+      .then((data) => {
+        const pinned = (data.pinned || []).map(mapEvent).filter(Boolean);
+        setPinnedEvents(pinned);
+      })
+      .catch(() => {});
+  }, []);
+
+  const fallbackEvent = UPCOMING_EVENTS[0];
+  const announcedEvents = pinnedEvents.length ? pinnedEvents : fallbackEvent ? [fallbackEvent] : [];
 
   return (
     <div className="page-container home-page-container page-fade-enter">
@@ -155,6 +170,43 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+
+          <div className="home-core-values">
+            <div className="section-header" style={{ marginBottom: 20 }}>
+              <div className="eyebrow" style={{ color: '#C084FC' }}>Guided Principles</div>
+              <h2>Our Core Values</h2>
+            </div>
+            <div className="about-pillars-rich-grid home-core-values-grid">
+              <div className="about-pillar-card-enhanced">
+                <div className="about-pillar-icon-wrap about-pillar-icon-purple">
+                  <ShieldCheck />
+                </div>
+                <h3 className="about-pillar-title">Integrity (Ikhlas)</h3>
+                <p className="about-pillar-desc">Sincerity of intention and transparency in all our initiatives and financial management.</p>
+              </div>
+              <div className="about-pillar-card-enhanced">
+                <div className="about-pillar-icon-wrap about-pillar-icon-cyan">
+                  <Award />
+                </div>
+                <h3 className="about-pillar-title">Excellence (Ihsan)</h3>
+                <p className="about-pillar-desc">Striving for high quality in both academic achievements and Islamic character.</p>
+              </div>
+              <div className="about-pillar-card-enhanced">
+                <div className="about-pillar-icon-wrap about-pillar-icon-emerald">
+                  <UsersRound />
+                </div>
+                <h3 className="about-pillar-title">Unity & Respect</h3>
+                <p className="about-pillar-desc">Welcoming students from diverse cultural backgrounds with warmth and mutual respect.</p>
+              </div>
+              <div className="about-pillar-card-enhanced">
+                <div className="about-pillar-icon-wrap about-pillar-icon-rose">
+                  <Heart />
+                </div>
+                <h3 className="about-pillar-title">Compassionate Service</h3>
+                <p className="about-pillar-desc">Serving humanity and contributing positively to Metropolitan University and local society.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </AboutScrollSection>
 
@@ -184,9 +236,10 @@ export default function HomePage() {
               <div className="compact-event-meta">
                 <span className="compact-tag-purple">Flagship Conference</span>
                 <span className="compact-tag-emerald"><ShieldCheck /> Open registration</span>
+                <span className="compact-tag-gold">150 BDT</span>
               </div>
               <h3 className="compact-event-title">Sirah Conference 2026</h3>
-              <p className="compact-event-desc">Pay, then register with your name, student ID, phone, email, department, and TrxID. MUIS approves your seat after checking payment.</p>
+              <p className="compact-event-desc">Registration fee 150 BDT. Pay, then register with your name, student ID, phone, email, department, and TrxID. MUIS approves your seat after checking payment.</p>
               <div className="compact-event-action">
                 <Link href="/sirah-2026" className="btn btn-vibrant-primary btn-sm">
                   Register at muis.bd/sirah-2026 <ExternalLink />
@@ -195,30 +248,35 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="section-header" style={{ marginBottom: 24, marginTop: 12 }}>
-            <div className="eyebrow" style={{ color: '#38BDF8' }}>Upcoming Campus Event</div>
-            <h2>Dawah Event 2026</h2>
-          </div>
-
-          <div className="compact-event-card" id="open-dawah-modal-btn">
-            <div className="compact-event-cover" style={{ backgroundImage: "url('/images/dawah_event.png')" }}>
-              <span className="compact-event-badge"><Calendar /> Dec 2026</span>
-            </div>
-
-            <div className="compact-event-body">
-              <div className="compact-event-meta">
-                <span className="compact-tag-purple">Upcoming Program</span>
-                <span className="compact-tag-emerald"><ShieldCheck /> Separate Seating</span>
+          {announcedEvents.length ? (
+            <>
+              <div className="section-header" style={{ marginBottom: 24, marginTop: 12 }}>
+                <div className="eyebrow" style={{ color: '#38BDF8' }}>Upcoming Campus Event</div>
+                <h2>{announcedEvents.length === 1 ? announcedEvents[0].title : 'Pinned announcements'}</h2>
               </div>
-              <h3 className="compact-event-title">Dawah Event 2026</h3>
-              <p className="compact-event-desc">Premier annual campus Dawah conference featuring international scholars, interactive seminars, and book exhibitions.</p>
-              <div className="compact-event-action">
-                <Link href="/events-programs/dawah-2026" className="btn btn-vibrant-primary btn-sm">
-                  View Event Details & Schedule <ExternalLink />
-                </Link>
-              </div>
-            </div>
-          </div>
+              {announcedEvents.map((event) => (
+                <div key={event.id || event.slug} className="compact-event-card" style={{ marginTop: 12 }}>
+                  <div className="compact-event-cover" style={{ backgroundImage: `url('${event.image || '/images/dawah_event.png'}')` }}>
+                    <span className="compact-event-badge"><Calendar /> {event.date}</span>
+                  </div>
+
+                  <div className="compact-event-body">
+                    <div className="compact-event-meta">
+                      <span className="compact-tag-purple">{event.badge || 'Upcoming Program'}</span>
+                      <span className="compact-tag-emerald"><ShieldCheck /> Separate Seating</span>
+                    </div>
+                    <h3 className="compact-event-title">{event.title}</h3>
+                    <p className="compact-event-desc">{event.description}</p>
+                    <div className="compact-event-action">
+                      <Link href={`/events-programs/${event.id || event.slug}`} className="btn btn-vibrant-primary btn-sm">
+                        View Event Details & Schedule <ExternalLink />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
+          ) : null}
         </div>
       </ScrollReveal>
 

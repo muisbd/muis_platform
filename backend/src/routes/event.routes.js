@@ -11,13 +11,14 @@ import { publicFormLimiter } from '../middleware/rateLimit.js';
 const router = Router();
 
 router.get('/', asyncHandler(async (_req, res) => {
-  const [upcoming, past, weekly, gallery] = await Promise.all([
+  const [upcoming, past, weekly, gallery, pinned] = await Promise.all([
     Event.find({ isUpcoming: true }).sort({ createdAt: -1 }),
     Event.find({ isUpcoming: false }).sort({ createdAt: -1 }),
     WeeklyProgram.find(),
-    GalleryItem.find()
+    GalleryItem.find(),
+    Event.find({ pinned: true }).sort({ updatedAt: -1 })
   ]);
-  res.json({ ok: true, upcoming, past, weekly, gallery });
+  res.json({ ok: true, upcoming, past, weekly, gallery, pinned });
 }));
 
 router.get('/:slug', asyncHandler(async (req, res) => {

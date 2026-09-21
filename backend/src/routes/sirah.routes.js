@@ -21,6 +21,7 @@ function applyFields(doc, fields) {
   doc.department = fields.department;
   doc.batch = fields.batch;
   doc.section = fields.section;
+  doc.gender = fields.gender;
   doc.paymentMethod = fields.paymentMethod;
   doc.trxId = fields.trxId;
   doc.paidTo = fields.paidTo;
@@ -37,18 +38,22 @@ router.get('/info', asyncHandler(async (_req, res) => {
     event: {
       slug: 'sirah-2026',
       title: 'Sirah Conference 2026',
-      path: '/sirah-2026'
+      path: '/sirah-2026',
+      fee: 150,
+      currency: 'BDT'
     }
   });
 }));
 
 router.post('/register', publicFormLimiter, asyncHandler(async (req, res) => {
-  const { name, studentId, phone, email, department, batch, section, paymentMethod, trxId, paidTo } = req.body || {};
+  const { name, studentId, phone, email, department, batch, section, gender, paymentMethod, trxId, paidTo } = req.body || {};
   if (!name?.trim()) throw new HttpError(400, 'Please enter the participant name.');
   if (!studentId?.trim()) throw new HttpError(400, 'Please enter your student ID.');
   if (!phone?.trim()) throw new HttpError(400, 'Please enter your phone number.');
   if (!email || !String(email).includes('@')) throw new HttpError(400, 'Please enter a valid email address.');
   if (!department?.trim()) throw new HttpError(400, 'Please enter your department.');
+  const genderValue = String(gender || '').trim();
+  if (genderValue !== 'Male' && genderValue !== 'Female') throw new HttpError(400, 'Please choose Male or Female.');
   if (!paymentMethod?.trim()) throw new HttpError(400, 'Please choose a payment method.');
   const cash = isCashPayment(paymentMethod);
   if (cash && !paidTo?.trim()) throw new HttpError(400, 'Please enter the name of the person you paid cash to.');
@@ -63,6 +68,7 @@ router.post('/register', publicFormLimiter, asyncHandler(async (req, res) => {
     department: department.trim(),
     batch: String(batch || '').trim(),
     section: String(section || '').trim(),
+    gender: genderValue,
     paymentMethod: paymentMethod.trim(),
     trxId: trxKey,
     paidTo: cash ? paidTo.trim() : ''
@@ -97,7 +103,7 @@ router.post('/register', publicFormLimiter, asyncHandler(async (req, res) => {
     'Sirah 2026 registration',
     wrapEmail(
       'New Sirah application',
-      `<p>${doc.name} (${doc.studentId}) — ${doc.email}</p><p>Phone: ${doc.phone}<br/>Department: ${doc.department}${doc.batch ? ` · Batch ${doc.batch}` : ''}${doc.section ? ` · Section ${doc.section}` : ''}</p><p>${doc.paymentMethod} · ${doc.paidTo ? `Paid to ${doc.paidTo}` : `TrxID ${doc.trxId}`}</p>`
+      `<p>${doc.name} (${doc.studentId}) — ${doc.email}</p><p>Phone: ${doc.phone}<br/>Department: ${doc.department}${doc.batch ? ` · Batch ${doc.batch}` : ''}${doc.gender ? ` · ${doc.gender}` : ''}</p><p>${doc.paymentMethod} · ${doc.paidTo ? `Paid to ${doc.paidTo}` : `TrxID ${doc.trxId}`}</p>`
     )
   );
   await sendMail({
