@@ -357,7 +357,8 @@ export default function SirahConferencePage() {
           <div className="hero-bismillah text-arabic sirah-banner-bismillah">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
           <div className="sirah-hero-grid sirah-hero-grid-single">
             <div className="sirah-banner-copy">
-              <div className="eyebrow" style={{ color: '#FBBF24' }}>Metropolitan University Islamic Society <span className="sirah-presents">presents</span></div>
+              <div className="eyebrow" style={{ color: '#FBBF24' }}>Metropolitan University Islamic Society</div>
+              <div className="sirah-presents-text">presents</div>
               <h1>Seerah Conference 2026</h1>
               <span className="sirah-prophet-lead">The timeless life of the Prophet</span>
               <div className="sirah-prophet-honorific">
@@ -491,7 +492,7 @@ export default function SirahConferencePage() {
               <div className="form-card" style={{ marginTop: 28, maxWidth: 'none' }}>
                 <div className="sirah-form-head-centered">
                   <div className="sirah-pay-card-labels" style={{ justifyContent: 'center' }}>
-                    <span className="sirah-pay-kicker"><BookOpen /> Step 2 · Register for Seerah 2026</span>
+                    <span className="sirah-pay-kicker"><BookOpen /> Step 2 · Register<span className="sirah-form-title-rest"> for Seerah 2026</span></span>
                   </div>
                   <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', marginTop: 12, marginBottom: 14, fontSize: '0.92rem', maxWidth: 620 }}>
                     Pay the <strong>{REGISTRATION_FEE_LABEL}</strong> fee first, then enter your TrxID.

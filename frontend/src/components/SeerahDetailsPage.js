@@ -99,10 +99,6 @@ export default function SeerahDetailsPage() {
                 <li><Bus /> অংশগ্রহণকারীদের জন্য বাসের ব্যবস্থা থাকবে।</li>
               </ul>
             </section>
-
-            <p className="seerah-details-close">
-              একটি রেজিস্ট্রেশন- তিনটি আয়োজন- একটি স্মরণীয় সীরাহ অভিজ্ঞতা।
-            </p>
           </article>
 
           <div className="seerah-details-cta">
