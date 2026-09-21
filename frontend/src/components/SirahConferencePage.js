@@ -357,7 +357,7 @@ export default function SirahConferencePage() {
           <div className="hero-bismillah text-arabic sirah-banner-bismillah">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
           <div className="sirah-hero-grid sirah-hero-grid-single">
             <div className="sirah-banner-copy">
-              <div className="eyebrow" style={{ color: '#FBBF24' }}>Metropolitan University Islamic Society</div>
+              <div className="eyebrow" style={{ color: '#FBBF24' }}>Metropolitan University Islamic Society <span className="sirah-presents">presents</span></div>
               <h1>Seerah Conference 2026</h1>
               <span className="sirah-prophet-lead">The timeless life of the Prophet</span>
               <div className="sirah-prophet-honorific">

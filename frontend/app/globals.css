@@ -5833,6 +5833,18 @@ select.form-control option {
   margin-bottom: 4px;
 }
 
+.sirah-banner-copy .eyebrow::before {
+  content: none;
+}
+
+.sirah-presents {
+  text-transform: none;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: inherit;
+  opacity: 0.92;
+}
+
 .sirah-banner-copy h1 {
   font-size: clamp(1.62rem, 2.8vh + 0.7rem, 2.45rem);
   margin-bottom: 6px;
@@ -6207,16 +6219,16 @@ select.form-control option {
 .sirah-scroll-down {
   position: absolute;
   left: 50%;
-  bottom: 14px;
+  bottom: 12px;
   z-index: 3;
-  min-width: 148px;
+  min-width: 0;
   height: auto;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: 12px 22px 10px;
+  gap: 0;
+  padding: 6px 14px 5px;
   border: 1.5px solid rgba(251, 191, 36, 0.85);
   border-radius: 9999px;
   background: rgba(7, 9, 19, 0.78);
@@ -6224,21 +6236,22 @@ select.form-control option {
   cursor: pointer;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
   animation: sirahScrollBounce 1.65s ease-in-out infinite;
 }
 
 .sirah-scroll-down span {
   display: block;
-  font-size: 0.82rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  line-height: 1.1;
 }
 
 .sirah-scroll-down svg {
-  width: 28px;
-  height: 28px;
+  width: 16px;
+  height: 16px;
   stroke-width: 2.4;
 }
 
@@ -6248,7 +6261,7 @@ select.form-control option {
 
 @keyframes sirahScrollBounce {
   0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(8px); }
+  50% { transform: translateX(-50%) translateY(5px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -6264,8 +6277,8 @@ select.form-control option {
 
 @media (max-height: 820px) {
   .sirah-scroll-down {
-    min-width: 42px;
-    padding: 8px;
+    min-width: 34px;
+    padding: 6px;
     bottom: 10px;
   }
 
@@ -8166,19 +8179,19 @@ select.form-control option {
   }
 
   .sirah-scroll-down {
-    bottom: 14px;
-    min-width: 136px;
-    padding: 10px 18px 8px;
+    bottom: 12px;
+    min-width: 0;
+    padding: 5px 12px 4px;
   }
 
   .sirah-scroll-down span {
     display: block;
-    font-size: 0.76rem;
+    font-size: 0.62rem;
   }
 
   .sirah-scroll-down svg {
-    width: 26px;
-    height: 26px;
+    width: 14px;
+    height: 14px;
   }
 
   .seerah-carousel-section,

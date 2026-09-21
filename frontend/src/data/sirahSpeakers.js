@@ -52,7 +52,6 @@ export const SEERAH_CAROUSEL = [
     kicker: 'Highlights · 17 October',
     line1: 'Seerah',
     line2: '2026',
-    title: 'সীরাহ কনফারেন্স ২০২৬',
     highlights: ['Seerah Quiz', 'Writing Contest', 'Seerah Seminar'],
     caption: `এক রেজিস্ট্রেশনেই তিন আয়োজন। কুইজ, রাইটিং কনটেস্ট ও সেমিনার। রাইটিং কনটেস্টের শেষ সময় ${WRITING_CONTEST_DEADLINE_BN}।`,
     accent: 'conference'
@@ -63,7 +62,6 @@ export const SEERAH_CAROUSEL = [
     kicker: 'Quiz · 17 October',
     line1: 'Seerah',
     line2: 'Quiz',
-    title: 'সীরাহ কুইজ',
     caption: 'MCQ ও সংক্ষিপ্ত প্রশ্ন। সিলেবাস: সীরাতে খাতামুল আম্বিয়া। ১৭ অক্টোবর, সকাল ১১টা।',
     accent: 'quiz'
   },
@@ -73,7 +71,6 @@ export const SEERAH_CAROUSEL = [
     kicker: `Contest · Deadline ${WRITING_CONTEST_DEADLINE_SHORT}`,
     line1: 'Seerah',
     line2: 'Writing',
-    title: 'রাইটিং কনটেস্ট',
     caption: `রাসূলুল্লাহ ﷺ-এর জীবনী থেকে সর্বোচ্চ ২০০ শব্দে লিখুন। জমা দেওয়ার শেষ সময় ${WRITING_CONTEST_DEADLINE_BN}। ই-মেইল অথবা ফেসবুক ইনবক্সে পাঠান।`,
     accent: 'writing'
   },
@@ -83,7 +80,6 @@ export const SEERAH_CAROUSEL = [
     kicker: 'Seminar · 17 October',
     line1: 'Seerah',
     line2: 'Seminar',
-    title: 'সীরাহ সেমিনার',
     guests: ['Jakariya Masud', 'Mufti Ziaur Rahman'],
     caption: 'শনিবার দুইটি সেশন, যোহরের সালাত ও লাঞ্চ, অংশগ্রহণকারীদের জন্য বাসের ব্যবস্থা।',
     accent: 'seminar'

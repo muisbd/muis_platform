@@ -69,7 +69,7 @@ export default function SeerahContestPoster({ slide, variant = 'carousel' }) {
         <div className="seerah-poster-rule" aria-hidden="true">
           <i />
         </div>
-        <p className="seerah-poster-bn">{slide.title}</p>
+        {slide.title ? <p className="seerah-poster-bn">{slide.title}</p> : null}
         {highlights.length ? (
           <div className="seerah-poster-guests seerah-poster-highlights">
             {highlights.map((item) => (
