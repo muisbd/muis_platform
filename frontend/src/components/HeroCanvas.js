@@ -10,6 +10,7 @@ export default function HeroCanvas() {
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     const heroSection = document.getElementById('home');
 
     let width = canvas.width = (heroSection && heroSection.clientWidth > 0) ? heroSection.clientWidth : (window.innerWidth || 1200);
