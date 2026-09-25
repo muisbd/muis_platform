@@ -1,0 +1,10 @@
+# Allow full indexing for Googlebot and search engines
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api/*
+
+# Host & Sitemap
+Host: https://muis.bd
+Sitemap: https://muis.bd/sitemap.xml
