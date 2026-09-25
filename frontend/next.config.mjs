@@ -5,7 +5,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  outputFileTracingRoot: path.join(__dirname, '..'),
+  outputFileTracingRoot: __dirname,
   async redirects() {
     return [
       { source: '/index.html', destination: '/', permanent: false },

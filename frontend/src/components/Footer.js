@@ -83,8 +83,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <div>&copy; 2026 Metropolitan University Islamic Society (MUIS). All rights reserved.</div>
-          <div>Crafted in sincere khidmah for the Ummah.</div>
-          <div className="text-arabic" style={{ color: 'var(--color-gold-light)', fontSize: '1rem' }}>وَقُل رَّبِّ زِدْنِي عِلْمًا · My Lord, increase me in knowledge</div>
+          <div className="text-arabic" style={{ color: 'var(--color-gold-light)', fontSize: '1rem' }}>رَّبِّ زِدْنِي عِلْمًا · My Lord, increase me in knowledge</div>
         </div>
       </div>
     </footer>

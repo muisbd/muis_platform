@@ -17,19 +17,23 @@ export const metadata = {
   },
   icons: {
     icon: [{ url: '/muis_logo_white.png', type: 'image/png' }]
+  },
+  verification: {
+    google: 'zLQ4oXk4h6qWsEAbf9ntTmXKLykAKzg5zt8rUiTwHpc'
   }
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <meta name="google-site-verification" content="zLQ4oXk4h6qWsEAbf9ntTmXKLykAKzg5zt8rUiTwHpc" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet" />
         <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet" />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Providers>
           <HashRedirect />
           <Preloader />

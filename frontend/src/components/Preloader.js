@@ -97,6 +97,7 @@ export default function Preloader() {
       id="preloader"
       className={`preloader-overlay${fading ? ' preloader-fade-out' : ''}`}
       aria-hidden="true"
+      suppressHydrationWarning
     >
       <div className="preloader-backdrop" />
       <div className="preloader-glow" />

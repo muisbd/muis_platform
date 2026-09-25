@@ -9011,3 +9011,74 @@ select.form-control option {
     margin-top: 20px;
   }
 }
+
+/* Skills Multi-Select Checkbox Group */
+.skills-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.skill-checkbox-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: rgba(7, 9, 19, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  color: #94A3B8;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.skill-checkbox-card:hover:not(.disabled) {
+  border-color: rgba(56, 189, 248, 0.5);
+  background: rgba(15, 23, 42, 0.9);
+  color: #F8FAFC;
+}
+
+.skill-checkbox-card.selected {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: #38BDF8;
+  color: #38BDF8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+.skill-checkbox-card.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.skill-checkbox-input {
+  width: 17px;
+  height: 17px;
+  accent-color: #38BDF8;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.skill-checkbox-card.disabled .skill-checkbox-input {
+  cursor: not-allowed;
+}
+
+.skill-checkbox-card.none-option {
+  grid-column: 1 / -1;
+  border-color: rgba(192, 132, 252, 0.3);
+}
+
+.skill-checkbox-card.none-option.selected {
+  background: rgba(192, 132, 252, 0.15);
+  border-color: #C084FC;
+  color: #C084FC;
+  box-shadow: 0 0 12px rgba(192, 132, 252, 0.25);
+}
+
+.skill-checkbox-card.none-option .skill-checkbox-input {
+  accent-color: #C084FC;
+}

@@ -33,7 +33,7 @@ function publicUser(user) {
 }
 
 router.post('/', authLimiter, asyncHandler(async (req, res) => {
-  const { name, studentId, status, gender, email, phone, department, year, motivation, password } = req.body || {};
+  const { name, studentId, status, gender, email, phone, department, year, skills, motivation, password } = req.body || {};
   if (!name) throw new HttpError(400, 'Please enter your Full Name.');
   if (!studentId) throw new HttpError(400, 'Please enter your Student ID.');
   if (!status) throw new HttpError(400, 'Please select your Status.');
@@ -92,6 +92,7 @@ router.post('/', authLimiter, asyncHandler(async (req, res) => {
     phone,
     department,
     year: year || 'N/A',
+    skills: Array.isArray(skills) ? skills : (skills ? [skills] : []),
     motivation: motivation || 'N/A',
     userId: user._id
   });

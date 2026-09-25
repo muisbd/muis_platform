@@ -140,51 +140,12 @@ export default function HomePage() {
             <div className="about-pillars-rich-grid">
               <div className="about-pillar-card-enhanced">
                 <div className="about-pillar-icon-wrap about-pillar-icon-purple">
-                  <Sparkles />
-                </div>
-                <h3 className="about-pillar-title">Spiritual Worship</h3>
-                <p className="about-pillar-desc">Daily campus Musalla maintenance, Jummah reminders, & dedicated Sisters Halaqa sessions.</p>
-              </div>
-
-              <div className="about-pillar-card-enhanced">
-                <div className="about-pillar-icon-wrap about-pillar-icon-cyan">
-                  <BookOpen />
-                </div>
-                <h3 className="about-pillar-title">Islamic Education</h3>
-                <p className="about-pillar-desc">Structured Tajweed intensives, Student Fiqh workshops, and Seerah lectures with guest scholars.</p>
-              </div>
-
-              <div className="about-pillar-card-enhanced">
-                <div className="about-pillar-icon-wrap about-pillar-icon-emerald">
-                  <Users />
-                </div>
-                <h3 className="about-pillar-title">Student Leadership</h3>
-                <p className="about-pillar-desc">Fostering campus brotherhood, moral integrity, academic excellence, and student executive growth.</p>
-              </div>
-
-              <div className="about-pillar-card-enhanced">
-                <div className="about-pillar-icon-wrap about-pillar-icon-rose">
-                  <HeartHandshake />
-                </div>
-                <h3 className="about-pillar-title">Community Service</h3>
-                <p className="about-pillar-desc">Ramadan pre-food pack drives, Sylhet emergency flood relief, and student welfare support.</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="home-core-values">
-            <div className="section-header" style={{ marginBottom: 20 }}>
-              <div className="eyebrow" style={{ color: '#C084FC' }}>Guided Principles</div>
-              <h2>Our Core Values</h2>
-            </div>
-            <div className="about-pillars-rich-grid home-core-values-grid">
-              <div className="about-pillar-card-enhanced">
-                <div className="about-pillar-icon-wrap about-pillar-icon-purple">
                   <ShieldCheck />
                 </div>
                 <h3 className="about-pillar-title">Integrity (Ikhlas)</h3>
                 <p className="about-pillar-desc">Sincerity of intention and transparency in all our initiatives and financial management.</p>
               </div>
+
               <div className="about-pillar-card-enhanced">
                 <div className="about-pillar-icon-wrap about-pillar-icon-cyan">
                   <Award />
@@ -192,6 +153,7 @@ export default function HomePage() {
                 <h3 className="about-pillar-title">Excellence (Ihsan)</h3>
                 <p className="about-pillar-desc">Striving for high quality in both academic achievements and Islamic character.</p>
               </div>
+
               <div className="about-pillar-card-enhanced">
                 <div className="about-pillar-icon-wrap about-pillar-icon-emerald">
                   <UsersRound />
@@ -199,6 +161,7 @@ export default function HomePage() {
                 <h3 className="about-pillar-title">Unity & Respect</h3>
                 <p className="about-pillar-desc">Welcoming students from diverse cultural backgrounds with warmth and mutual respect.</p>
               </div>
+
               <div className="about-pillar-card-enhanced">
                 <div className="about-pillar-icon-wrap about-pillar-icon-rose">
                   <Heart />

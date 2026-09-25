@@ -236,6 +236,11 @@ export default function AdminDashboard() {
                     </div>
                     <div className="admin-meta">{row.studentId} · {row.email} · {row.phone}</div>
                     <div className="admin-meta">{row.department} · {row.status} {row.year && row.year !== 'N/A' ? `· ${row.year}` : ''} · {fmt(row.createdAt)}</div>
+                    {row.skills && row.skills.length > 0 ? (
+                      <div className="admin-meta" style={{ marginTop: 2, color: '#38BDF8' }}>
+                        <strong>Skills:</strong> {Array.isArray(row.skills) ? row.skills.join(', ') : row.skills}
+                      </div>
+                    ) : null}
                     {row.motivation && row.motivation !== 'N/A' ? <p className="admin-meta">Why join: {row.motivation}</p> : null}
                   </div>
                   <div className="admin-actions">

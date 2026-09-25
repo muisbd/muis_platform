@@ -8,14 +8,49 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.js';
 
+const SKILL_OPTIONS = [
+  'Quran Recitation (Qirat)',
+  'Nasheed',
+  'Event Management & Leadership',
+  'Content Writing',
+  'Graphic Design',
+  'Video Editing',
+  'Photography & Videography',
+  'Anchoring / Hosting',
+  'Calligraphy',
+  'None of the above, but eager to learn new skills'
+];
+
+const NONE_SKILL = 'None of the above, but eager to learn new skills';
+
 export default function JoinPage() {
   const { join } = useAuth();
   const [status, setStatus] = useState('Current Student');
   const [gender, setGender] = useState('');
+  const [selectedSkills, setSelectedSkills] = useState([]);
   const [alert, setAlert] = useState(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
   const [formKey, setFormKey] = useState(0);
+
+  const handleSkillToggle = (option) => {
+    setSelectedSkills((prev) => {
+      if (option === NONE_SKILL) {
+        if (prev.includes(NONE_SKILL)) {
+          return [];
+        }
+        return [NONE_SKILL];
+      } else {
+        let next = prev.filter((s) => s !== NONE_SKILL);
+        if (next.includes(option)) {
+          next = next.filter((s) => s !== option);
+        } else {
+          next.push(option);
+        }
+        return next;
+      }
+    });
+  };
 
   const showAlert = (msg, isError = true) => {
     setAlert({ msg, isError });
@@ -66,6 +101,10 @@ export default function JoinPage() {
       showAlert('Please enter your Department (e.g. CSE, LLB, BBA).');
       return;
     }
+    if (!selectedSkills || selectedSkills.length === 0) {
+      showAlert('Please select at least one skill or choose "None of the above, but eager to learn new skills".');
+      return;
+    }
     if (!password || password.length < 6) {
       showAlert('Please choose a password of at least 6 characters. This is your MUIS login.');
       return;
@@ -84,6 +123,7 @@ export default function JoinPage() {
       phone,
       department,
       year: year || 'N/A',
+      skills: selectedSkills,
       motivation: motivation || 'N/A',
       password
     };
@@ -105,6 +145,7 @@ export default function JoinPage() {
     setSuccess(null);
     setStatus('Current Student');
     setGender('');
+    setSelectedSkills([]);
     hideAlert();
     setFormKey((k) => k + 1);
   };
@@ -134,7 +175,7 @@ export default function JoinPage() {
                     <label htmlFor="join-name">Full Name <span className="required">*</span></label>
                     <div className="input-with-icon">
                       <User className="input-icon" />
-                      <input type="text" id="join-name" name="name" className="form-control" placeholder="e.g. Niyaz Ahmad Khan" required />
+                      <input type="text" id="join-name" name="name" className="form-control" placeholder="Your Name" required />
                     </div>
                   </div>
 
@@ -182,7 +223,7 @@ export default function JoinPage() {
                     <label htmlFor="join-email">Email Address <span className="required">*</span></label>
                     <div className="input-with-icon">
                       <Mail className="input-icon" />
-                      <input type="email" id="join-email" name="email" className="form-control" placeholder="e.g. student@metrouni.edu.bd" required />
+                      <input type="email" id="join-email" name="email" className="form-control" placeholder="e.g. student@gmail.com" required />
                     </div>
                   </div>
 
@@ -210,6 +251,37 @@ export default function JoinPage() {
                       <Calendar className="input-icon" />
                       <input type="text" id="join-year" name="year" className="form-control" placeholder="e.g. 3-2" />
                     </div>
+                  </div>
+                </div>
+
+                <div className="form-group" style={{ marginBottom: 24 }}>
+                  <label style={{ display: 'block', marginBottom: 8, fontWeight: 600 }}>
+                    Do you have any skills? <span className="optional-tag">(Can select Multiple Option)</span> <span className="required">*</span>
+                  </label>
+                  <div className="skills-checkbox-grid">
+                    {SKILL_OPTIONS.map((option) => {
+                      const isNoneOption = option === NONE_SKILL;
+                      const isNoneSelected = selectedSkills.includes(NONE_SKILL);
+                      const isChecked = selectedSkills.includes(option);
+                      const isDisabled = !isNoneOption && isNoneSelected;
+
+                      return (
+                        <label
+                          key={option}
+                          className={`skill-checkbox-card${isChecked ? ' selected' : ''}${isDisabled ? ' disabled' : ''}${isNoneOption ? ' none-option' : ''}`}
+                        >
+                          <input
+                            type="checkbox"
+                            className="skill-checkbox-input"
+                            value={option}
+                            checked={isChecked}
+                            disabled={isDisabled}
+                            onChange={() => handleSkillToggle(option)}
+                          />
+                          <span>{option}</span>
+                        </label>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -267,6 +339,7 @@ export default function JoinPage() {
                       <div><strong>Mobile (WhatsApp):</strong> {success.phone}</div>
                       <div><strong>Department:</strong> {success.department}</div>
                       <div><strong>Year & Semester:</strong> {success.year}</div>
+                      <div><strong>Skills:</strong> {Array.isArray(success.skills) ? success.skills.join(', ') : success.skills}</div>
                       {success.motivation !== 'N/A' ? <div><strong>Why Join MUIS:</strong> {success.motivation}</div> : null}
                     </div>
                   </div>

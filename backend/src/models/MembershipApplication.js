@@ -10,6 +10,7 @@ const membershipSchema = new mongoose.Schema(
     phone: { type: String, required: true, trim: true },
     department: { type: String, required: true, trim: true },
     year: { type: String, default: 'N/A' },
+    skills: { type: [String], default: [] },
     motivation: { type: String, default: 'N/A' },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     reviewStatus: {
