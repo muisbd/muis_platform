@@ -31,7 +31,7 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <Link href="/" title="Back to Homepage" style={{ display: 'inline-block' }}>
-              <img src="/muis_logo_dark.png" alt="MUIS Logo Footer" style={{ filter: 'brightness(0) invert(1)', cursor: 'pointer' }} />
+              <img src="/muis_logo_white.png" alt="MUIS Logo Footer" style={{ cursor: 'pointer' }} />
             </Link>
             <p>Metropolitan University Islamic Society (MUIS) is a student-led organization committed to spiritual growth, brotherhood, sisterhood, and community service on campus.</p>
           </div>
