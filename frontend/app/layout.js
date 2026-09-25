@@ -89,6 +89,39 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (typeof window !== 'undefined') {
+                  var filterMsg = function(args) {
+                    if (!args || !args[0]) return false;
+                    var str = String(args[0]);
+                    return str.indexOf('powerPreference') !== -1 || str.indexOf('369219127') !== -1;
+                  };
+                  ['warn', 'log', 'error', 'info'].forEach(function(method) {
+                    var orig = console[method];
+                    if (orig) {
+                      console[method] = function() {
+                        if (filterMsg(arguments)) return;
+                        orig.apply(console, arguments);
+                      };
+                    }
+                  });
+                  if (typeof navigator !== 'undefined' && navigator.gpu && navigator.gpu.requestAdapter) {
+                    var origAdapter = navigator.gpu.requestAdapter.bind(navigator.gpu);
+                    navigator.gpu.requestAdapter = function(opts) {
+                      if (opts && opts.powerPreference) {
+                        delete opts.powerPreference;
+                      }
+                      return origAdapter(opts);
+                    };
+                  }
+                }
+              })();
+            `
+          }}
+        />
         <meta name="keywords" content="muis, metropolitan university islamic society, metro islamic society, islamic society, metro society, muis sylhet, metropolitan university sylhet, metropolitan university bangladesh, muslim student association, seerah 2026, campus musalla, islamic courses sylhet, tajweed, halaqas" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
