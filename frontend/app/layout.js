@@ -93,6 +93,46 @@ export default function RootLayout({ children }) {
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
         <meta name="google-site-verification" content="zLQ4oXk4h6qWsEAbf9ntTmXKLykAKzg5zt8rUiTwHpc" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'EducationalOrganization',
+                  '@id': 'https://muis.bd/#organization',
+                  'name': 'Metropolitan University Islamic Society',
+                  'alternateName': ['MUIS', 'Metro Islamic Society', 'Metro Society', 'MUIS Sylhet'],
+                  'url': 'https://muis.bd',
+                  'logo': 'https://muis.bd/muis_logo_white.png',
+                  'image': 'https://muis.bd/MUIIS_cvr-02.png',
+                  'description': 'Student-led organization empowering spiritual growth, academic excellence, Quranic education, and community service at Metropolitan University, Sylhet, Bangladesh.',
+                  'address': {
+                    '@type': 'PostalAddress',
+                    'addressLocality': 'Sylhet',
+                    'addressCountry': 'Bangladesh'
+                  },
+                  'parentOrganization': {
+                    '@type': 'CollegeOrUniversity',
+                    'name': 'Metropolitan University'
+                  }
+                },
+                {
+                  '@type': 'WebSite',
+                  '@id': 'https://muis.bd/#website',
+                  'url': 'https://muis.bd',
+                  'name': 'Metropolitan University Islamic Society',
+                  'alternateName': 'MUIS Platform',
+                  'publisher': {
+                    '@id': 'https://muis.bd/#organization'
+                  },
+                  'inLanguage': 'en-US'
+                }
+              ]
+            })
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet" />
