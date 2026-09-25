@@ -8,7 +8,7 @@ import Providers from '../src/components/Providers.js';
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://muis.bd'),
   title: {
-    default: 'Metropolitan University Islamic Society (MUIS) | Faith, Character & Excellence',
+    default: 'Metropolitan University Islamic Society (MUIS)',
     template: '%s | Metropolitan University Islamic Society (MUIS)'
   },
   description: 'Official platform of Metropolitan University Islamic Society (MUIS). Empowering students through Quranic education, Seerah conferences, campus halaqas, youth leadership, and community service at Metropolitan University, Sylhet.',
