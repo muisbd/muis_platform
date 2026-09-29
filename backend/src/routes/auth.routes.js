@@ -7,12 +7,12 @@ import { env } from '../config/env.js';
 
 const router = Router();
 
-function setAuthCookie(res, token) {
+function setAuthCookie(res, token, maxAge = 7 * 24 * 60 * 60 * 1000) {
   res.cookie('token', token, {
     httpOnly: true,
     sameSite: 'lax',
     secure: env.nodeEnv === 'production',
-    maxAge: 7 * 24 * 60 * 60 * 1000
+    maxAge
   });
 }
 
@@ -40,12 +40,27 @@ router.post('/login', authLimiter, asyncHandler(async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) throw new HttpError(400, 'Email and password are required.');
   const user = await User.findOne({ email: String(email).toLowerCase() }).select('+password');
-  if (!user || !(await user.comparePassword(password))) {
+  const passwordOk = Boolean(user && (await user.comparePassword(password)));
+  if (!user || !passwordOk || user.role === 'lu_verifier') {
     throw new HttpError(401, 'Incorrect email or password.');
   }
   if (user.frozen) throw new HttpError(403, 'This account is frozen. Contact MUIS.');
   const token = signToken(user);
   setAuthCookie(res, token);
+  res.json({ ok: true, token, user: publicUser(user) });
+}));
+
+router.post('/lu-login', authLimiter, asyncHandler(async (req, res) => {
+  const { email, password } = req.body || {};
+  if (!email || !password) throw new HttpError(400, 'Email and password are required.');
+  const user = await User.findOne({ email: String(email).toLowerCase() }).select('+password');
+  const passwordOk = Boolean(user && (await user.comparePassword(password)));
+  if (!user || !passwordOk || user.role !== 'lu_verifier' || user.frozen) {
+    throw new HttpError(401, 'Incorrect email or password.');
+  }
+  const maxAge = 12 * 60 * 60 * 1000;
+  const token = signToken(user, '12h');
+  setAuthCookie(res, token, maxAge);
   res.json({ ok: true, token, user: publicUser(user) });
 }));
 
@@ -59,6 +74,7 @@ router.get('/me', authRequired, asyncHandler(async (req, res) => {
 }));
 
 router.patch('/me', authRequired, asyncHandler(async (req, res) => {
+  if (req.user.role === 'lu_verifier') throw new HttpError(403, 'This account cannot be changed here.');
   const fields = ['name', 'phone', 'department', 'studentId', 'gender', 'byline'];
   for (const key of fields) {
     if (req.body[key] !== undefined) req.user[key] = req.body[key];

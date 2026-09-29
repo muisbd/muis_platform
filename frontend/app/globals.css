@@ -7269,6 +7269,55 @@ select.form-control option {
   font-weight: 600;
 }
 
+.sirah-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+button.sirah-choice {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+}
+
+.sirah-choice-grid .radio-card-btn {
+  white-space: normal;
+  text-align: center;
+  width: 100%;
+  min-height: 52px;
+}
+
+.sirah-form-section {
+  margin: 8px 0 14px;
+  color: #F8FAFC;
+  font-size: 1rem;
+}
+
+.sirah-path-note {
+  margin: 0 0 18px;
+  color: #CBD5E1;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.sirah-path-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 12px;
+}
+
+.sirah-lu-wait {
+  color: #FCD34D;
+  font-size: 0.82rem;
+  font-weight: 700;
+  max-width: 180px;
+  text-align: right;
+}
+
 .sirah-admin-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -7334,8 +7383,14 @@ select.form-control option {
 }
 
 @media (max-width: 640px) {
-  .sirah-success-meta {
+  .sirah-success-meta,
+  .sirah-choice-grid {
     grid-template-columns: 1fr;
+  }
+
+  .sirah-lu-wait {
+    max-width: none;
+    text-align: left;
   }
 }
 
@@ -9081,4 +9136,4 @@ select.form-control option {
 
 .skill-checkbox-card.none-option .skill-checkbox-input {
   accent-color: #C084FC;
-}
+}

@@ -260,6 +260,12 @@ export default function SirahConferencePage() {
   const [submitted, setSubmitted] = useState(null);
   const [gender, setGender] = useState('');
   const [batch, setBatch] = useState('');
+  const [audience, setAudience] = useState('');
+  const [otherPath, setOtherPath] = useState('');
+  const [relationship, setRelationship] = useState('');
+  const registrantType = audience === 'mu' ? 'mu' : otherPath;
+  const isGuardian = registrantType === 'guardian';
+  const isLu = registrantType === 'lu';
   const [copied, setCopied] = useState('');
   const [showStickyCta, setShowStickyCta] = useState(false);
 
@@ -282,18 +288,38 @@ export default function SirahConferencePage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
+    if (!registrantType) {
+      setError('Please choose how you are registering.');
+      return;
+    }
     if (gender !== 'Male' && gender !== 'Female') {
       setError('Please choose Male or Female.');
       return;
     }
+    if ((isLu || isGuardian) && !batch.trim()) {
+      setError(isGuardian ? 'Please enter the student\'s batch.' : 'Please enter your batch.');
+      return;
+    }
+    if (isGuardian && !relationship) {
+      setError('Please choose how you are related to the student.');
+      return;
+    }
     const form = e.currentTarget;
+    const relationshipNote = isGuardian && relationship === 'Other' ? form.relationshipNote.value.trim() : '';
+    if (isGuardian && relationship === 'Other' && !relationshipNote) {
+      setError('Please write how you are related to the student.');
+      return;
+    }
     const payload = {
+      registrantType,
       name: form.name.value.trim(),
       studentId: form.studentId.value.trim(),
       phone: form.phone.value.trim(),
       email: form.email.value.trim(),
       department: form.department.value.trim(),
       batch: batch.trim(),
+      relationship: isGuardian ? relationship : '',
+      relationshipNote,
       gender,
       paymentMethod: 'bKash',
       trxId: form.trxId.value.trim(),
@@ -421,14 +447,19 @@ export default function SirahConferencePage() {
               <h3>Registration submitted</h3>
               <p>
                 JazakAllah khair, <strong>{submitted.name}</strong>. We received your form.
-                MUIS will check TrxID <strong>{submitted.trxId}</strong> and then approve or reject your seat.
+                {submitted.registrantType === 'lu'
+                  ? ' Leading University will confirm the student. MUIS will then check TrxID '
+                  : ' MUIS will check TrxID '}
+                <strong>{submitted.trxId}</strong>
+                {submitted.registrantType === 'lu' ? ' and confirm the seat only after both checks.' : ' and then approve or reject your seat.'}
               </p>
               <dl className="sirah-success-meta">
-                <div><dt>Student ID</dt><dd>{submitted.studentId}</dd></div>
-                <div><dt>Phone</dt><dd>{submitted.phone}</dd></div>
-                <div><dt>Email</dt><dd>{submitted.email}</dd></div>
-                <div><dt>Department</dt><dd>{submitted.department}</dd></div>
-                {submitted.batch ? <div><dt>Batch</dt><dd>{submitted.batch}</dd></div> : null}
+                <div><dt>{submitted.registrantType === 'guardian' ? 'MU student ID' : 'Student ID'}</dt><dd>{submitted.studentId}</dd></div>
+                <div><dt>{submitted.registrantType === 'guardian' ? 'Your phone' : 'Phone'}</dt><dd>{submitted.phone}</dd></div>
+                <div><dt>{submitted.registrantType === 'guardian' ? 'Your email' : 'Email'}</dt><dd>{submitted.email}</dd></div>
+                <div><dt>{submitted.registrantType === 'guardian' ? 'Student department' : 'Department'}</dt><dd>{submitted.department}</dd></div>
+                {submitted.batch ? <div><dt>{submitted.registrantType === 'guardian' ? 'Student batch' : 'Batch'}</dt><dd>{submitted.batch}</dd></div> : null}
+                {submitted.registrantType === 'guardian' ? <div><dt>Relationship</dt><dd>{submitted.relationship === 'Other' ? submitted.relationshipNote : submitted.relationship}</dd></div> : null}
                 {submitted.gender ? <div><dt>Gender</dt><dd>{submitted.gender}</dd></div> : null}
                 <div><dt>Payment</dt><dd>bKash</dd></div>
                 <div><dt>TrxID</dt><dd>{submitted.trxId}</dd></div>
@@ -500,6 +531,157 @@ export default function SirahConferencePage() {
                   </p>
                 </div>
                 <form onSubmit={handleRegister} style={{ marginTop: 20 }}>
+                  <div className="form-group">
+                    <label>Who is registering? *</label>
+                    <div className="sirah-choice-grid">
+                      <button
+                        type="button"
+                        className={`radio-card sirah-choice${audience === 'mu' ? ' selected' : ''}`}
+                        onClick={() => { setAudience('mu'); setOtherPath(''); setRelationship(''); }}
+                      >
+                        <span className="radio-card-btn">Metropolitan University student</span>
+                      </button>
+                      <button
+                        type="button"
+                        className={`radio-card sirah-choice${audience === 'other' ? ' selected' : ''}`}
+                        onClick={() => setAudience('other')}
+                      >
+                        <span className="radio-card-btn">Not a Metropolitan University student</span>
+                      </button>
+                    </div>
+                  </div>
+                  {audience === 'other' ? (
+                    <div className="form-group">
+                      <label>Choose one *</label>
+                      <div className="sirah-choice-grid">
+                        <button
+                          type="button"
+                          className={`radio-card sirah-choice${otherPath === 'lu' ? ' selected' : ''}`}
+                          onClick={() => { setOtherPath('lu'); setRelationship(''); }}
+                        >
+                          <span className="radio-card-btn">Leading University (LUICF)</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`radio-card sirah-choice${otherPath === 'guardian' ? ' selected' : ''}`}
+                          onClick={() => setOtherPath('guardian')}
+                        >
+                          <span className="radio-card-btn">Guardian of an MU student</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+                  {registrantType ? (
+                    <p className="sirah-path-note">
+                      {isGuardian
+                        ? 'First enter your own name, phone, email, and gender. Phone and email are yours, not the student’s. Then enter the Metropolitan University student’s ID, department, and batch. You still pay the 150 BDT fee.'
+                        : isLu
+                          ? 'Use your Leading University student ID. An example is 0182320012101215, but your own ID is fine if it looks different. Leading University will confirm you, and MUIS will check the payment.'
+                          : 'Use your Metropolitan University student ID. MUIS will check the payment and then confirm your seat.'}
+                    </p>
+                  ) : null}
+                  {registrantType ? (
+                  <>
+                  {isGuardian ? (
+                    <>
+                      <h4 className="sirah-form-section">Your details</h4>
+                      <div className="form-grid-2">
+                        <div className="form-group">
+                          <label>Your full name *</label>
+                          <div className="input-with-icon">
+                            <User className="input-icon" />
+                            <input name="name" className="form-control" required placeholder="Guardian name" autoComplete="name" />
+                          </div>
+                        </div>
+                        <div className="form-group">
+                          <label>Your phone number *</label>
+                          <div className="input-with-icon">
+                            <Phone className="input-icon" />
+                            <input name="phone" type="tel" className="form-control" required placeholder="01XXXXXXXXX" autoComplete="tel" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <label>Your email *</label>
+                        <div className="input-with-icon">
+                          <Mail className="input-icon" />
+                          <input name="email" type="email" className="form-control" required placeholder="you@email.com" autoComplete="email" />
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <label>Your gender *</label>
+                        <div className="radio-card-group">
+                          <label className={`radio-card${gender === 'Male' ? ' selected' : ''}`}>
+                            <input type="radio" name="gender" value="Male" checked={gender === 'Male'} required onChange={() => setGender('Male')} />
+                            <span className="radio-card-btn"><UserCheck /> Male</span>
+                          </label>
+                          <label className={`radio-card${gender === 'Female' ? ' selected' : ''}`}>
+                            <input type="radio" name="gender" value="Female" checked={gender === 'Female'} required onChange={() => setGender('Female')} />
+                            <span className="radio-card-btn"><User /> Female</span>
+                          </label>
+                        </div>
+                      </div>
+                      <div className="form-grid-2">
+                        <div className="form-group">
+                          <label>Your relationship to the student *</label>
+                          <select
+                            className="form-control"
+                            value={relationship}
+                            onChange={(e) => setRelationship(e.target.value)}
+                            required
+                          >
+                            <option value="">Choose one</option>
+                            <option>Parent</option>
+                            <option>Brother</option>
+                            <option>Sister</option>
+                            <option>Spouse</option>
+                            <option>Other</option>
+                          </select>
+                        </div>
+                        {relationship === 'Other' ? (
+                          <div className="form-group">
+                            <label>How are you related? *</label>
+                            <input name="relationshipNote" className="form-control" required placeholder="For example: uncle" />
+                          </div>
+                        ) : null}
+                      </div>
+                      <h4 className="sirah-form-section">The Metropolitan University student</h4>
+                      <div className="form-group">
+                        <label>Student ID *</label>
+                        <div className="input-with-icon">
+                          <CreditCard className="input-icon" />
+                          <input name="studentId" className="form-control" required placeholder="231-115-052" autoComplete="off" />
+                        </div>
+                      </div>
+                      <div className="form-grid-2">
+                        <div className="form-group">
+                          <label>Student department *</label>
+                          <div className="input-with-icon">
+                            <GraduationCap className="input-icon" />
+                            <input name="department" className="form-control" required placeholder="CSE, BBA, LLB…" />
+                          </div>
+                        </div>
+                        <div className="form-group">
+                          <label>Student batch *</label>
+                          <div className="input-with-icon">
+                            <Layers className="input-icon" />
+                            <input
+                              name="batch"
+                              type="number"
+                              inputMode="numeric"
+                              min="1"
+                              className="form-control"
+                              value={batch}
+                              onChange={(e) => setBatch(e.target.value)}
+                              placeholder="e.g. 62"
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                  <>
                   <div className="form-grid-2">
                     <div className="form-group">
                       <label>Participant full name *</label>
@@ -509,10 +691,10 @@ export default function SirahConferencePage() {
                       </div>
                     </div>
                     <div className="form-group">
-                      <label>Student ID *</label>
+                      <label>{isLu ? 'Leading University student ID *' : 'Student ID *'}</label>
                       <div className="input-with-icon">
                         <CreditCard className="input-icon" />
-                        <input name="studentId" className="form-control" required placeholder="231-115-052" autoComplete="off" />
+                        <input name="studentId" className="form-control" required placeholder={isLu ? '0182320012101215' : '231-115-052'} autoComplete="off" />
                       </div>
                     </div>
                   </div>
@@ -528,7 +710,7 @@ export default function SirahConferencePage() {
                       <label>Email *</label>
                       <div className="input-with-icon">
                         <Mail className="input-icon" />
-                        <input name="email" type="email" className="form-control" required placeholder="student@gmail.com" autoComplete="email" />
+                        <input name="email" type="email" className="form-control" required placeholder={isLu ? 'you@email.com' : 'student@metrouni.edu.bd'} autoComplete="email" />
                       </div>
                     </div>
                   </div>
@@ -541,7 +723,7 @@ export default function SirahConferencePage() {
                       </div>
                     </div>
                     <div className="form-group">
-                      <label>Batch</label>
+                      <label>{isLu ? 'Batch *' : 'Batch'}</label>
                       <div className="input-with-icon">
                         <Layers className="input-icon" />
                         <input
@@ -553,6 +735,7 @@ export default function SirahConferencePage() {
                           value={batch}
                           onChange={(e) => setBatch(e.target.value)}
                           placeholder="e.g. 58th"
+                          required={isLu}
                         />
                       </div>
                     </div>
@@ -570,6 +753,8 @@ export default function SirahConferencePage() {
                       </label>
                     </div>
                   </div>
+                  </>
+                  )}
                   <div className="form-group">
                     <label>bKash Transaction ID (TrxID) *</label>
                     <div className="input-with-icon">
@@ -580,6 +765,8 @@ export default function SirahConferencePage() {
                   <button type="submit" className="btn btn-gold btn-lg" style={{ width: '100%' }} disabled={loading}>
                     <ShieldCheck /> {loading ? 'Submitting…' : 'Submit registration'}
                   </button>
+                  </>
+                  ) : null}
                 </form>
               </div>
             </>

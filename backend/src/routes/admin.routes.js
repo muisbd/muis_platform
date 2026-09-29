@@ -290,8 +290,15 @@ router.patch('/sirah/:id', requireRoles('admin', 'moderator', 'treasurer'), asyn
   if (!['accepted', 'rejected', 'pending_review'].includes(nextStatus)) {
     throw new HttpError(400, 'Invalid status.');
   }
+  if (nextStatus === 'accepted' && doc.registrantType === 'lu' && doc.luStatus !== 'verified') {
+    throw new HttpError(400, 'Leading University has not verified this student yet. You can approve the seat after they say yes.');
+  }
   doc.status = nextStatus;
   doc.adminNote = req.body.adminNote || doc.adminNote;
+  if (doc.registrantType === 'lu') {
+    if (nextStatus === 'pending_review' && doc.luStatus === 'rejected') doc.luStatus = 'pending';
+    if (nextStatus === 'rejected' && doc.luStatus === 'pending') doc.luStatus = 'rejected';
+  }
   if (nextStatus === 'accepted') {
     doc.ticketCode = doc.ticketCode || `SEERAH26-${doc._id.toString().slice(-6).toUpperCase()}`;
   }
@@ -310,7 +317,9 @@ router.patch('/sirah/:id', requireRoles('admin', 'moderator', 'treasurer'), asyn
         <p><strong>Date:</strong> 17 October<br/>
         <strong>Writing contest deadline:</strong> 14 October 2026<br/>
         <strong>Reference:</strong> ${doc.ticketCode}<br/>
-        <strong>Student ID:</strong> ${doc.studentId}</p>
+        ${doc.registrantType === 'guardian'
+          ? `<strong>Guardian of MU student:</strong> ${doc.studentId}${doc.relationship ? ` (${doc.relationship})` : ''}`
+          : `<strong>Student ID:</strong> ${doc.studentId}`}</p>
         <p>Please keep this email. Event details: ${env.frontendUrl}/seerah-2026/details</p>
         <p>Wassalam,<br/>Metropolitan University Islamic Society (MUIS)</p>`
       )

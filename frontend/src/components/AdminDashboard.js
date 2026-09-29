@@ -55,18 +55,45 @@ function csvCell(value) {
   return text;
 }
 
+function sirahPathOf(row) {
+  return row?.registrantType || 'mu';
+}
+
+function sirahPathLabel(row) {
+  const path = sirahPathOf(row);
+  if (path === 'lu') return 'Leading University';
+  if (path === 'guardian') return 'Guardian';
+  return 'MU student';
+}
+
+function sirahRelation(row) {
+  if (sirahPathOf(row) !== 'guardian') return '';
+  if (row.relationship === 'Other' && row.relationshipNote) return `Other (${row.relationshipNote})`;
+  return row.relationship || '';
+}
+
+function sirahLuLabel(row) {
+  if (sirahPathOf(row) !== 'lu') return '';
+  if (row.luStatus === 'verified') return 'LU verified';
+  if (row.luStatus === 'rejected') return 'LU said no';
+  return 'Waiting for LU';
+}
+
 function downloadSirahCsv(list, filename) {
-  const headers = ['Name', 'Student ID', 'Phone', 'Email', 'Department', 'Batch', 'Gender', 'Payment method', 'TrxID / Paid to', 'Status', 'Reference', 'Submitted'];
+  const headers = ['Path', 'Name', 'Student ID', 'Relationship', 'Phone', 'Email', 'Department', 'Batch', 'Gender', 'LU check', 'Payment method', 'TrxID / Paid to', 'Status', 'Reference', 'Submitted'];
   const lines = [
     headers.join(','),
     ...list.map((row) => [
+      sirahPathLabel(row),
       row.name,
       row.studentId,
+      sirahRelation(row),
       row.phone,
       row.email,
       row.department,
       row.batch,
       row.gender,
+      sirahLuLabel(row),
       row.paymentMethod,
       sirahPaymentRef(row),
       row.status,
@@ -84,15 +111,18 @@ function downloadSirahCsv(list, filename) {
 }
 
 function sirahListText(list) {
-  const header = ['Name', 'Student ID', 'Phone', 'Email', 'Department', 'Batch', 'Gender', 'Payment', 'TrxID / Paid to'].join('\t');
+  const header = ['Path', 'Name', 'Student ID', 'Relationship', 'Phone', 'Email', 'Department', 'Batch', 'Gender', 'LU check', 'Payment', 'TrxID / Paid to'].join('\t');
   const body = list.map((row) => [
+    sirahPathLabel(row),
     row.name,
     row.studentId,
+    sirahRelation(row),
     row.phone,
     row.email,
     row.department,
     row.batch || '',
     row.gender || '',
+    sirahLuLabel(row),
     row.paymentMethod,
     sirahPaymentRef(row)
   ].join('\t'));
@@ -134,13 +164,18 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false);
   const [sirahUpdates, setSirahUpdates] = useState([]);
   const [sirahFilter, setSirahFilter] = useState('pending');
+  const [sirahPath, setSirahPath] = useState('all');
 
   const tabs = ALL_TABS.filter((t) => user && (user.role === 'admin' || t.roles.includes(user.role)));
 
   useEffect(() => {
     if (!ready) return;
+    if (user?.role === 'lu_verifier') {
+      router.replace('/lu-verify');
+      return;
+    }
     if (!isStaff) router.replace('/login');
-  }, [ready, isStaff, router]);
+  }, [ready, isStaff, user, router]);
 
   const load = async (current = tab) => {
     setLoading(true);
@@ -329,26 +364,49 @@ export default function AdminDashboard() {
           ) : null}
 
           {tab === 'sirah' && Array.isArray(rows) ? (() => {
-            const pendingCount = rows.filter(isSirahPending).length;
-            const accepted = rows.filter((row) => row.status === 'accepted');
-            const rejectedCount = rows.filter((row) => row.status === 'rejected').length;
-            const visible = rows.filter((row) => {
+            const pathRows = rows.filter((row) => sirahPath === 'all' || sirahPathOf(row) === sirahPath);
+            const countPath = (id) => rows.filter((row) => sirahPathOf(row) === id).length;
+            const pendingCount = pathRows.filter(isSirahPending).length;
+            const accepted = pathRows.filter((row) => row.status === 'accepted');
+            const rejectedCount = pathRows.filter((row) => row.status === 'rejected').length;
+            const visible = pathRows.filter((row) => {
               if (sirahFilter === 'all') return true;
               if (sirahFilter === 'pending') return isSirahPending(row);
               return row.status === sirahFilter;
             });
+            const pathHelp = {
+              mu: 'Metropolitan University students. Check the TrxID, then approve or reject.',
+              lu: 'Leading University students. Approve only after they are marked LU verified. You still check the TrxID. Their yes or no is only about the student.',
+              guardian: 'Guardians. Check the Metropolitan University student details and the TrxID, then approve or reject. They pay the same fee.',
+              all: 'Three paths are separate below. Check the TrxID before you approve. Leading University students also need their university to say yes first.'
+            }[sirahPath];
             return (
             <div className="admin-table-wrap">
-              <p className="admin-help">
-                Check the TrxID, then Approve or Reject. Use the accepted list below for the final registered candidates.
-              </p>
+              <p className="admin-help">{pathHelp}</p>
+              <div className="sirah-path-row">
+                {[
+                  ['all', `All paths (${rows.length})`],
+                  ['mu', `MU students (${countPath('mu')})`],
+                  ['lu', `Leading University (${countPath('lu')})`],
+                  ['guardian', `Guardians (${countPath('guardian')})`]
+                ].map(([id, label]) => (
+                  <button
+                    key={id}
+                    type="button"
+                    className={`tab-btn${sirahPath === id ? ' active' : ''}`}
+                    onClick={() => setSirahPath(id)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
               <div className="sirah-admin-toolbar">
                 <div className="sirah-filter-row">
                   {[
                     ['pending', `Pending (${pendingCount})`],
                     ['accepted', `Accepted (${accepted.length})`],
                     ['rejected', `Rejected (${rejectedCount})`],
-                    ['all', `All (${rows.length})`]
+                    ['all', `All (${pathRows.length})`]
                   ].map(([id, label]) => (
                     <button
                       key={id}
@@ -366,7 +424,7 @@ export default function AdminDashboard() {
                     className="btn btn-sm btn-emerald"
                     disabled={!accepted.length}
                     onClick={() => {
-                      downloadSirahCsv(accepted, 'seerah-2026-accepted.csv');
+                      downloadSirahCsv(accepted, `seerah-2026-accepted-${sirahPath}.csv`);
                       showToast('Accepted list downloaded.');
                     }}
                   >
@@ -383,8 +441,8 @@ export default function AdminDashboard() {
                   <button
                     type="button"
                     className="btn btn-sm btn-outline"
-                    disabled={!rows.length}
-                    onClick={() => downloadSirahCsv(rows, 'seerah-2026-all.csv')}
+                    disabled={!pathRows.length}
+                    onClick={() => downloadSirahCsv(pathRows, `seerah-2026-${sirahPath}.csv`)}
                   >
                     Download all
                   </button>
@@ -397,6 +455,7 @@ export default function AdminDashboard() {
                     <thead>
                       <tr>
                         <th>#</th>
+                        <th>Path</th>
                         <th>Name</th>
                         <th>Student ID</th>
                         <th>Phone</th>
@@ -412,7 +471,8 @@ export default function AdminDashboard() {
                       {accepted.map((row, index) => (
                         <tr key={row._id}>
                           <td>{index + 1}</td>
-                          <td>{row.name}</td>
+                          <td>{sirahPathLabel(row)}</td>
+                          <td>{row.name}{sirahRelation(row) ? ` · ${sirahRelation(row)}` : ''}</td>
                           <td>{row.studentId}</td>
                           <td>{row.phone || '—'}</td>
                           <td>{row.email}</td>
@@ -440,10 +500,17 @@ export default function AdminDashboard() {
                   <div>
                     <div className="admin-row-title">
                       <strong>{row.name}</strong>
+                      <span className="admin-badge">{sirahPathLabel(row)}</span>
                       <span className={`admin-badge admin-badge-${row.status}`}>{statusLabel(row.status)}</span>
+                      {sirahLuLabel(row) ? <span className={`admin-badge admin-badge-${row.luStatus === 'verified' ? 'accepted' : row.luStatus === 'rejected' ? 'rejected' : 'pending'}`}>{sirahLuLabel(row)}</span> : null}
                     </div>
-                    <div className="admin-meta">{row.studentId} · {row.phone || 'no phone'} · {row.email}</div>
                     <div className="admin-meta">
+                      {sirahPathOf(row) === 'guardian' ? `MU student ${row.studentId}` : row.studentId}
+                      {sirahRelation(row) ? ` · ${sirahRelation(row)}` : ''}
+                      {' · '}{row.phone || 'no phone'} · {row.email}
+                    </div>
+                    <div className="admin-meta">
+                      {sirahPathOf(row) === 'guardian' ? 'Student ' : ''}
                       {row.department || 'Department not given'}
                       {row.batch ? ` · Batch ${row.batch}` : ''}
                       {row.gender ? ` · ${row.gender}` : ''}
@@ -460,7 +527,11 @@ export default function AdminDashboard() {
                   </div>
                   <div className="admin-actions">
                     {row.status !== 'accepted' ? (
-                      <button type="button" className="btn btn-sm btn-emerald" onClick={() => patch(`/admin/sirah/${row._id}`, { status: 'accepted' })}>Approve</button>
+                      sirahPathOf(row) === 'lu' && row.luStatus !== 'verified' ? (
+                        <span className="sirah-lu-wait">Approve after Leading University says yes</span>
+                      ) : (
+                        <button type="button" className="btn btn-sm btn-emerald" onClick={() => patch(`/admin/sirah/${row._id}`, { status: 'accepted' })}>Approve</button>
+                      )
                     ) : null}
                     {row.status !== 'rejected' ? (
                       <button type="button" className="btn btn-sm btn-outline" onClick={() => patch(`/admin/sirah/${row._id}`, { status: 'rejected' })}>Reject</button>

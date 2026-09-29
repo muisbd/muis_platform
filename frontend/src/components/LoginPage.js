@@ -8,14 +8,17 @@ import { useAuth } from '../context/AuthContext.js';
 import PageHeader from './PageHeader.js';
 
 export default function LoginPage() {
-  const { login, isLoggedIn, isStaff } = useAuth();
+  const { login, isLoggedIn, isStaff, user } = useAuth();
   const router = useRouter();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isLoggedIn) router.replace(isStaff ? '/admin' : '/');
-  }, [isLoggedIn, isStaff, router]);
+    if (!isLoggedIn) return;
+    if (user?.role === 'lu_verifier') router.replace('/lu-verify');
+    else if (isStaff) router.replace('/admin');
+    else router.replace('/');
+  }, [isLoggedIn, isStaff, user, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

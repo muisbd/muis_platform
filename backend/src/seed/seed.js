@@ -9,6 +9,7 @@ import { MagazineEdition } from '../models/MagazineEdition.js';
 import { CommitteeMember } from '../models/CommitteeMember.js';
 import { FaqItem } from '../models/FaqItem.js';
 import { EVENTS, WEEKLY, GALLERY, COURSES, MAGAZINE, COMMITTEE, FAQS } from './siteData.js';
+import { ensureLuVerifier } from '../utils/ensureAccounts.js';
 
 async function upsertMany(Model, items, key) {
   for (const item of items) {
@@ -59,6 +60,7 @@ async function run() {
   if (!primary && !secondary) {
     console.warn('ADMIN_EMAIL / ADMIN_PASSWORD not set — skipping admin user.');
   }
+  await ensureLuVerifier();
 
   await upsertMany(Event, EVENTS, 'slug');
   console.log(`Events: ${EVENTS.length}`);

@@ -3,11 +3,11 @@ import { env } from '../config/env.js';
 import { HttpError } from '../utils/asyncHandler.js';
 import { User } from '../models/User.js';
 
-export function signToken(user) {
+export function signToken(user, expiresIn = env.jwtExpiresIn) {
   return jwt.sign(
     { id: user._id.toString(), role: user.role },
     env.jwtSecret,
-    { expiresIn: env.jwtExpiresIn }
+    { expiresIn }
   );
 }
 

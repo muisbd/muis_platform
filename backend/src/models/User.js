@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
     gender: { type: String, enum: ['Male', 'Female', ''], default: '' },
     role: {
       type: String,
-      enum: ['student', 'blogger', 'moderator', 'treasurer', 'admin'],
+      enum: ['student', 'blogger', 'moderator', 'treasurer', 'admin', 'lu_verifier'],
       default: 'student'
     },
     memberStatus: {

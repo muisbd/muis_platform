@@ -10,6 +10,9 @@ function escapeRegex(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+const REGISTRANT_TYPES = ['mu', 'lu', 'guardian'];
+const RELATIONSHIPS = ['Parent', 'Brother', 'Sister', 'Spouse', 'Other'];
+
 function applyFields(doc, fields) {
   doc.name = fields.name;
   doc.studentId = fields.studentId;
@@ -18,6 +21,10 @@ function applyFields(doc, fields) {
   doc.batch = fields.batch;
   doc.section = fields.section;
   doc.gender = fields.gender;
+  doc.registrantType = fields.registrantType;
+  doc.relationship = fields.relationship;
+  doc.relationshipNote = fields.relationshipNote;
+  doc.luStatus = fields.registrantType === 'lu' ? 'pending' : 'not_required';
   doc.paymentMethod = fields.paymentMethod;
   doc.trxId = fields.trxId;
   doc.paidTo = fields.paidTo;
@@ -26,6 +33,17 @@ function applyFields(doc, fields) {
   doc.verifyCodeHash = '';
   doc.adminNote = '';
   doc.ticketCode = '';
+}
+
+function pathLabel(type) {
+  if (type === 'lu') return 'Leading University';
+  if (type === 'guardian') return 'Guardian';
+  return 'Metropolitan University student';
+}
+
+function relationLabel(doc) {
+  if (doc.relationship === 'Other' && doc.relationshipNote) return `Other (${doc.relationshipNote})`;
+  return doc.relationship || 'Guardian';
 }
 
 router.get('/info', asyncHandler(async (_req, res) => {
@@ -42,27 +60,51 @@ router.get('/info', asyncHandler(async (_req, res) => {
 }));
 
 router.post('/register', publicFormLimiter, asyncHandler(async (req, res) => {
-  const { name, studentId, phone, email, department, batch, section, gender, paymentMethod, trxId } = req.body || {};
-  if (!name?.trim()) throw new HttpError(400, 'Please enter the participant name.');
-  if (!studentId?.trim()) throw new HttpError(400, 'Please enter your student ID.');
-  if (!phone?.trim()) throw new HttpError(400, 'Please enter your phone number.');
-  if (!email || !String(email).includes('@')) throw new HttpError(400, 'Please enter a valid email address.');
-  if (!department?.trim()) throw new HttpError(400, 'Please enter your department.');
-  const genderValue = String(gender || '').trim();
-  if (genderValue !== 'Male' && genderValue !== 'Female') throw new HttpError(400, 'Please choose Male or Female.');
-  if (String(paymentMethod || '').trim() !== 'bKash') throw new HttpError(400, 'Please pay with bKash Send Money and enter the TrxID.');
-  if (!trxId?.trim()) throw new HttpError(400, 'Please enter your bKash transaction ID.');
+  const body = req.body || {};
+  const registrantType = String(body.registrantType || 'mu').trim();
+  const name = String(body.name || '').trim();
+  const studentId = String(body.studentId || '').trim();
+  const phone = String(body.phone || '').trim();
+  const department = String(body.department || '').trim();
+  const batch = String(body.batch || '').trim();
+  const genderValue = String(body.gender || '').trim();
+  const relationship = String(body.relationship || '').trim();
+  const relationshipNote = String(body.relationshipNote || '').trim();
 
-  const emailKey = String(email).toLowerCase().trim();
-  const trxKey = String(trxId).trim();
+  if (!REGISTRANT_TYPES.includes(registrantType)) throw new HttpError(400, 'Please choose how you are registering.');
+  if (!name) throw new HttpError(400, registrantType === 'guardian' ? 'Please enter the guardian name.' : 'Please enter the participant name.');
+  if (!studentId) {
+    throw new HttpError(400, registrantType === 'guardian' ? 'Please enter the Metropolitan University student ID.' : 'Please enter the student ID.');
+  }
+  if (!phone) throw new HttpError(400, 'Please enter your phone number.');
+  if (!body.email || !String(body.email).includes('@')) throw new HttpError(400, 'Please enter a valid email address.');
+  if (!department) {
+    throw new HttpError(400, registrantType === 'guardian' ? 'Please enter the student\'s department.' : 'Please enter your department.');
+  }
+  if ((registrantType === 'lu' || registrantType === 'guardian') && !batch) {
+    throw new HttpError(400, registrantType === 'guardian' ? 'Please enter the student\'s batch.' : 'Please enter your batch.');
+  }
+  if (registrantType === 'guardian') {
+    if (!RELATIONSHIPS.includes(relationship)) throw new HttpError(400, 'Please choose how you are related to the student.');
+    if (relationship === 'Other' && !relationshipNote) throw new HttpError(400, 'Please write how you are related to the student.');
+  }
+  if (genderValue !== 'Male' && genderValue !== 'Female') throw new HttpError(400, 'Please choose Male or Female.');
+  if (String(body.paymentMethod || '').trim() !== 'bKash') throw new HttpError(400, 'Please pay with bKash Send Money and enter the TrxID.');
+  if (!String(body.trxId || '').trim()) throw new HttpError(400, 'Please enter your bKash transaction ID. The registration fee is required.');
+
+  const emailKey = String(body.email).toLowerCase().trim();
+  const trxKey = String(body.trxId).trim();
   const fields = {
-    name: name.trim(),
-    studentId: studentId.trim(),
-    phone: phone.trim(),
-    department: department.trim(),
-    batch: String(batch || '').trim(),
-    section: String(section || '').trim(),
+    name,
+    studentId,
+    phone,
+    department,
+    batch,
+    section: String(body.section || '').trim(),
     gender: genderValue,
+    registrantType,
+    relationship: registrantType === 'guardian' ? relationship : '',
+    relationshipNote: registrantType === 'guardian' && relationship === 'Other' ? relationshipNote : '',
     paymentMethod: 'bKash',
     trxId: trxKey,
     paidTo: ''
@@ -84,31 +126,46 @@ router.post('/register', publicFormLimiter, asyncHandler(async (req, res) => {
   } else if (!doc) {
     doc = new SirahRegistration({
       ...fields,
-      email: emailKey
+      email: emailKey,
+      luStatus: registrantType === 'lu' ? 'pending' : 'not_required'
     });
   } else {
     applyFields(doc, fields);
   }
 
   await doc.save();
+  const who = doc.registrantType === 'guardian'
+    ? `${doc.name}, guardian (${relationLabel(doc)}) of MU student ${doc.studentId}`
+    : `${doc.name} (${doc.studentId})`;
+  const nextStep = doc.registrantType === 'lu'
+    ? 'Leading University will confirm this student. MUIS will check the bKash payment after that.'
+    : 'MUIS will check the bKash payment and then approve or reject the seat.';
   await notifyCommittee(
     'Seerah 2026 registration',
     wrapEmail(
       'New Seerah application',
-      `<p>${doc.name} (${doc.studentId}) — ${doc.email}</p><p>Phone: ${doc.phone}<br/>Department: ${doc.department}${doc.batch ? ` · Batch ${doc.batch}` : ''}${doc.gender ? ` · ${doc.gender}` : ''}</p><p>${doc.paymentMethod} · ${doc.paidTo ? `Paid to ${doc.paidTo}` : `TrxID ${doc.trxId}`}</p>`
+      `<p>${who} — ${doc.email}</p><p>Path: ${pathLabel(doc.registrantType)}<br/>Phone: ${doc.phone}<br/>Department: ${doc.department}${doc.batch ? ` · Batch ${doc.batch}` : ''}${doc.gender ? ` · ${doc.gender}` : ''}</p><p>bKash TrxID ${doc.trxId}</p><p>${nextStep}</p>`
     )
   );
+  const applicantNote = doc.registrantType === 'lu'
+    ? 'Leading University will confirm that you are their student. MUIS will check your bKash payment. Your seat is confirmed only after both checks.'
+    : 'MUIS will check your bKash payment and then approve or reject your seat.';
+  const idLine = doc.registrantType === 'guardian'
+    ? `Guardian: ${relationLabel(doc)}<br/>MU student ID: ${doc.studentId}`
+    : `Student ID: ${doc.studentId}`;
   await sendMail({
     to: emailKey,
     subject: 'Seerah 2026 — registration received',
     html: wrapEmail(
       'Registration received',
-      `<p>Assalamu alaikum ${doc.name},</p><p>We received your Seerah Conference 2026 registration. MUIS will check your bKash payment and then approve or reject your seat.</p><p>This covers the Seerah Quiz, Writing Contest, and Seerah Seminar. Writing contest deadline: 14 October 2026.</p><p>Student ID: ${doc.studentId}<br/>TrxID: ${doc.trxId}</p>`
+      `<p>Assalamu alaikum ${doc.name},</p><p>We received your Seerah Conference 2026 registration. ${applicantNote}</p><p>This covers the Seerah Quiz, Writing Contest, and Seerah Seminar. Writing contest deadline: 14 October 2026.</p><p>${idLine}<br/>TrxID: ${doc.trxId}</p>`
     )
   });
   res.status(201).json({
     ok: true,
-    message: 'Registration submitted. MUIS will confirm after checking your payment.'
+    message: doc.registrantType === 'lu'
+      ? 'Registration submitted. Leading University will confirm the student, then MUIS will check the payment.'
+      : 'Registration submitted. MUIS will confirm after checking your payment.'
   });
 }));
 

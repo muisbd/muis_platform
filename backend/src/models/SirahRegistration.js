@@ -10,6 +10,14 @@ const sirahSchema = new mongoose.Schema(
     batch: { type: String, default: '', trim: true },
     section: { type: String, default: '', trim: true },
     gender: { type: String, enum: ['Male', 'Female', ''], default: '', trim: true },
+    registrantType: { type: String, enum: ['mu', 'lu', 'guardian'], default: 'mu', index: true },
+    relationship: { type: String, default: '', trim: true },
+    relationshipNote: { type: String, default: '', trim: true },
+    luStatus: {
+      type: String,
+      enum: ['not_required', 'pending', 'verified', 'rejected'],
+      default: 'not_required'
+    },
     paymentMethod: { type: String, required: true, trim: true },
     trxId: { type: String, default: '', trim: true },
     paidTo: { type: String, default: '', trim: true },

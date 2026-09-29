@@ -31,10 +31,17 @@ export function AuthProvider({ children }) {
       ready,
       isLoggedIn: Boolean(user),
       isStaff: Boolean(user && staff.includes(user.role)),
+      isLuVerifier: Boolean(user && user.role === 'lu_verifier'),
       isMember: Boolean(user && (user.role === 'admin' || user.memberStatus === 'approved')),
       isPendingMember: Boolean(user && user.memberStatus === 'pending'),
       async login(email, password) {
         const data = await api('/auth/login', { method: 'POST', body: { email, password } });
+        setToken(data.token);
+        setUser(data.user);
+        return data.user;
+      },
+      async loginLu(email, password) {
+        const data = await api('/auth/lu-login', { method: 'POST', body: { email, password } });
         setToken(data.token);
         setUser(data.user);
         return data.user;
