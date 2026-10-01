@@ -533,20 +533,22 @@ export default function SirahConferencePage() {
                 <form onSubmit={handleRegister} style={{ marginTop: 20 }}>
                   <div className="form-group">
                     <label>Who is registering? *</label>
-                    <div className="sirah-choice-grid">
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                       <button
                         type="button"
-                        className={`radio-card sirah-choice${audience === 'mu' ? ' selected' : ''}`}
+                        className={`btn ${audience === 'mu' ? 'btn-gold' : 'btn-outline-white'}`}
+                        style={{ padding: '16px', height: '100%' }}
                         onClick={() => { setAudience('mu'); setOtherPath(''); setRelationship(''); }}
                       >
-                        <span className="radio-card-btn">Metropolitan University student</span>
+                        MU Student
                       </button>
                       <button
                         type="button"
-                        className={`radio-card sirah-choice${audience === 'other' ? ' selected' : ''}`}
+                        className={`btn ${audience === 'other' ? 'btn-gold' : 'btn-outline-white'}`}
+                        style={{ padding: '16px', height: '100%', whiteSpace: 'normal', textAlign: 'center' }}
                         onClick={() => setAudience('other')}
                       >
-                        <span className="radio-card-btn">Not a Metropolitan University student</span>
+                        Not a MU Student
                       </button>
                     </div>
                   </div>
@@ -566,7 +568,7 @@ export default function SirahConferencePage() {
                           className={`radio-card sirah-choice${otherPath === 'guardian' ? ' selected' : ''}`}
                           onClick={() => setOtherPath('guardian')}
                         >
-                          <span className="radio-card-btn">Guardian of an MU student</span>
+                          <span className="radio-card-btn">Guardian of an MU Student</span>
                         </button>
                       </div>
                     </div>
@@ -581,191 +583,191 @@ export default function SirahConferencePage() {
                     </p>
                   ) : null}
                   {registrantType ? (
-                  <>
-                  {isGuardian ? (
                     <>
-                      <h4 className="sirah-form-section">Your details</h4>
-                      <div className="form-grid-2">
-                        <div className="form-group">
-                          <label>Your full name *</label>
-                          <div className="input-with-icon">
-                            <User className="input-icon" />
-                            <input name="name" className="form-control" required placeholder="Guardian name" autoComplete="name" />
+                      {isGuardian ? (
+                        <>
+                          <h4 className="sirah-form-section">Your details</h4>
+                          <div className="form-grid-2">
+                            <div className="form-group">
+                              <label>Your full name *</label>
+                              <div className="input-with-icon">
+                                <User className="input-icon" />
+                                <input name="name" className="form-control" required placeholder="Guardian name" autoComplete="name" />
+                              </div>
+                            </div>
+                            <div className="form-group">
+                              <label>Your phone number *</label>
+                              <div className="input-with-icon">
+                                <Phone className="input-icon" />
+                                <input name="phone" type="tel" className="form-control" required placeholder="01XXXXXXXXX" autoComplete="tel" />
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                        <div className="form-group">
-                          <label>Your phone number *</label>
-                          <div className="input-with-icon">
-                            <Phone className="input-icon" />
-                            <input name="phone" type="tel" className="form-control" required placeholder="01XXXXXXXXX" autoComplete="tel" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label>Your email *</label>
-                        <div className="input-with-icon">
-                          <Mail className="input-icon" />
-                          <input name="email" type="email" className="form-control" required placeholder="you@email.com" autoComplete="email" />
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label>Your gender *</label>
-                        <div className="radio-card-group">
-                          <label className={`radio-card${gender === 'Male' ? ' selected' : ''}`}>
-                            <input type="radio" name="gender" value="Male" checked={gender === 'Male'} required onChange={() => setGender('Male')} />
-                            <span className="radio-card-btn"><UserCheck /> Male</span>
-                          </label>
-                          <label className={`radio-card${gender === 'Female' ? ' selected' : ''}`}>
-                            <input type="radio" name="gender" value="Female" checked={gender === 'Female'} required onChange={() => setGender('Female')} />
-                            <span className="radio-card-btn"><User /> Female</span>
-                          </label>
-                        </div>
-                      </div>
-                      <div className="form-grid-2">
-                        <div className="form-group">
-                          <label>Your relationship to the student *</label>
-                          <select
-                            className="form-control"
-                            value={relationship}
-                            onChange={(e) => setRelationship(e.target.value)}
-                            required
-                          >
-                            <option value="">Choose one</option>
-                            <option>Parent</option>
-                            <option>Brother</option>
-                            <option>Sister</option>
-                            <option>Spouse</option>
-                            <option>Other</option>
-                          </select>
-                        </div>
-                        {relationship === 'Other' ? (
                           <div className="form-group">
-                            <label>How are you related? *</label>
-                            <input name="relationshipNote" className="form-control" required placeholder="For example: uncle" />
+                            <label>Your email *</label>
+                            <div className="input-with-icon">
+                              <Mail className="input-icon" />
+                              <input name="email" type="email" className="form-control" required placeholder="you@email.com" autoComplete="email" />
+                            </div>
                           </div>
-                        ) : null}
-                      </div>
-                      <h4 className="sirah-form-section">The Metropolitan University student</h4>
+                          <div className="form-group">
+                            <label>Your gender *</label>
+                            <div className="radio-card-group">
+                              <label className={`radio-card${gender === 'Male' ? ' selected' : ''}`}>
+                                <input type="radio" name="gender" value="Male" checked={gender === 'Male'} required onChange={() => setGender('Male')} />
+                                <span className="radio-card-btn"><UserCheck /> Male</span>
+                              </label>
+                              <label className={`radio-card${gender === 'Female' ? ' selected' : ''}`}>
+                                <input type="radio" name="gender" value="Female" checked={gender === 'Female'} required onChange={() => setGender('Female')} />
+                                <span className="radio-card-btn"><User /> Female</span>
+                              </label>
+                            </div>
+                          </div>
+                          <div className="form-grid-2">
+                            <div className="form-group">
+                              <label>Your relationship to the student *</label>
+                              <select
+                                className="form-control"
+                                value={relationship}
+                                onChange={(e) => setRelationship(e.target.value)}
+                                required
+                              >
+                                <option value="">Choose one</option>
+                                <option>Parent</option>
+                                <option>Brother</option>
+                                <option>Sister</option>
+                                <option>Spouse</option>
+                                <option>Other</option>
+                              </select>
+                            </div>
+                            {relationship === 'Other' ? (
+                              <div className="form-group">
+                                <label>How are you related? *</label>
+                                <input name="relationshipNote" className="form-control" required placeholder="For example: uncle" />
+                              </div>
+                            ) : null}
+                          </div>
+                          <h4 className="sirah-form-section">The Metropolitan University student</h4>
+                          <div className="form-group">
+                            <label>Student ID *</label>
+                            <div className="input-with-icon">
+                              <CreditCard className="input-icon" />
+                              <input name="studentId" className="form-control" required placeholder="231-115-052" autoComplete="off" />
+                            </div>
+                          </div>
+                          <div className="form-grid-2">
+                            <div className="form-group">
+                              <label>Student department *</label>
+                              <div className="input-with-icon">
+                                <GraduationCap className="input-icon" />
+                                <input name="department" className="form-control" required placeholder="CSE, BBA, LLB…" />
+                              </div>
+                            </div>
+                            <div className="form-group">
+                              <label>Student batch *</label>
+                              <div className="input-with-icon">
+                                <Layers className="input-icon" />
+                                <input
+                                  name="batch"
+                                  type="number"
+                                  inputMode="numeric"
+                                  min="1"
+                                  className="form-control"
+                                  value={batch}
+                                  onChange={(e) => setBatch(e.target.value)}
+                                  placeholder="e.g. 62"
+                                  required
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="form-grid-2">
+                            <div className="form-group">
+                              <label>Participant full name *</label>
+                              <div className="input-with-icon">
+                                <User className="input-icon" />
+                                <input name="name" className="form-control" required placeholder="Your name" autoComplete="name" />
+                              </div>
+                            </div>
+                            <div className="form-group">
+                              <label>{isLu ? 'Leading University student ID *' : 'Student ID *'}</label>
+                              <div className="input-with-icon">
+                                <CreditCard className="input-icon" />
+                                <input name="studentId" className="form-control" required placeholder={isLu ? '0182320012101215' : '231-115-052'} autoComplete="off" />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="form-grid-2">
+                            <div className="form-group">
+                              <label>Phone number *</label>
+                              <div className="input-with-icon">
+                                <Phone className="input-icon" />
+                                <input name="phone" type="tel" className="form-control" required placeholder="01XXXXXXXXX" autoComplete="tel" />
+                              </div>
+                            </div>
+                            <div className="form-group">
+                              <label>Email *</label>
+                              <div className="input-with-icon">
+                                <Mail className="input-icon" />
+                                <input name="email" type="email" className="form-control" required placeholder={isLu ? 'you@email.com' : 'student@metrouni.edu.bd'} autoComplete="email" />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="form-grid-2">
+                            <div className="form-group">
+                              <label>Department *</label>
+                              <div className="input-with-icon">
+                                <GraduationCap className="input-icon" />
+                                <input name="department" className="form-control" required placeholder="CSE, BBA, LLB…" />
+                              </div>
+                            </div>
+                            <div className="form-group">
+                              <label>{isLu ? 'Batch *' : 'Batch'}</label>
+                              <div className="input-with-icon">
+                                <Layers className="input-icon" />
+                                <input
+                                  name="batch"
+                                  type="number"
+                                  inputMode="numeric"
+                                  min="1"
+                                  className="form-control"
+                                  value={batch}
+                                  onChange={(e) => setBatch(e.target.value)}
+                                  placeholder="e.g. 58th"
+                                  required={isLu}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="form-group">
+                            <label>Gender *</label>
+                            <div className="radio-card-group">
+                              <label className={`radio-card${gender === 'Male' ? ' selected' : ''}`}>
+                                <input type="radio" name="gender" value="Male" checked={gender === 'Male'} required onChange={() => setGender('Male')} />
+                                <span className="radio-card-btn"><UserCheck /> Male</span>
+                              </label>
+                              <label className={`radio-card${gender === 'Female' ? ' selected' : ''}`}>
+                                <input type="radio" name="gender" value="Female" checked={gender === 'Female'} required onChange={() => setGender('Female')} />
+                                <span className="radio-card-btn"><User /> Female</span>
+                              </label>
+                            </div>
+                          </div>
+                        </>
+                      )}
                       <div className="form-group">
-                        <label>Student ID *</label>
+                        <label>bKash Transaction ID (TrxID) *</label>
                         <div className="input-with-icon">
-                          <CreditCard className="input-icon" />
-                          <input name="studentId" className="form-control" required placeholder="231-115-052" autoComplete="off" />
+                          <Hash className="input-icon" />
+                          <input id="sirah-trx-id" name="trxId" className="form-control" required placeholder="e.g. 9J4K2L8M1N" style={{ fontFamily: 'monospace' }} />
                         </div>
                       </div>
-                      <div className="form-grid-2">
-                        <div className="form-group">
-                          <label>Student department *</label>
-                          <div className="input-with-icon">
-                            <GraduationCap className="input-icon" />
-                            <input name="department" className="form-control" required placeholder="CSE, BBA, LLB…" />
-                          </div>
-                        </div>
-                        <div className="form-group">
-                          <label>Student batch *</label>
-                          <div className="input-with-icon">
-                            <Layers className="input-icon" />
-                            <input
-                              name="batch"
-                              type="number"
-                              inputMode="numeric"
-                              min="1"
-                              className="form-control"
-                              value={batch}
-                              onChange={(e) => setBatch(e.target.value)}
-                              placeholder="e.g. 62"
-                              required
-                            />
-                          </div>
-                        </div>
-                      </div>
+                      <button type="submit" className="btn btn-gold btn-lg" style={{ width: '100%' }} disabled={loading}>
+                        <ShieldCheck /> {loading ? 'Submitting…' : 'Submit registration'}
+                      </button>
                     </>
-                  ) : (
-                  <>
-                  <div className="form-grid-2">
-                    <div className="form-group">
-                      <label>Participant full name *</label>
-                      <div className="input-with-icon">
-                        <User className="input-icon" />
-                        <input name="name" className="form-control" required placeholder="Your name" autoComplete="name" />
-                      </div>
-                    </div>
-                    <div className="form-group">
-                      <label>{isLu ? 'Leading University student ID *' : 'Student ID *'}</label>
-                      <div className="input-with-icon">
-                        <CreditCard className="input-icon" />
-                        <input name="studentId" className="form-control" required placeholder={isLu ? '0182320012101215' : '231-115-052'} autoComplete="off" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="form-grid-2">
-                    <div className="form-group">
-                      <label>Phone number *</label>
-                      <div className="input-with-icon">
-                        <Phone className="input-icon" />
-                        <input name="phone" type="tel" className="form-control" required placeholder="01XXXXXXXXX" autoComplete="tel" />
-                      </div>
-                    </div>
-                    <div className="form-group">
-                      <label>Email *</label>
-                      <div className="input-with-icon">
-                        <Mail className="input-icon" />
-                        <input name="email" type="email" className="form-control" required placeholder={isLu ? 'you@email.com' : 'student@metrouni.edu.bd'} autoComplete="email" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="form-grid-2">
-                    <div className="form-group">
-                      <label>Department *</label>
-                      <div className="input-with-icon">
-                        <GraduationCap className="input-icon" />
-                        <input name="department" className="form-control" required placeholder="CSE, BBA, LLB…" />
-                      </div>
-                    </div>
-                    <div className="form-group">
-                      <label>{isLu ? 'Batch *' : 'Batch'}</label>
-                      <div className="input-with-icon">
-                        <Layers className="input-icon" />
-                        <input
-                          name="batch"
-                          type="number"
-                          inputMode="numeric"
-                          min="1"
-                          className="form-control"
-                          value={batch}
-                          onChange={(e) => setBatch(e.target.value)}
-                          placeholder="e.g. 58th"
-                          required={isLu}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label>Gender *</label>
-                    <div className="radio-card-group">
-                      <label className={`radio-card${gender === 'Male' ? ' selected' : ''}`}>
-                        <input type="radio" name="gender" value="Male" checked={gender === 'Male'} required onChange={() => setGender('Male')} />
-                        <span className="radio-card-btn"><UserCheck /> Male</span>
-                      </label>
-                      <label className={`radio-card${gender === 'Female' ? ' selected' : ''}`}>
-                        <input type="radio" name="gender" value="Female" checked={gender === 'Female'} required onChange={() => setGender('Female')} />
-                        <span className="radio-card-btn"><User /> Female</span>
-                      </label>
-                    </div>
-                  </div>
-                  </>
-                  )}
-                  <div className="form-group">
-                    <label>bKash Transaction ID (TrxID) *</label>
-                    <div className="input-with-icon">
-                      <Hash className="input-icon" />
-                      <input id="sirah-trx-id" name="trxId" className="form-control" required placeholder="e.g. 9J4K2L8M1N" style={{ fontFamily: 'monospace' }} />
-                    </div>
-                  </div>
-                  <button type="submit" className="btn btn-gold btn-lg" style={{ width: '100%' }} disabled={loading}>
-                    <ShieldCheck /> {loading ? 'Submitting…' : 'Submit registration'}
-                  </button>
-                  </>
                   ) : null}
                 </form>
               </div>
