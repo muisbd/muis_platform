@@ -8,8 +8,6 @@ import Gallery from './Gallery.js';
 import { UPCOMING_EVENTS, PAST_EVENTS, WEEKLY_PROGRAMS } from '../data/eventsData.js';
 import { api, mapEvent } from '../lib/api.js';
 import SeerahEventCover from './SeerahEventCover.js';
-import { WRITING_CONTEST_DEADLINE_EN } from '../data/sirahSpeakers.js';
-
 const FILTERS = [
   { key: 'all', label: 'All Past Events' },
   { key: 'halaqa', label: 'Halaqas & Talks' },
@@ -125,13 +123,13 @@ export default function EventsProgramsPage() {
       <section className="section">
         <div className="container">
           <div className="section-header">
-            <div className="eyebrow" style={{ color: '#FBBF24' }}>Open now</div>
+            <div className="eyebrow" style={{ color: '#FBBF24' }}>Certificates available</div>
             <h2>Seerah Conference 2026</h2>
-            <p>Registration fee is 150 BDT via bKash. One registration covers Seerah Quiz, Writing Contest, and Seerah Seminar. Writing contest deadline {WRITING_CONTEST_DEADLINE_EN}. Pay, submit your details and TrxID, then MUIS accepts or rejects your registration.</p>
+            <p>Registration is closed. JazakAllah khair to everyone who joined. If you attended, sign in with Google and request your certificate.</p>
           </div>
           <SeerahEventCover className="sirah-events-banner" />
           <div style={{ marginBottom: 36, display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-            <Link href="/seerah-2026" className="btn btn-vibrant-primary">Register for Seerah Conference 2026</Link>
+            <Link href="/seerah-2026/certificate" className="btn btn-vibrant-primary">Get your Seerah Conference 2026 certificate</Link>
             <Link href="/seerah-2026/details" className="btn btn-outline">Event details</Link>
           </div>
 

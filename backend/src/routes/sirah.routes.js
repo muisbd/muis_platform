@@ -3,6 +3,7 @@ import { asyncHandler, HttpError } from '../utils/asyncHandler.js';
 import { SirahRegistration } from '../models/SirahRegistration.js';
 import { publicFormLimiter } from '../middleware/rateLimit.js';
 import { sendMail, notifyCommittee, wrapEmail } from '../utils/mailer.js';
+import { getSeerahSettings } from '../utils/seerahSettings.js';
 
 const router = Router();
 
@@ -47,6 +48,7 @@ function relationLabel(doc) {
 }
 
 router.get('/info', asyncHandler(async (_req, res) => {
+  const settings = await getSeerahSettings();
   res.json({
     ok: true,
     event: {
@@ -54,12 +56,16 @@ router.get('/info', asyncHandler(async (_req, res) => {
       title: 'Seerah Conference 2026',
       path: '/seerah-2026',
       fee: 150,
-      currency: 'BDT'
+      currency: 'BDT',
+      registrationOpen: settings.registrationOpen,
+      certificateRequestsOpen: settings.requestsOpen
     }
   });
 }));
 
 router.post('/register', publicFormLimiter, asyncHandler(async (req, res) => {
+  const { registrationOpen } = await getSeerahSettings();
+  if (!registrationOpen) throw new HttpError(403, 'Seerah Conference 2026 registration is closed.');
   const body = req.body || {};
   const registrantType = String(body.registrantType || 'mu').trim();
   const name = String(body.name || '').trim();

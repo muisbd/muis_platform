@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema(
     phone: { type: String, trim: true, default: '' },
     department: { type: String, trim: true, default: '' },
     gender: { type: String, enum: ['Male', 'Female', ''], default: '' },
+    attendeeType: { type: String, enum: ['student', 'guest', ''], default: '' },
+    university: { type: String, trim: true, default: '' },
+    batch: { type: String, trim: true, default: '' },
+    guestNote: { type: String, trim: true, default: '' },
+    googleId: { type: String, default: '', index: true },
+    authProvider: { type: String, enum: ['password', 'google', 'email_code'], default: 'password' },
     role: {
       type: String,
       enum: ['student', 'blogger', 'moderator', 'treasurer', 'admin', 'lu_verifier'],

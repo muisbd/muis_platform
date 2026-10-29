@@ -17,6 +17,7 @@ import { buildIcs } from '../utils/ics.js';
 import { env } from '../config/env.js';
 import { SirahRegistration } from '../models/SirahRegistration.js';
 import { SirahUpdate } from '../models/SirahUpdate.js';
+import { SeerahCertificate } from '../models/SeerahCertificate.js';
 
 const router = Router();
 router.use(authRequired);
@@ -29,7 +30,8 @@ router.get('/overview', requireRoles('admin', 'moderator', 'treasurer'), asyncHa
     pendingBlogs,
     magSubs,
     users,
-    sirah
+    sirah,
+    certificates
   ] = await Promise.all([
     MembershipApplication.countDocuments({ reviewStatus: 'new' }),
     ContactMessage.countDocuments({ handled: false }),
@@ -37,9 +39,10 @@ router.get('/overview', requireRoles('admin', 'moderator', 'treasurer'), asyncHa
     BlogPost.countDocuments({ status: 'pending_review' }),
     MagazineSubmission.countDocuments({ status: 'pending' }),
     User.countDocuments(),
-    SirahRegistration.countDocuments({ status: { $in: ['pending_review', 'pending_verify'] } })
+    SirahRegistration.countDocuments({ status: { $in: ['pending_review', 'pending_verify'] } }),
+    SeerahCertificate.countDocuments({ status: 'pending' })
   ]);
-  res.json({ ok: true, memberships, messages, donations, pendingBlogs, magSubs, users, sirah });
+  res.json({ ok: true, memberships, messages, donations, pendingBlogs, magSubs, users, sirah, certificates });
 }));
 
 router.get('/memberships', requireRoles('admin', 'moderator'), asyncHandler(async (req, res) => {

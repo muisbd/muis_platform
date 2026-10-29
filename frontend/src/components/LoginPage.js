@@ -6,6 +6,13 @@ import { useRouter } from 'next/navigation';
 import { LogIn, Mail, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.js';
 import PageHeader from './PageHeader.js';
+import SignInOptions from './SignInOptions.js';
+
+function nextPath() {
+  if (typeof window === 'undefined') return '';
+  const next = new URLSearchParams(window.location.search).get('next') || '';
+  return next.startsWith('/') && !next.startsWith('//') ? next : '';
+}
 
 export default function LoginPage() {
   const { login, isLoggedIn, isStaff, user } = useAuth();
@@ -16,8 +23,8 @@ export default function LoginPage() {
   useEffect(() => {
     if (!isLoggedIn) return;
     if (user?.role === 'lu_verifier') router.replace('/lu-verify');
-    else if (isStaff) router.replace('/admin');
-    else router.replace('/');
+    else if (isStaff) router.replace(nextPath() || '/admin');
+    else router.replace(nextPath() || '/account');
   }, [isLoggedIn, isStaff, user, router]);
 
   const handleSubmit = async (e) => {
@@ -26,12 +33,7 @@ export default function LoginPage() {
     const form = e.currentTarget;
     setLoading(true);
     try {
-      const user = await login(form.email.value.trim(), form.password.value);
-      if (['admin', 'moderator', 'treasurer'].includes(user.role)) {
-        router.push('/admin');
-      } else {
-        router.push('/');
-      }
+      await login(form.email.value.trim(), form.password.value);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -41,39 +43,44 @@ export default function LoginPage() {
 
   return (
     <div className="page-container page-fade-enter">
-      <PageHeader title="Member login" description="Sign in with the email and password from your Join MUIS application." />
+      <PageHeader title="Sign in" description="Sign in with Google. No password needed. Your account is created the first time you sign in." />
       <section className="section">
         <div className="container">
           <div className="form-card auth-card">
             <h3 style={{ color: 'var(--color-navy)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <LogIn /> Welcome back
+              <LogIn /> Welcome
             </h3>
             <p style={{ color: 'var(--color-text-muted)', marginBottom: 20, fontSize: '0.92rem' }}>
-              Courses stay locked until a committee officer approves your membership. Super admin lands in Admin after login.
+              Use this to get your Seerah Conference 2026 certificate and MUIS updates.
             </p>
-            {error ? <div className="join-alert alert-error" role="alert">{error}</div> : null}
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="login-email">Email *</label>
-                <div className="input-with-icon">
-                  <Mail className="input-icon" />
-                  <input id="login-email" name="email" type="email" className="form-control" required placeholder="student@metrouni.edu.bd" />
+            <SignInOptions />
+
+            <details className="signin-members">
+              <summary>MUIS members and committee: sign in with password</summary>
+              {error ? <div className="join-alert alert-error" role="alert">{error}</div> : null}
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="login-email">Email *</label>
+                  <div className="input-with-icon">
+                    <Mail className="input-icon" />
+                    <input id="login-email" name="email" type="email" className="form-control" required placeholder="student@metrouni.edu.bd" />
+                  </div>
                 </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="login-password">Password *</label>
-                <div className="input-with-icon">
-                  <Lock className="input-icon" />
-                  <input id="login-password" name="password" type="password" className="form-control" required minLength={6} />
+                <div className="form-group">
+                  <label htmlFor="login-password">Password *</label>
+                  <div className="input-with-icon">
+                    <Lock className="input-icon" />
+                    <input id="login-password" name="password" type="password" className="form-control" required minLength={6} />
+                  </div>
                 </div>
-              </div>
-              <button type="submit" className="btn btn-navy btn-lg" style={{ width: '100%' }} disabled={loading}>
-                {loading ? 'Signing in…' : 'Sign in'}
-              </button>
-            </form>
-            <p style={{ marginTop: 16, fontSize: '0.9rem', textAlign: 'center' }}>
-              New student? <Link href="/join" style={{ color: 'var(--color-navy)', fontWeight: 700 }}>Join MUIS</Link>
-            </p>
+                <button type="submit" className="btn btn-navy btn-lg" style={{ width: '100%' }} disabled={loading}>
+                  {loading ? 'Signing in…' : 'Sign in with password'}
+                </button>
+              </form>
+              <p style={{ marginTop: 16, fontSize: '0.9rem', textAlign: 'center' }}>
+                Want to become a member? <Link href="/join" style={{ color: 'var(--color-navy)', fontWeight: 700 }}>Join MUIS</Link>
+              </p>
+            </details>
           </div>
         </div>
       </section>

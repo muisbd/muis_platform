@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PageHeader from './PageHeader.js';
 import AdminContentPanel from './AdminContentPanel.js';
+import AdminSeerahCertificates from './AdminSeerahCertificates.js';
 import { useAuth } from '../context/AuthContext.js';
 import { api } from '../lib/api.js';
 import { showToast } from '../utils/toast.js';
@@ -15,6 +16,7 @@ const ALL_TABS = [
   { id: 'donations', label: 'Donations', roles: ['admin', 'treasurer'] },
   { id: 'rsvps', label: 'Event tickets', roles: ['admin', 'moderator'] },
   { id: 'sirah', label: 'Seerah 2026', roles: ['admin', 'moderator', 'treasurer'] },
+  { id: 'certificates', label: 'Seerah certificates', roles: ['admin', 'moderator'] },
   { id: 'enrollments', label: 'Enrollments', roles: ['admin', 'moderator'] },
   { id: 'notes', label: 'Notes', roles: ['admin', 'moderator'] },
   { id: 'magazine', label: 'Writing', roles: ['admin', 'moderator'] },
@@ -207,8 +209,13 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get('tab');
+    if (wanted && ALL_TABS.some((t) => t.id === wanted)) setTab(wanted);
+  }, []);
+
+  useEffect(() => {
     if (!isStaff) return;
-    if (tab === 'content') return;
+    if (tab === 'content' || tab === 'certificates') return;
     load(tab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, isStaff]);
@@ -253,6 +260,9 @@ export default function AdminDashboard() {
               <div className="progress-stat"><strong>{overview.magSubs}</strong><span>Magazine subs</span></div>
               <div className="progress-stat"><strong>{overview.users}</strong><span>Accounts</span></div>
               <div className="progress-stat"><strong>{overview.sirah || 0}</strong><span>Seerah to review</span></div>
+              <button type="button" className="progress-stat progress-stat-link" onClick={() => setTab('certificates')}>
+                <strong>{overview.certificates || 0}</strong><span>Certificate requests</span>
+              </button>
             </div>
           ) : null}
 
@@ -676,6 +686,7 @@ export default function AdminDashboard() {
           ) : null}
 
           {tab === 'content' ? <AdminContentPanel isAdmin={user?.role === 'admin'} /> : null}
+          {tab === 'certificates' ? <AdminSeerahCertificates /> : null}
         </div>
       </section>
     </div>

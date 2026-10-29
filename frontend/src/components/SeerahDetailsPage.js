@@ -19,7 +19,7 @@ export default function SeerahDetailsPage() {
       <PageHeader
         title="Seerah Conference 2026"
         description={`17 October · Seerah Quiz, Writing Contest, and Seerah Seminar. Writing contest deadline ${WRITING_CONTEST_DEADLINE_EN}. One registration for all three.`}
-        parentPage="Register"
+        parentPage="Seerah Conference 2026"
         parentHash="/seerah-2026"
         eyebrow="Event details"
       />
@@ -102,8 +102,8 @@ export default function SeerahDetailsPage() {
           </article>
 
           <div className="seerah-details-cta">
-            <Link href="/seerah-2026#sirah-register" className="btn btn-gold btn-lg">
-              Register now <ArrowRight />
+            <Link href="/seerah-2026/certificate" className="btn btn-gold btn-lg">
+              Get your certificate <ArrowRight />
             </Link>
           </div>
         </div>
@@ -111,11 +111,11 @@ export default function SeerahDetailsPage() {
 
       <div className="sirah-sticky-cta seerah-details-sticky">
         <div className="sirah-sticky-cta-copy">
-          <strong>17 Oct · 150 BDT</strong>
-          <span>Writing deadline {WRITING_CONTEST_DEADLINE_EN}</span>
+          <strong>Attended Seerah Conference 2026?</strong>
+          <span>Registration is closed</span>
         </div>
-        <Link href="/seerah-2026#sirah-register" className="btn btn-gold">
-          Register
+        <Link href="/seerah-2026/certificate" className="btn btn-gold">
+          Get certificate
         </Link>
       </div>
     </div>

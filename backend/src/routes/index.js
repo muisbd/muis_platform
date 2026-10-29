@@ -14,6 +14,9 @@ import adminRoutes from './admin.routes.js';
 import uploadRoutes from './upload.routes.js';
 import sirahRoutes from './sirah.routes.js';
 import luVerifyRoutes from './luVerify.routes.js';
+import certificateRoutes from './certificate.routes.js';
+import seerahAdminRoutes from './seerahAdmin.routes.js';
+import notificationRoutes from './notification.routes.js';
 
 const router = Router();
 
@@ -36,5 +39,8 @@ router.use('/admin', adminRoutes);
 router.use('/upload', uploadRoutes);
 router.use('/sirah', sirahRoutes);
 router.use('/lu-verify', luVerifyRoutes);
+router.use('/certificates', certificateRoutes);
+router.use('/seerah-admin', seerahAdminRoutes);
+router.use('/notifications', notificationRoutes);
 
 export default router;

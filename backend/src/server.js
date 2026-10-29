@@ -6,7 +6,7 @@ import { env } from './config/env.js';
 import { connectDb } from './config/db.js';
 import api from './routes/index.js';
 import { errorHandler } from './middleware/errorHandler.js';
-import { ensureLuVerifier, normalizeSirahPaths } from './utils/ensureAccounts.js';
+import { ensureLuVerifier, normalizeSirahPaths, ensureSeerahRoster } from './utils/ensureAccounts.js';
 
 const app = express();
 app.set('trust proxy', 1);
@@ -50,6 +50,7 @@ connectDb()
     try {
       await ensureLuVerifier();
       await normalizeSirahPaths();
+      await ensureSeerahRoster();
     } catch (err) {
       console.error('Account setup warning:', err.message);
     }

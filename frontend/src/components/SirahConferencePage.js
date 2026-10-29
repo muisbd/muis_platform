@@ -6,7 +6,7 @@ import {
   BookOpen, Mail, User, CreditCard, Hash, ShieldCheck, Phone, GraduationCap,
   CheckCircle2, Layers, ChevronDown, ChevronLeft, ChevronRight, UserCheck,
   Copy, Check, Smartphone, Wallet, Banknote, PenLine, ArrowRight,
-  Calendar, Clock, Sparkles
+  Calendar, Clock, Sparkles, Award
 } from 'lucide-react';
 import { api } from '../lib/api.js';
 import { useAuth } from '../context/AuthContext.js';
@@ -268,6 +268,13 @@ export default function SirahConferencePage() {
   const isLu = registrantType === 'lu';
   const [copied, setCopied] = useState('');
   const [showStickyCta, setShowStickyCta] = useState(false);
+  const [registrationOpen, setRegistrationOpen] = useState(false);
+
+  useEffect(() => {
+    api('/sirah/info')
+      .then((data) => setRegistrationOpen(Boolean(data.event?.registrationOpen)))
+      .catch(() => setRegistrationOpen(false));
+  }, []);
 
   const copyValue = async (text, label) => {
     setCopied(label);
@@ -408,9 +415,15 @@ export default function SirahConferencePage() {
                 <span><Banknote /> {REGISTRATION_FEE_LABEL}</span>
               </div>
               <div className="sirah-hero-actions">
-                <button type="button" className="btn btn-gold" onClick={scrollToRegister}>
-                  Register now
-                </button>
+                {registrationOpen ? (
+                  <button type="button" className="btn btn-gold" onClick={scrollToRegister}>
+                    Register now
+                  </button>
+                ) : (
+                  <Link href="/seerah-2026/certificate" className="btn btn-gold">
+                    <Award /> Get your certificate
+                  </Link>
+                )}
                 <Link href="/seerah-2026/details" className="btn btn-outline sirah-hero-details-btn">
                   Event details <ArrowRight />
                 </Link>
@@ -441,7 +454,19 @@ export default function SirahConferencePage() {
 
           {error ? <div className="join-alert alert-error" role="alert">{error}</div> : null}
 
-          {submitted ? (
+          {!registrationOpen ? (
+            <div className="form-card sirah-success-card sirah-closed-card">
+              <Award className="sirah-success-icon" />
+              <h3>Registration is closed</h3>
+              <p>
+                JazakAllah khair to everyone who joined <strong>Seerah Conference 2026</strong>.
+                Did you attend? Sign in with Google and request your certificate.
+              </p>
+              <Link href="/seerah-2026/certificate" className="btn btn-gold btn-lg">
+                <Award /> Get your certificate
+              </Link>
+            </div>
+          ) : submitted ? (
             <div className="form-card sirah-success-card">
               <CheckCircle2 className="sirah-success-icon" />
               <h3>Registration submitted</h3>
@@ -799,13 +824,27 @@ export default function SirahConferencePage() {
 
       {showStickyCta ? (
         <div className="sirah-sticky-cta">
-          <div className="sirah-sticky-cta-copy">
-            <strong>Register · {REGISTRATION_FEE_LABEL}</strong>
-            <span>Writing deadline {WRITING_CONTEST_DEADLINE_SHORT}</span>
-          </div>
-          <button type="button" className="btn btn-gold" onClick={scrollToRegister}>
-            Register
-          </button>
+          {registrationOpen ? (
+            <>
+              <div className="sirah-sticky-cta-copy">
+                <strong>Register · {REGISTRATION_FEE_LABEL}</strong>
+                <span>Writing deadline {WRITING_CONTEST_DEADLINE_SHORT}</span>
+              </div>
+              <button type="button" className="btn btn-gold" onClick={scrollToRegister}>
+                Register
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="sirah-sticky-cta-copy">
+                <strong>Attended Seerah Conference 2026?</strong>
+                <span>Request your certificate</span>
+              </div>
+              <Link href="/seerah-2026/certificate" className="btn btn-gold">
+                Get certificate
+              </Link>
+            </>
+          )}
         </div>
       ) : null}
     </div>

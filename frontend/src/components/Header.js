@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.js';
+import NotificationBell from './NotificationBell.js';
 
 export default function Header() {
   const pathname = usePathname() || '/';
@@ -70,6 +71,7 @@ export default function Header() {
             {isLoggedIn ? (
               <>
                 {isStaff ? <li className="nav-mobile-only"><Link href="/admin" className={`nav-link ${getActiveClass('/admin')}`} onClick={closeMenu}>Admin</Link></li> : null}
+                <li className="nav-mobile-only"><Link href="/account" className={`nav-link ${getActiveClass('/account')}`} onClick={closeMenu}>My profile</Link></li>
                 <li className="nav-mobile-only"><button type="button" className="nav-link" onClick={() => { closeMenu(); logout(); }}>Logout</button></li>
               </>
             ) : (
@@ -83,6 +85,7 @@ export default function Header() {
           {ready && isLoggedIn ? (
             <>
               {isStaff ? <Link href="/admin" className="btn btn-sm btn-gold nav-auth-btn">Admin</Link> : null}
+              {user?.role !== 'lu_verifier' ? <NotificationBell /> : null}
               <div className="nav-account">
                 <button
                   type="button"
@@ -94,6 +97,8 @@ export default function Header() {
                 </button>
                 {accountOpen ? (
                   <div className="nav-account-menu">
+                    <Link href="/account" onClick={() => setAccountOpen(false)}>My profile</Link>
+                    <Link href="/seerah-2026/certificate" onClick={() => setAccountOpen(false)}>Seerah certificate</Link>
                     {isMember ? <Link href="/courses" onClick={() => setAccountOpen(false)}>Courses</Link> : null}
                     {isPendingMember ? <span>Membership pending review</span> : null}
                     <button type="button" onClick={() => { setAccountOpen(false); logout(); }}>Logout</button>

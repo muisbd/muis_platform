@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { api, getToken, setToken } from '../lib/api.js';
+import { syncPush } from '../lib/pwa.js';
 
 const AuthContext = createContext(null);
 
@@ -16,7 +17,10 @@ export function AuthProvider({ children }) {
       return;
     }
     api('/auth/me')
-      .then((data) => setUser(data.user))
+      .then((data) => {
+        setUser(data.user);
+        syncPush();
+      })
       .catch(() => {
         setToken('');
         setUser(null);
@@ -55,6 +59,28 @@ export function AuthProvider({ children }) {
       async applyToken(token) {
         setToken(token);
         const data = await api('/auth/me');
+        setUser(data.user);
+        return data.user;
+      },
+      async loginWithGoogle(credential) {
+        const data = await api('/auth/google', { method: 'POST', body: { credential } });
+        setToken(data.token);
+        setUser(data.user);
+        syncPush();
+        return data.user;
+      },
+      async requestEmailCode(email) {
+        return api('/auth/email-code/request', { method: 'POST', body: { email } });
+      },
+      async verifyEmailCode(email, code) {
+        const data = await api('/auth/email-code/verify', { method: 'POST', body: { email, code } });
+        setToken(data.token);
+        setUser(data.user);
+        syncPush();
+        return data.user;
+      },
+      async updateProfile(patch) {
+        const data = await api('/auth/me', { method: 'PATCH', body: patch });
         setUser(data.user);
         return data.user;
       },

@@ -82,7 +82,19 @@ export const metadata = {
   },
   verification: {
     google: 'zLQ4oXk4h6qWsEAbf9ntTmXKLykAKzg5zt8rUiTwHpc'
+  },
+  icons: {
+    apple: '/icons/apple-touch-icon.png'
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'MUIS',
+    statusBarStyle: 'black-translucent'
   }
+};
+
+export const viewport = {
+  themeColor: '#0D1127'
 };
 
 export default function RootLayout({ children }) {
@@ -94,6 +106,11 @@ export default function RootLayout({ children }) {
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
+                  window.addEventListener('beforeinstallprompt', function(e) {
+                    e.preventDefault();
+                    window.__muisInstallPrompt = e;
+                    window.dispatchEvent(new Event('muis-install-ready'));
+                  });
                   var filterMsg = function(args) {
                     if (!args || !args[0]) return false;
                     var str = String(args[0]);

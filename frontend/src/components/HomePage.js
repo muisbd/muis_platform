@@ -14,8 +14,6 @@ import ScrollReveal, { AboutScrollSection } from './ScrollReveal.js';
 import SeerahEventCover from './SeerahEventCover.js';
 import { api, mapEvent } from '../lib/api.js';
 import { UPCOMING_EVENTS } from '../data/eventsData.js';
-import { WRITING_CONTEST_DEADLINE_EN } from '../data/sirahSpeakers.js';
-
 export default function HomePage() {
   const [faqOpen, setFaqOpen] = useState(-1);
   const [pinnedEvents, setPinnedEvents] = useState([]);
@@ -188,7 +186,7 @@ export default function HomePage() {
       <ScrollReveal id="upcoming-event-section" className="section section-upcoming-shade section-scroll-reveal">
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="section-header" style={{ marginBottom: 24 }}>
-            <div className="eyebrow" style={{ color: '#FBBF24' }}>Open registration</div>
+            <div className="eyebrow" style={{ color: '#FBBF24' }}>Certificates available</div>
             <h2>Seerah Conference 2026</h2>
           </div>
 
@@ -197,14 +195,14 @@ export default function HomePage() {
             <div className="compact-event-body">
               <div className="compact-event-meta">
                 <span className="compact-tag-purple">Flagship Conference</span>
-                <span className="compact-tag-emerald"><ShieldCheck /> Open registration</span>
-                <span className="compact-tag-gold">150 BDT</span>
+                <span className="compact-tag-emerald"><ShieldCheck /> Registration closed</span>
+                <span className="compact-tag-gold">Certificates</span>
               </div>
               <h3 className="compact-event-title">Seerah Conference 2026</h3>
-              <p className="compact-event-desc">One registration covers Seerah Quiz, Writing Contest, and Seerah Seminar. Writing contest deadline {WRITING_CONTEST_DEADLINE_EN}. Pay 150 BDT with bKash, then submit your details and TrxID.</p>
+              <p className="compact-event-desc">JazakAllah khair to everyone who joined. Attended Seerah Conference 2026? Sign in with Google, complete your profile and request your certificate.</p>
               <div className="compact-event-action" style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-                <Link href="/seerah-2026" className="btn btn-vibrant-primary btn-sm">
-                  Register at muis.bd/seerah-2026 <ExternalLink />
+                <Link href="/seerah-2026/certificate" className="btn btn-vibrant-primary btn-sm">
+                  Get your certificate <ExternalLink />
                 </Link>
                 <Link href="/seerah-2026/details" className="btn btn-outline btn-sm">
                   Event details

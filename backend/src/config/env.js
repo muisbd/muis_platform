@@ -29,5 +29,10 @@ export const env = {
   admin2StudentId: process.env.ADMIN2_STUDENT_ID || 'ADMIN-002',
   luVerifierName: process.env.LU_VERIFIER_NAME || 'Leading University Verifier',
   luVerifierEmail: process.env.LU_VERIFIER_EMAIL || '',
-  luVerifierPassword: process.env.LU_VERIFIER_PASSWORD || ''
+  luVerifierPassword: process.env.LU_VERIFIER_PASSWORD || '',
+  googleClientId: process.env.GOOGLE_CLIENT_ID || '',
+  emailCodeDailyLimit: Number(process.env.EMAIL_CODE_DAILY_LIMIT || 80),
+  vapidPublicKey: process.env.VAPID_PUBLIC_KEY || '',
+  vapidPrivateKey: process.env.VAPID_PRIVATE_KEY || '',
+  vapidSubject: process.env.VAPID_SUBJECT || 'mailto:muis@metrouni.edu.bd'
 };
