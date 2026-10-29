@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Target, Sparkles, BookOpen, Users, HeartHandshake, ShieldCheck, Award, UsersRound, Heart } from 'lucide-react';
